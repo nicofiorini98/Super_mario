@@ -1,0 +1,39 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file>graphics/background/icebergs.png</file>
+	<file>graphics/background/water.png</file>
+	<file>graphics/background/sky1.png</file>
+	<file>graphics/background/scene3.png</file>
+    <file>graphics/sprites/enemies.png</file>
+    <file>graphics/sprites/goal_roulette.png</file>
+    <file>graphics/sprites/hud.png</file>
+    <file>graphics/sprites/mario.png</file>
+    <file>graphics/sprites/miscs.png</file>
+    <file>graphics/sprites/stage_tiles.png</file>
+    <file>graphics/sprites/title_screen.png</file>
+    <file>graphics/sprites/fireworks.png</file>
+    <file>sounds/1up.wav</file>
+    <file>sounds/break.wav</file>
+    <file>sounds/bump.wav</file>
+    <file>sounds/coin.wav</file>
+    <file>sounds/death.wav</file>
+    <file>sounds/fireball.wav</file>
+    <file>sounds/fly.wav</file>
+    <file>sounds/gameover.wav</file>
+	<file>sounds/hurry-up.wav</file>
+    <file>sounds/jump.wav</file>
+    <file>sounds/level_clear.wav</file>
+    <file>sounds/mushroom-appear.wav</file>
+    <file>sounds/mushroom-eat.wav</file>
+    <file>sounds/overworld.wav</file>
+    <file>sounds/pause.wav</file>
+    <file>sounds/pickabox.wav</file>
+	<file>sounds/pswitch-hit.wav</file>
+    <file>sounds/pipe-travel.wav</file>
+    <file>sounds/starmusic.wav</file>
+    <file>sounds/stomp.wav</file>
+    <file>sounds/tail.wav</file>
+	<file>sounds/timer-reset.wav</file>
+    <file>sounds/vine.wav</file>
+</qresource>
+</RCC>
