@@ -11,7 +11,8 @@
 #include "FireBall.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
-{ //sono nico
+{
+
 	prev_dir = dir;
 	// set flags
 	level_name = _level_name; 
@@ -615,8 +616,7 @@ void Mario::advance()
 			animation_div=6;
 		} 
 	}
-
-
+		
 	if (falling_start_counter >= 0)  // incremento il falling_start_counter in entity ho messo che falling_counter+=falling_speed
 		falling_start_counter++;
 
