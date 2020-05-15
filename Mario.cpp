@@ -11,7 +11,7 @@
 #include "FireBall.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
-{
+{ //master
 	prev_dir = dir;
 	// set flags
 	level_name = _level_name; 
