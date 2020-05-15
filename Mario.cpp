@@ -12,7 +12,9 @@
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
+	//branch nico
 
+		
 	prev_dir = dir;
 	// set flags
 	level_name = _level_name; 
@@ -650,9 +652,9 @@ void Mario::advance()
 		//bug fix start
 		if(dir_change_counter>0)
 		{
-			dir_change_counter = -1;
-			
+			setDirection(inverse(dir));
 		}
+		
 		if (moving_stop_counter > 0)
 		{
 			//moving_stop_counter = -1;
@@ -912,13 +914,15 @@ void Mario::setMoving(bool _moving)
 void Mario::setDirection(Direction _dir)
 {
 	//bug fix start
-	//exception for script_move, in teoria se sono in script_move, non 
+	//exception for script_move, in teoria se sono in script_move
 	//bug fix end
 
 
 	if(script_move)
 	{
-		//cambiare 
+		//change direction instantly in script_move
+		dir = inverse(dir);
+		dir_change_counter = -1;
 	}
 
 	
