@@ -1,56 +1,111 @@
 #include "Mario.h"
 #include "Sounds.h"
-#include "Leaf.h"
 #include "Sprites.h"
+#include "Leaf.h"
 #include <iostream>
-Leaf::Leaf(QPoint position, Direction _dir) : Collectable(position)
+Leaf::Leaf(QPoint position) : Collectable(position)
 {
 	// set attributes
-	type = LEAF;
-	dir = _dir;
-	// set texture and position
-	setPixmap(Sprites::instance()->get(""));//todo istanziare la texture della foglia
+	falling_speed_div = 1;
+	falling = false;
 	
+	moving_speed_div = 1;
+	setPixmap(Sprites::instance()->get("leaf"));
 	setPos(position);
-	
-	setZValue(1);
-	// play mushroom sound
 	Sounds::instance()->play("spawn");
 }
 
 void Leaf::animate()
 {
 	Entity::animate();
-
-
+	
+	if(dir==LEFT)
+		setPixmap(Sprites::instance()->get("leaf"));
+	else
+		setPixmap(Sprites::instance()->get("leaf").transformed(QTransform().scale(-1, 1)));
 }
 
 void Leaf::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
 
-	// if hit by Mario, Mario eats mushroom and mushroom dies
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
 	{
-		//todo farlo in mario
-		//mario->setFire(true);
+		mario->powerUp(LEAF);
 		die();
-		return;
 	}
-	Inert* inert_obj = dynamic_cast<Inert*>(what);
-	if (inert_obj && fromDir == DOWN)
-		walkable_object = inert_obj;
-
-	// if hit from its left or right side, it
-	// has to move to the opposite direction w.r.t. the one
-	// is he currently moving
 }
-
 
 void Leaf::advance()
 {
+	if (dir == UP) 
+	{
+		if (y() == spawned_position.y() - 3 * pixmap().height() + 16)
+			moving_speed_div = 2;
+		if (y() == spawned_position.y() - 3 * pixmap().height() + 12)
+			moving_speed_div = 3;
+		if (y() == spawned_position.y() - 3 * pixmap().height() + 8)
+			moving_speed_div = 4;
+		if (y() == spawned_position.y() - 3 * pixmap().height() + 4)
+			moving_speed_div = 5;
+		if (y() == spawned_position.y() - 3 * pixmap().height()) {
+			falling = true;
+			collidable = true;
+			dir = RIGHT;
+		}
+	}
+	falling_speed = animation_counter % falling_speed_div == 0;
 
-	//todo fare lo script della foglia
+	if (falling && falling_counter < 3)
+		falling_speed_div = 1;
+
+	if (falling_counter >= 3 && falling_counter < 6)
+		moving_speed_div = 4;
+
+	if (falling_counter >= 6 && falling_counter < 9)
+		moving_speed_div = 3;
+
+	if (falling_counter >= 9 && falling_counter < 12)
+		moving_speed_div = 2;
+
+	if (falling_counter >= 12 && falling_counter < 15)
+		moving_speed_div = 1;
+
+
+	if (falling_counter >= 15 && falling_counter < 18)
+		falling_speed_div = 2;
+
+	if (falling_counter >= 18 && falling_counter < 21)
+		falling_speed_div = 3;
+
+	if (falling_counter >= 21 && falling_counter < 24)
+		falling_speed_div = 4;
+
+	if (falling_counter >= 24 && falling_counter < 27)
+		falling_speed_div = 5;
+
+	if (falling_counter >= 27 && falling_counter < 30)
+	{
+		falling_speed = -(animation_counter % falling_speed_div == 0);
+		falling_speed_div = 4;
+	}
+	if (falling_counter >= 30 && falling_counter < 36)
+	{
+		falling_speed = -(animation_counter % falling_speed_div == 0);
+		falling_speed_div = 3;
+	}
+	if (falling_counter >= 36 && falling_counter < 42)
+	{
+		falling_speed = -(animation_counter % falling_speed_div == 0);
+		falling_speed_div = 2;
+	}
+	if (falling_counter == 42)
+	{
+		dir = inverse(dir);
+		falling_counter = 0;
+	}
+
 	
+	Entity::advance();
 }

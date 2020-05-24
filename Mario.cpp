@@ -11,7 +11,10 @@
 #include "FireBall.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
-{ //sono nico
+{
+	//branch nico
+
+		
 	prev_dir = dir;
 	// set flags
 	level_name = _level_name; 
@@ -234,10 +237,10 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 void Mario::advance()
 {
 
-	if (script_move)
-		std::cout << "true\n";
+	if (moving)
+		std::cout << "moving\n";
 	else
-		std::cout << "false\n";
+		std::cout << "not_moving\n";
 
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
@@ -266,7 +269,6 @@ void Mario::advance()
 				moving = false;
 			}
 	}
-
 	if (raccoon)
 	{
 		if (prev_dir != dir)
@@ -553,12 +555,10 @@ void Mario::advance()
 				animation_div = 1;
 			}
 		}
-		
 	}
 	else if(inWater && !script_move)
 	{
 
-	
 	// update moving acceleration / deceleration counters
 	if (moving_stop_counter >= 0 && !walkable_object)
 		moving_stop_counter++;
@@ -571,7 +571,6 @@ void Mario::advance()
 		Entity::setDirection(inverse(dir));
 		dir_change_counter = -1;
 	}
-
 	else if (dir_change_counter >= 0 && dir_change_counter < 20)
 		dir_change_counter++;
 
@@ -615,8 +614,7 @@ void Mario::advance()
 			animation_div=6;
 		} 
 	}
-
-
+		
 	if (falling_start_counter >= 0)  // incremento il falling_start_counter in entity ho messo che falling_counter+=falling_speed
 		falling_start_counter++;
 
@@ -644,25 +642,24 @@ void Mario::advance()
 		}
 	}
 
+	//manage movement on the uphill and downhill
 	if (script_move)
 	{
-		//stop transition from !script to script_move
-		//bug fix start
+		//change direction instantly
 		if(dir_change_counter>0)
 		{
-			dir_change_counter = -1;
-			
+			setDirection(inverse(dir));
 		}
-		if (moving_stop_counter > 0)
+		
+		//stop moving instantly
+		if (moving_stop_counter > 0) //todo, non mi fido di questo pezzo
 		{
-			//moving_stop_counter = -1;
 			moving = false;
 		}
-		//bug fix end
-
+		//physic paramether
 		if (inWater)
 		{
-			moving_speed = 1;
+			moving_speed = animation_counter%2;
 
 			if (swimming)
 				script_move = false;
@@ -673,8 +670,6 @@ void Mario::advance()
 
 			if (jumping)
 				script_move = false;
-			/*--- da fare ---*/
-
 		}
 	}
 	
@@ -762,8 +757,8 @@ void Mario::swim()
 			brake_swim = false;
 			small_swim = true;
 		}
-		//if mario swim when he doing small swim, begin swim standard
-		else if (small_swim) //
+		//if mario swim when doing small swim, begin swim standard
+		else if (small_swim) 
 		{
 			brake_swim = false;
 			small_swim = false;
@@ -911,14 +906,16 @@ void Mario::setMoving(bool _moving)
 // @override setDirection() to avoid instant direction change
 void Mario::setDirection(Direction _dir)
 {
-	//bug fix start
-	//exception for script_move, in teoria se sono in script_move, non 
-	//bug fix end
+	// bug fix start
+	//exception for script_move, in teoria se sono in script_move
+	// bug fix end
 
 
 	if(script_move)
 	{
-		//cambiare 
+		//change direction instantly in script_move
+		dir = inverse(dir);
+		dir_change_counter = -1;
 	}
 
 	
@@ -926,9 +923,7 @@ void Mario::setDirection(Direction _dir)
 	{
 		// reset acceleration/deceleration counters
 
-
 		moving_start_counter = 0;
-		
 		moving_stop_counter = -1;
 		
 		//start the direction counter
@@ -938,8 +933,7 @@ void Mario::setDirection(Direction _dir)
 
 	if (_dir != dir && !moving)
 	{
-		//asymmetry_correction comunica all'advance che deve fare una traslazione
-		//per l'asimmetria della texture di mario raccoon
+		
 		if (raccoon)
 			prev_dir = dir;
 
@@ -949,7 +943,6 @@ void Mario::setDirection(Direction _dir)
 
 void Mario::animate()
 {
-	
 	Entity::animate();
 
 	// save current texture height (for later correction)
