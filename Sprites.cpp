@@ -64,7 +64,7 @@ static QRect Splash(352, 144, 15, 15);
 static QRect Bloober_Nanny(352, 160, 16, 16);
 static QRect Baby_Cheep(450, 66, 12, 12);
 static QRect Big_Bertha(352, 48, 24, 32);
-
+static QRect leaf(180, 123, 16, 14);
 
 Sprites* Sprites::instance()
 {
@@ -560,7 +560,9 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(moveBy(fire_ball, 2, 0, 10, 10, 0, 0));
 	if (id == "fire-ball-left-3")
 		return mario.copy(moveBy(fire_ball, 3, 0, 10, 10, 0, 0));
-
+	
+	 if (id == "leaf")
+		 return miscs.copy(leaf);
 	
 	if (id == "muncher-0")
 		return stage_tiles.copy(muncher);
