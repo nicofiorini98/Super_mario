@@ -2,6 +2,9 @@
 #include "Sounds.h"
 #include "SwitchBlock.h"
 #include "BrickBlock.h"
+//#include "Mushroom.h"
+//#include "Flower.h"
+//#include "Leaf.h"
 
 BouncingBlock::BouncingBlock() : Inert()
 {
@@ -50,4 +53,25 @@ void BouncingBlock::hit(Object* what, Direction fromDir)
 		// play box hit sound
 		Sounds::instance()->play("bump");
 	}
+}
+
+
+void BouncingBlock::spawn()
+{
+	if (content == FLOWER)
+	{
+		if (mario->isBig())
+			;   // spawn flower object
+		else
+			new Mushroom(QPoint(x(), y()), UP, true);
+	}
+	else if (content == LEAF)
+	{
+		if (mario->isBig())
+			;	// spawn leaf object
+		else
+			new Mushroom(QPoint(x(), y()), UP, true);
+	}
+	else if (content == LIFE)
+		new Mushroom(QPoint(x(), y()), UP, false);
 }

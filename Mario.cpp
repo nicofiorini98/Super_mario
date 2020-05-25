@@ -1208,6 +1208,7 @@ void Mario::animate()
 		setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 
 	}
+	//todo qua l'indentazione è sbagliata, vidi mpo
 
 	// correct y position if texture height changed
 	int cur_h = boundingRect().height();
