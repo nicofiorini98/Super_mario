@@ -44,6 +44,7 @@ static QRect wood_block(1004, 35, 16, 16);
 static QRect brick_block(1038, 18, 16, 16);
 static QRect empty_block(1208, 1, 16, 16);
 static QRect jump_block(1038, 103, 16, 16);
+static QRect secret_box(1140, 1, 16, 16);
 // "p_switch" and "switch_block" are the same object 
 // (ambiguity due to object's textures location in different files within sprites)
 static QRect switch_block(1174, 171, 16, 16); 
@@ -580,6 +581,17 @@ QPixmap Sprites::get(const std::string & id)
 		return stage_tiles.copy(mega_empty_box);
 	if (id == "mega-secret-box")
 		return stage_tiles.copy(moveBy(mega_empty_box, 1, 0,32));
+	
+	if (id == "secret-box-0")
+		return stage_tiles.copy(secret_box);
+	if (id == "secret-box-1")
+		return stage_tiles.copy(moveBy(secret_box, 1, 0));
+	if (id == "secret-box-2")
+		return stage_tiles.copy(moveBy(secret_box, 2, 0));
+	if (id == "secret-box-3")
+		return stage_tiles.copy(moveBy(secret_box, 3, 0));
+	if (id == "secret-box-inactive")
+		return stage_tiles.copy(moveBy(secret_box, 4, 0));
 
 	if (id == "brick-block-0")
 		return stage_tiles.copy(brick_block);

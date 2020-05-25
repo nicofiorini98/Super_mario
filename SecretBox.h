@@ -7,12 +7,13 @@ class SecretBox : public BouncingBlock
 	protected:
 
 		// textures
-		QPixmap texture_active;
+		QPixmap texture_active[4];
 		QPixmap texture_inactive;
+		std::string type;
 
 	public:
 
-		SecretBox(QPoint position);
+		SecretBox(QPoint position, spawnable_t _spawnable, std::string _type);
 
 		// inherited methods
 		virtual std::string name() {return "SecretBox";}

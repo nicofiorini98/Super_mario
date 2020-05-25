@@ -2,7 +2,8 @@
 #include "Entity.h"
 enum spawnable_t
 {
-	DEBUG,
+	DEBUG,  //todo togliere solo per il debug
+	EMPTY,
 	COIN,
 	MUSHROOM,
 	LEAF,

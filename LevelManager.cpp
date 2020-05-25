@@ -18,6 +18,7 @@
 #include "EndLevelText.h"
 #include "LifeUp.h"
 #include "Leaf.h"
+//#include "Collectable.h"
 
 // load all items from the given level in the given scene
 Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
@@ -43,7 +44,9 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 		for (int i = 0; i < 3; i++)
 			new FixedBlock(QPoint(8*16 + (32*i), terrain_level - 32),"ice");
-		new Leaf(QPoint(6 * 16, terrain_level - 80));
+		
+		new Leaf(QPoint(6 * 16, terrain_level - 80));//todo foglia di debug
+		
 		
 		// ice_block
 		new FixedBlock(QPoint(10*16, terrain_level-64),  "ice");
@@ -68,6 +71,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		//new Firework(QPoint(0,1*16), "FLOWER");
 		//new GoalRoulette(QPoint(4*16,23*16));
 		new GoalRoulette(QPoint(88*16, 337));
+		
+		new SecretBox(QPoint(6 * 16, terrain_level - 80), FLOWER,"normal");
 		
 		// Mario
 		//mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
@@ -276,7 +281,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 			   new Coin(QPoint((5+2*col)*16, (3+2*raw)*16));
 
 
-	   new SecretBox(QPoint(5*16, 20*16));
+	   new SecretBox(QPoint(5*16, 20*16),LIFE,"mega");
 
     }
 	else

@@ -2,6 +2,9 @@
 
 #include "Inert.h"
 #include "Mario.h"
+#include "Mushroom.h"
+#include "Flower.h"
+//#include "Collectable.h"
 
 class BouncingBlock : public Inert
 {
@@ -9,6 +12,8 @@ class BouncingBlock : public Inert
 
 		// attributes
 		Direction dir;
+		spawnable_t content;
+	
 		bool active;
 		bool moving;
 		Mario* mario;
@@ -18,6 +23,9 @@ class BouncingBlock : public Inert
 		// counters
 		int hit_counter;
 		int animation_counter;
+
+		//utility method
+		virtual void spawn();
 
 	public:
 

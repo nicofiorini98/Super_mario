@@ -16,6 +16,7 @@ BouncingBlock::BouncingBlock() : Inert()
 	moving = false;
 	moving_speed = 1;
 	hit_counter = -1;
+	//content = FLOWER;
 }
 
 void BouncingBlock::advance()
@@ -64,7 +65,7 @@ void BouncingBlock::spawn()
 			;   // spawn flower object
 		else
 			new Mushroom(QPoint(x(), y()), UP, true);
-	}
+	}	
 	else if (content == LEAF)
 	{
 		if (mario->isBig())
