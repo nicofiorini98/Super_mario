@@ -9,6 +9,7 @@ SecretBox::SecretBox(QPoint position,spawnable_t _spawnable,std::string _type) :
 	//todo vedere se si devono inizializza i counter
 	// textures
 	type = _type;
+	animation_counter = 0;
 
 	if(type== "normal")
 	{
@@ -45,7 +46,9 @@ void SecretBox::animate()
 	}
 	else if (type == "mega")
 	{
-		if (!active)
+		if (active)
+			setPixmap(texture_active[0]);
+		else
 			setPixmap(texture_inactive);
 	}
 }
