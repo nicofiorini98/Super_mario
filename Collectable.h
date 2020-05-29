@@ -18,6 +18,7 @@ class Collectable : public Entity
 		
 		QPoint spawned_position;	// position where collectable spawned
 		spawnable_t type;			//type of item that spawned
+	
 	public:
 
 		Collectable(QPoint position);

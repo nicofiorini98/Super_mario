@@ -10,9 +10,10 @@ class JumpBlock : public BouncingBlock
 
 	public:
 
-		JumpBlock(QPoint position);
+		JumpBlock(QPoint position,spawnable_t _content);
 
 		virtual std::string name() { return "JumpBlock"; }
+		virtual void hit(Object* what, Direction fromDir);
 		virtual void animate();
 		virtual void advance();
 

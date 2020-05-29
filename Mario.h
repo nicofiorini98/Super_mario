@@ -133,7 +133,6 @@ class Mario : public Entity
 
 		Mario(QPoint position, std::string _level_name);
 
-
 		// getters and setters
 		bool isBig() { return big; }
 		bool isRaccoon() { return raccoon; }

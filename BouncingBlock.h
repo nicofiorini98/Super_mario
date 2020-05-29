@@ -3,8 +3,7 @@
 #include "Inert.h"
 #include "Mario.h"
 #include "Mushroom.h"
-#include "Flower.h"
-//#include "Collectable.h"
+//#include "Flower.h"/#include "Collectable.h"
 
 class BouncingBlock : public Inert
 {
@@ -25,13 +24,14 @@ class BouncingBlock : public Inert
 		int animation_counter;
 
 		//utility method
-		virtual void spawn();
+		
 
 	public:
 
 		BouncingBlock();
 
 		bool isActive() { return active; }
+		virtual void spawn(Direction _dir);
 	
 		// pure virtual methods to be implemented
 		virtual std::string name() = 0;

@@ -9,17 +9,17 @@ class SecretBox : public BouncingBlock
 		// textures
 		QPixmap texture_active[4];
 		QPixmap texture_inactive;
-		std::string type;
+		Direction hit_from;
 
 	public:
 
-		SecretBox(QPoint position, spawnable_t _spawnable, std::string _type);
-
+		SecretBox(QPoint position, spawnable_t _spawnable);
 		// inherited methods
+		//virtual void spawn(Direction _dir){}
 		virtual std::string name() {return "SecretBox";}
 		virtual void animate();
 		virtual void hit(Object *what, Direction fromDir);
 
-		// @ovveride
+		// @override
 		virtual void advance();
 };

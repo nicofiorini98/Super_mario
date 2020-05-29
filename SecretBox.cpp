@@ -1,29 +1,20 @@
 #include "SecretBox.h"
 #include "Sprites.h"
 #include "Mario.h"
-#include "Mushroom.h"
 #include "Sounds.h"
+#include <iostream>
+#include "Game.h"
 
-SecretBox::SecretBox(QPoint position,spawnable_t _spawnable,std::string _type) : BouncingBlock()
+SecretBox::SecretBox(QPoint position,spawnable_t _spawnable) : BouncingBlock()
 {
-	//todo vedere se si devono inizializza i counter
+	//todo vedere se c'è un animazione nella mega secret box
 	// textures
-	type = _type;
 	animation_counter = 0;
+	content = _spawnable;
 
-	if(type== "normal")
-	{
-		texture_active[0] = Sprites::instance()->get("secret-box-0");
-		texture_active[1] = Sprites::instance()->get("secret-box-1");
-		texture_active[2] = Sprites::instance()->get("secret-box-2");
-		texture_active[3] = Sprites::instance()->get("secret-box-3");
-		texture_inactive = Sprites::instance()->get("secret-box-inactive");
-	}
-	else if(type== "mega")
-	{
-		texture_active[0] = Sprites::instance()->get("mega-secret-box");
-		texture_inactive = Sprites::instance()->get("mega-empty-box");
-	}
+	texture_active[0] = Sprites::instance()->get("mega-secret-box");
+	texture_inactive = Sprites::instance()->get("mega-empty-box");
+	
 	
 	// make background color (255, 178, 127) transparent
 	texture_active[0].setMask(texture_active[0].createMaskFromColor(QColor(255, 178, 127)));
@@ -37,20 +28,10 @@ SecretBox::SecretBox(QPoint position,spawnable_t _spawnable,std::string _type) :
 
 void SecretBox::animate()
 {
-	if (type == "normal")
-	{
-		if (active)
-			setPixmap(texture_active[(animation_counter++ / 20) % 4]);
-		else
-			setPixmap(texture_inactive);
-	}
-	else if (type == "mega")
-	{
-		if (active)
-			setPixmap(texture_active[0]);
-		else
-			setPixmap(texture_inactive);
-	}
+	if (active)
+		setPixmap(texture_active[0]);
+	else
+		setPixmap(texture_inactive);
 }
 	
 	
@@ -74,33 +55,41 @@ void SecretBox::advance()
 		else
 		{
 			hit_counter = -1;
-			//spawn();  //spawn of mushroom
+			//new Mushroom(QPoint(x(), y()), UP);
+			BouncingBlock::spawn(UP);  //spawn of mushroom
 		}
-
 		BouncingBlock::advance();
 	}
 }
 
-void SecretBox::hit(Object *what, Direction fromDir)
+void SecretBox::hit(Object* what, Direction fromDir)
 {
-	// do nothing if not active
-	if(!active)
-		return;
-
-	Mario* mario = dynamic_cast<Mario*>(what);
-	if(mario && fromDir == DOWN)
-	{
-		// start hit
-		hit_counter = 0;
-
-		moving = true;
-
-		// disable box
-		active = false;
-		
-		BouncingBlock::spawn();
-
-		// play box hit sound
-		Sounds::instance()->play("bump");
-	}
+	BouncingBlock::hit(what, fromDir);
 }
+
+//void SecretBox::hit(Object *what, Direction fromDir)
+//{
+//	
+//	// do nothing if not active
+//	if(!active)
+//		return;
+//
+//	mario = dynamic_cast<Mario*>(what);
+//	if(mario && fromDir == DOWN)
+//	{
+//		// start hit
+//		hit_counter = 0;
+//
+//		moving = true;
+//
+//		hit_from = fromDir;
+//
+//		// disable box
+//		active = false;
+//		
+//		//BouncingBlock::spawn();
+//
+//		// play box hit sound
+//		Sounds::instance()->play("bump");
+//	}
+//}
