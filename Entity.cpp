@@ -12,6 +12,7 @@
 #include "FireBall.h"
 #include "BlooberBaby.h"
 #include "BlooberNanny.h"
+#include "Leaf.h"
 
 Entity::Entity() : Object()
 {
@@ -226,6 +227,11 @@ void Entity::solveCollisions()
 			if (!obj->isCollidable())
 				continue;
 
+			//ignore collision between Leaf and Inert
+			if ((dynamic_cast<Leaf*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<Inert*>(this) && dynamic_cast<Leaf*>(obj)))
+				continue;
+			
 			//ignore collisions between Collectablses and Enemies
 			if ((dynamic_cast<Collectable*>(this) && dynamic_cast<Enemy*>(obj)) ||
 				(dynamic_cast<Enemy*>(this) && dynamic_cast<Collectable*>(obj)))

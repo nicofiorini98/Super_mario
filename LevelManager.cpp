@@ -75,8 +75,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new GoalRoulette(QPoint(88*16, 337));
 
 		
-		new SecretBox(QPoint(6 * 16, terrain_level - 80), FLOWER);
-		new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
+		new SecretBox(QPoint(6 * 16, terrain_level - 80), LEAF);
+		//new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
 		
 		//todo, non lo istanzia
 		//new JumpBlock(QPoint(2 * 16, terrain_level - 80), MUSHROOM);

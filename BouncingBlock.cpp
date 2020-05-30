@@ -72,7 +72,6 @@ void BouncingBlock::spawn(Direction _dir)
 		//std::cout << "che ci sta che non va";
 		if (mario->isBig())
 		{
-			
 			new Flower(QPoint(x(), y()), _dir);   // spawn flower object
 		}
 		else

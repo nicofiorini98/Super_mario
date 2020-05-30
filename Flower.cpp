@@ -31,8 +31,7 @@ void Flower::hit(Object* what, Direction fromDir)
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
 	{
-		//todo aggiungere il powerUP
-		//mario->powerUp(FLOWER);
+		mario->powerUp(FLOWER);
 		die();
 		return;
 	}

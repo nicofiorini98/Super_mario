@@ -484,6 +484,8 @@ QPixmap Sprites::get(const std::string & id)
 		return miscs.copy(mushroom);
 	if (id == "mushroom-green")
 		return miscs.copy(moveRight(mushroom, 130));
+	if (id == "flower")
+		return miscs.copy(QRect(309, 121, 16,16));
 	
 	//enemies
 	if (id == "cheep-0")
