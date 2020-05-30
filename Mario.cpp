@@ -1208,6 +1208,7 @@ void Mario::animate()
 		setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 
 	}
+	//todo qua l'indentazione è sbagliata, vidi mpo
 
 	// correct y position if texture height changed
 	int cur_h = boundingRect().height();
@@ -1370,13 +1371,13 @@ void Mario::powerUp(spawnable_t _power) //todo da debuggare
 	transformation_counter = 0;
 
 	//only for debug
-	if(!_power)
+	if(!_power) //!power is DEBUG enum, todo da togliere
 	{
 		if (!big)
 			big = true;
 		else if (big && !fire && !raccoon)
 			fire = true;
-		else if (fire) //non mi ritrasfroma in piccolo, boh perchè
+		else if (fire) 
 		{
 			fire = false;
 			raccoon = true;

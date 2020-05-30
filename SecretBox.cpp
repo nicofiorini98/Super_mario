@@ -1,21 +1,26 @@
 #include "SecretBox.h"
 #include "Sprites.h"
 #include "Mario.h"
-#include "Mushroom.h"
 #include "Sounds.h"
+#include <iostream>
+#include "Game.h"
 
-SecretBox::SecretBox(QPoint position) : BouncingBlock()
+SecretBox::SecretBox(QPoint position,spawnable_t _spawnable) : BouncingBlock()
 {
-
+	//todo vedere se c'è un animazione nella mega secret box
 	// textures
-	texture_active    = Sprites::instance()->get("mega-secret-box");
-	texture_inactive  = Sprites::instance()->get("mega-empty-box");
+	animation_counter = 0;
+	content = _spawnable;
 
+	texture_active[0] = Sprites::instance()->get("mega-secret-box");
+	texture_inactive = Sprites::instance()->get("mega-empty-box");
+	
+	
 	// make background color (255, 178, 127) transparent
-	texture_active.setMask(texture_active.createMaskFromColor(QColor(255, 178, 127)));
+	texture_active[0].setMask(texture_active[0].createMaskFromColor(QColor(255, 178, 127)));
 	texture_inactive.setMask(texture_inactive.createMaskFromColor(QColor(255, 178, 127)));
 
-	setPixmap(texture_active);
+	setPixmap(texture_active[0]);
 	setPos(position);
 
 	setZValue(3);
@@ -23,17 +28,19 @@ SecretBox::SecretBox(QPoint position) : BouncingBlock()
 
 void SecretBox::animate()
 {
-
-	if (!active)
+	if (active)
+		setPixmap(texture_active[0]);
+	else
 		setPixmap(texture_inactive);
 }
+	
+	
 
 // @override
 void SecretBox::advance()
 {
 	if(hit_counter >= 0)
 	{
-		
 		// raising phase
 		if (hit_counter < 12)
 			hit_counter++;
@@ -46,30 +53,43 @@ void SecretBox::advance()
 			hit_counter++;
 		}
 		else
+		{
 			hit_counter = -1;
-
+			//new Mushroom(QPoint(x(), y()), UP);
+			BouncingBlock::spawn(UP);  //spawn of mushroom
+		}
 		BouncingBlock::advance();
 	}
 }
 
-void SecretBox::hit(Object *what, Direction fromDir)
+void SecretBox::hit(Object* what, Direction fromDir)
 {
-	// do nothing if not active
-	if(!active)
-		return;
-
-	Mario* mario = dynamic_cast<Mario*>(what);
-	if(mario && fromDir == DOWN)
-	{
-		// start hit
-		hit_counter = 0;
-
-		moving = true;
-
-		// disable box
-		active = false;
-
-		// play box hit sound
-		Sounds::instance()->play("bump");
-	}
+	BouncingBlock::hit(what, fromDir);
 }
+
+//void SecretBox::hit(Object *what, Direction fromDir)
+//{
+//	
+//	// do nothing if not active
+//	if(!active)
+//		return;
+//
+//	mario = dynamic_cast<Mario*>(what);
+//	if(mario && fromDir == DOWN)
+//	{
+//		// start hit
+//		hit_counter = 0;
+//
+//		moving = true;
+//
+//		hit_from = fromDir;
+//
+//		// disable box
+//		active = false;
+//		
+//		//BouncingBlock::spawn();
+//
+//		// play box hit sound
+//		Sounds::instance()->play("bump");
+//	}
+//}

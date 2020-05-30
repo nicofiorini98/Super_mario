@@ -2,7 +2,8 @@
 #include "Entity.h"
 enum spawnable_t
 {
-	DEBUG,
+	DEBUG,  //todo togliere solo per il debug
+	EMPTY,
 	COIN,
 	MUSHROOM,
 	LEAF,
@@ -17,6 +18,7 @@ class Collectable : public Entity
 		
 		QPoint spawned_position;	// position where collectable spawned
 		spawnable_t type;			//type of item that spawned
+	
 	public:
 
 		Collectable(QPoint position);
