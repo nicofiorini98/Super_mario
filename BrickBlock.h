@@ -1,20 +1,20 @@
 #pragma once
-
+//#include "Koopa_Troopa.h"
 #include "BouncingBlock.h"
-
+#include "BrokenBlock.h"
 class BrickBlock : public BouncingBlock
 {
-	protected:
+protected:
+	std::string type;
+	QPixmap texture_active[4];
+	QPixmap texture_inactive[2];
+	/*BrokenBlock* fragments[2][2];*/
+public:
 
-		QPixmap texture_active[4];
-		QPixmap texture_inactive[2];
-		
-	public:
+	BrickBlock(QPoint position, std::string _type);
 
-		BrickBlock(QPoint position);
-
-		virtual std::string name() { return "BrickBlock"; }
-		virtual void advance();
-		virtual void animate();
-		virtual void hit(Object* what, Direction fromDir);
+	virtual std::string name() { return "BrickBlock"; }
+	virtual void advance();
+	virtual void animate();
+	virtual void hit(Object* what, Direction fromDir);
 };

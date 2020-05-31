@@ -1,29 +1,39 @@
 #include "BrickBlock.h"
 #include "Sprites.h"
+#include <iostream>
 
-
-BrickBlock::BrickBlock(QPoint position) : BouncingBlock()
+BrickBlock::BrickBlock(QPoint position, std::string _type) : BouncingBlock()
 {
-	
+	if (_type != "ice" && _type != "")
+		std::cerr << "Type not valid\n";
+	type = _type;
 	animation_counter = 0;
 
 	// textures
-	texture_active[0]   = Sprites::instance()->get("brick-block-0");
-	texture_active[1]   = Sprites::instance()->get("brick-block-1");
-	texture_active[2]   = Sprites::instance()->get("brick-block-2");
-	texture_active[3]   = Sprites::instance()->get("brick-block-3");
+	if (_type == "") {
+		texture_active[0] = Sprites::instance()->get("brick-block-0");
+		texture_active[1] = Sprites::instance()->get("brick-block-1");
+		texture_active[2] = Sprites::instance()->get("brick-block-2");
+		texture_active[3] = Sprites::instance()->get("brick-block-3");
+	}
+	else if (_type == "ice") {
+		texture_active[0] = Sprites::instance()->get("ice-brick-block-0");
+		texture_active[1] = Sprites::instance()->get("ice-brick-block-1");
+		texture_active[2] = Sprites::instance()->get("ice-brick-block-2");
+		texture_active[3] = Sprites::instance()->get("ice-brick-block-3");
+	}
 	texture_inactive[0] = Sprites::instance()->get("empty-block");
 	texture_inactive[1] = Sprites::instance()->get("red-empty-block");
-	
+
 
 	setPixmap(texture_active[0]);
 	setPos(position);
 	setZValue(3);
 }
- 
+
 void BrickBlock::advance()
 {
-	
+
 	if (hit_counter >= 0)
 	{
 		// raising phase
@@ -36,7 +46,7 @@ void BrickBlock::advance()
 		else if (hit_counter >= 10 && hit_counter < 14)
 		{
 			if (hit_counter == 10)
-				dir = DOWN;	
+				dir = DOWN;
 			moving_speed = hit_counter % 2 + 2;   // 2.5 speed
 			hit_counter++;
 		}
@@ -46,7 +56,7 @@ void BrickBlock::advance()
 			moving = false;
 		}
 		BouncingBlock::advance();
-	}	
+	}
 }
 
 void BrickBlock::animate()
@@ -65,5 +75,16 @@ void BrickBlock::animate()
 
 void BrickBlock::hit(Object* what, Direction fromDir)
 {
-	BouncingBlock::hit(what, fromDir);
+	if (type == "")
+		BouncingBlock::hit(what, fromDir);
+	//farlo quando ho il koopa_troopa
+	/*else if (type == "ice" && (dynamic_cast<Koopa_Troopa*>(what) && dynamic_cast<Koopa_Troopa*>(what)->isShellMoving())) {
+		collidable = false;
+		setVisible(false);
+		new BrokenBlock(pos(), LEFT, true);
+		new BrokenBlock(pos() + QPointF(0, 9), LEFT, false);
+		new BrokenBlock(pos() + QPointF(8, 0), RIGHT, true);
+		new BrokenBlock(pos() + QPointF(8, 9), RIGHT, false);
+
+	}*/
 }
