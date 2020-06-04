@@ -374,6 +374,10 @@ void Game::advance()
 	// if mario is dead, game over
 	if (mario->isDead() && cur_state != CHANGE_LEVEL)
 		gameover();
+
+	// todo update mario power
+
+	//todo update mario score
 	
 
 	// tell all game objects to animate and advance in the scene

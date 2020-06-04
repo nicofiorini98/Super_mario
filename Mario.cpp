@@ -242,6 +242,9 @@ void Mario::advance()
 	else
 		std::cout << "not_moving\n";*/
 
+	//std::cout << speedPower()<<"\n";
+	//std::cout << moving_start_counter<<"\n";
+
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
 	{
@@ -452,13 +455,19 @@ void Mario::advance()
 	//advance standard out of the water
 	if (outOfWater && !flying && !script_move && !running_out_of_view)
 	{
-		// update moving acceleration / deceleration counters
-		if (moving_stop_counter >= 0)  //bug prone for super running, check this part
-			moving_stop_counter++;
-		else if (moving_start_counter < 25)
-			moving_start_counter++;
-		else if (moving_start_counter >= 25 && running)  
-			moving_start_counter++;
+
+		//todo  da ripensare questo pezzo
+		if (moving)
+		{
+			// update moving acceleration / deceleration counters
+			if (moving_stop_counter >= 0)  //bug prone for super running, check this part
+				moving_stop_counter++;
+			else if (moving_start_counter < 25)
+				moving_start_counter++;
+			else if (moving_start_counter >= 25 && running)
+				moving_start_counter++;
+		}
+		
 
 		//update direction change counter
 		if (dir_change_counter >= 0 && !walkable_object) //change direction instantly in the air
@@ -1427,6 +1436,30 @@ bool Mario::isUnderPipe(std::string level_name)
 		return true;
 	else 
 		return false;
+}
+
+std::string Mario::speedPower() const
+{
+	if(outOfWater)
+	{
+		if (moving_start_counter > 25 && moving_start_counter < 40)
+			return "1";
+		else if (moving_start_counter >= 40 && moving_start_counter < 55)
+			return "2";
+		else if (moving_start_counter >= 55 && moving_start_counter < 70)
+			return "3";
+		else if (moving_start_counter >= 70 && moving_start_counter < 85)
+			return "4";
+		else if (moving_start_counter >= 85 && moving_start_counter < 100)
+			return "5";
+		else if (moving_start_counter >= 100 && moving_start_counter < 115)
+			return "6";
+		else if (moving_start_counter >= 115 && moving_start_counter < 130)
+			return "7";
+		else if (moving_start_counter >= 130 )
+			return "8";
+	}
+	return ""; //not running, don't update power meter
 }
 
 QPainterPath Mario::shape() const

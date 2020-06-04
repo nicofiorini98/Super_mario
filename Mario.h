@@ -133,6 +133,7 @@ class Mario : public Entity
 
 		Mario(QPoint position, std::string _level_name);
 
+
 		// getters and setters
 		bool isBig() { return big; }
 		bool isRaccoon() { return raccoon; }
@@ -141,6 +142,7 @@ class Mario : public Entity
 		bool isEnteringPipe() { return entering_pipe; }
 		Direction getDirection() { return dir;}
 		std::string ItemTaken() const { return item_taken; }
+		std::string speedPower() const;
 
 		bool isInWater() { return inWater; }
 		bool isRaccoonAttack() { return raccoon_attack; }

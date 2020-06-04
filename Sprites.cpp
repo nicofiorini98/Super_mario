@@ -421,6 +421,14 @@ QPixmap Sprites::get(const std::string & id)
 		return hud.copy(moveRight(number, 80));
 	if (id == "9")
 		return hud.copy(moveRight(number, 90));
+	if (id == "arrow")
+		return hud.copy(QRect(3, 33, 8, 7));
+	if (id == "P")
+		return hud.copy(QRect(12, 33, 15, 7));
+	if (id == "arrow-transparent")
+		return hud.copy(QRect(240,3, 8, 7));
+	if (id == "P-transparent")
+		return hud.copy(QRect(240,3, 15, 7));
 
 	if (id == "pipe1-NW")
 		return stage_tiles.copy(moveBy(pipe, 0, 0));

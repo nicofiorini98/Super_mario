@@ -32,7 +32,7 @@ Sounds::Sounds()
 	sounds["vine"]		   = new QSound(":/sounds/vine.wav");
 	sounds["kick"]		   = new QSound(":/sounds/kick.wav");
 	sounds["power-meter"]		   = new QSound(":/sounds/power_meter.wav");
-	sounds["raccoon-transform"]    = new QSound(":/sounds/raccoon-transfrom.wav");
+	sounds["raccoon-transform"]    = new QSound(":/sounds/raccoon_transfrom.wav");
 }
 
 void Sounds::play(const std::string & id)
