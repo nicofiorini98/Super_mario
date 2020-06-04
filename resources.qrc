@@ -35,5 +35,8 @@
     <file>sounds/tail.wav</file>
 	<file>sounds/timer-reset.wav</file>
     <file>sounds/vine.wav</file>
+  <file>sounds/kick.wav</file>
+  <file>sounds/power_meter.wav</file>
+  <file>sounds/raccoon_transform.wav</file>
 </qresource>
 </RCC>

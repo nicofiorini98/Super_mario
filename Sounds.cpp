@@ -8,7 +8,6 @@ Sounds* Sounds::instance()
 
 Sounds::Sounds()
 {
-
 	sounds["1up"]		   = new QSound(":/sounds/1up.wav");
 	sounds["break"]		   = new QSound(":/sounds/break.wav");
 	sounds["bump"]		   = new QSound(":/sounds/bump.wav");
@@ -31,6 +30,9 @@ Sounds::Sounds()
 	sounds["tail"]		   = new QSound(":/sounds/tail.wav");
 	sounds["timer-reset"]  = new QSound(":/sounds/timer-reset.wav");
 	sounds["vine"]		   = new QSound(":/sounds/vine.wav");
+	sounds["kick"]		   = new QSound(":/sounds/kick.wav");
+	sounds["power-meter"]		   = new QSound(":/sounds/power_meter.wav");
+	sounds["raccoon-transform"]    = new QSound(":/sounds/raccoon-transfrom.wav");
 }
 
 void Sounds::play(const std::string & id)

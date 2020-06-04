@@ -237,10 +237,10 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 void Mario::advance()
 {
 
-	if (moving)
+	/*if (moving)
 		std::cout << "moving\n";
 	else
-		std::cout << "not_moving\n";
+		std::cout << "not_moving\n";*/
 
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
@@ -580,17 +580,14 @@ void Mario::advance()
 		dir_change_counter = -1;
 	}
 
-	//todo forse l'accellerazione è troppo elevata, migliorare
-
-
 	//constant speed for the walking in backdrop
 	if (walkable_object)
 	{
 		moving_start_counter = 0;
 		moving_speed = animation_counter % 2; 
 	}
-		
-	//accelleration horizontal moving in water when mario isn't walking in the backdrop
+	// horizontal acceleration in water, when mario isn't walking in the backdrop
+
 	if (moving_start_counter>=0 && moving_stop_counter<0 && !walkable_object)
 	{
 		if (moving_start_counter <= 12)											//  0.5 speed
@@ -598,19 +595,19 @@ void Mario::advance()
 			moving_speed = moving_start_counter % 2;		
 			animation_div = 12;
 		}
-		if (moving_start_counter > 12 && moving_start_counter <= 25)			//1 speed
+		if (moving_start_counter > 12 && moving_start_counter <= 25)			//0.75 speed
 		{
-			moving_speed  = 1;							   
+			moving_speed = moving_start_counter % 4 != 0;
 			animation_div = 10;  
 		}
-		if (moving_start_counter > 25 && moving_start_counter<=50)				//1.5 speed
+		if (moving_start_counter > 25 && moving_start_counter<=50)				//1 speed
 		{
-			moving_speed = 1 + moving_start_counter % 2;                               
+			moving_speed = 1;                               
 			animation_div = 8;
 		}
 		if (moving_start_counter > 50)											//2   speed									
 		{
-			moving_speed = 2;
+			moving_speed = 1 + moving_start_counter % 2;
 			animation_div=6;
 		} 
 	}
@@ -752,7 +749,7 @@ void Mario::swim()
 		}
 
 		//if mario swim when slow down the swimming, mario can start small swim
-		if(brake_swim) //todo prima ci stava else if
+		if(brake_swim) 
 		{
 			brake_swim = false;
 			small_swim = true;
@@ -779,7 +776,6 @@ void Mario::swim()
 		Sounds::instance()->play("jump"); //todo mettere suono swim
 }
 
-
 void Mario::startSwimming()
 {
 	if (falling)
@@ -803,7 +799,6 @@ void Mario::startSwimming()
 		else
 			swim_rise_duration = 4;
 	}
-	//else if (small_swim || brake_swim)
 	else
 		swim_rise_duration = 16;
 }
@@ -835,7 +830,6 @@ void Mario::fly()
 	if (flying)
 		Sounds::instance()->play("jump");//todo mettere suono del volo
 }
-
 
 void Mario::startFlying()
 {
@@ -1431,7 +1425,8 @@ bool Mario::isUnderPipe(std::string level_name)
 	if  ((level_name == "World 6-9-3" && pos().x() >= 13*16 +4  && (pos().x() + 16) <= 15*16 -4)
 	   ||(level_name == "World 6-9-2" && pos().x() >= 107*16  && (pos().x() + 16) <= 109*16 ))  // rivedere questa riga
 		return true;
-	else return false;
+	else 
+		return false;
 }
 
 QPainterPath Mario::shape() const
