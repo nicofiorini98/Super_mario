@@ -248,7 +248,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   for(int i = 0; i <= 2 ; i++)
 		   new FixedBlock(QPoint((97+i)*16, 6*16), "wood");
 	   
-	   new BrickBlock(QPoint(82*16, 5*16));
+	   //new BrickBlock(QPoint(82*16, 5*16));
 	   
 	   new HiddenBlock(QPoint(80 * 16, 7 * 16));
 

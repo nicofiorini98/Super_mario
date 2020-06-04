@@ -9,7 +9,7 @@ class Hud : public QGraphicsView
 	private:
 
 		static Hud* uniqueInstance;	// Singleton design pattern
-		Hud(QWidget* parent = 0);	// Singleton design pattern
+		Hud(QWidget* parent = nullptr);	// Singleton design pattern
 
 
 		QGraphicsScene* scene;            // the scene used to render the hud 
@@ -18,7 +18,7 @@ class Hud : public QGraphicsView
 
 	public:
 		// singleton unique instance getter
-		static Hud* instance(QWidget* parent = 0);
+		static Hud* instance(QWidget* parent = nullptr);
 
 		// getters
 		QGraphicsScene* getScene()  { return scene; }
