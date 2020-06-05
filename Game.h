@@ -43,7 +43,7 @@ class Game : public QGraphicsView
 		// flags
 		bool hurry_up;                   // is game time under 100 seconds?
 		bool key_up_pressed;             // is key up pressed?
-	
+		
 
 		int clear_level_counter;         // counts the number of frames since level has been cleared
 

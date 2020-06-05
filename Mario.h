@@ -106,7 +106,11 @@ class Mario : public Entity
 		bool running_out_of_view;
 		// counters
 		int script_move_counter;
+
+		int speed;
+		int prev_speed;
 		int moving_start_counter;			// counts the number of frames since moving started
+
 		int moving_stop_counter;			// counts the number of frames since moving stopped
 		int dir_change_counter;				// counts the number of frames since direction changed
 		int transformation_counter;			// counts the number of frames since transformation started
@@ -141,8 +145,9 @@ class Mario : public Entity
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
 		Direction getDirection() { return dir;}
+		int getSpeed() const;
 		std::string ItemTaken() const { return item_taken; }
-		std::string speedPower() const;
+		std::string speedPower();
 
 		bool isInWater() { return inWater; }
 		bool isRaccoonAttack() { return raccoon_attack; }

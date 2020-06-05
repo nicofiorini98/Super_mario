@@ -376,6 +376,9 @@ void Game::advance()
 		gameover();
 
 	// todo update mario power
+	//turn on the arrow
+	if(mario->speedPower() != "notchange")
+		Hud::instance()->updatePanel("PowerMeter", mario->speedPower());
 
 	//todo update mario score
 	
