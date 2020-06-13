@@ -40,7 +40,8 @@ Hud::Hud(QWidget* parent) : QGraphicsView(parent)
 
 	// setup game timer
 	connect(Game::instance()->gameTime(), &QTimer::timeout, this, [this] {(updatePanel("GameTime")); });
-
+	//connect(Game::instance()->gameTime(), &QTimer::timeout, this, [this] {(updatePanel("PowerMeter","decrease")); });
+	
 }
 
 // rename properly this function

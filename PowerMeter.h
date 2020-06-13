@@ -1,11 +1,13 @@
 #pragma once
 
 #include "HudSubPanel.h"
+#include <QTimer>
 
 
 class PowerMeter : public HudSubPanel
 {
-
+	//Q_OBJECT
+	
 	private:
 		int speed;
 		virtual void doUpdate(const std::string& update_info);
@@ -17,4 +19,5 @@ class PowerMeter : public HudSubPanel
 		PowerMeter();
 
 		virtual void reset();
+	
 };

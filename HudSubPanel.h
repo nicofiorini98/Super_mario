@@ -5,6 +5,8 @@
 
 class HudSubPanel : public QGraphicsItemGroup
 {
+
+	//Q_OBJECT
 	
 	private:
 

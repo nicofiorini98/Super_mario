@@ -12,8 +12,8 @@
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
-	speed = 0;
-	prev_speed = 0;
+	speed = -1;
+	prev_speed = -1;
 		
 	prev_dir = dir;
 	// set flags
@@ -236,13 +236,16 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 // @override advance() for to add vertical/horizontal acceleration
 void Mario::advance()
 {
+	//std::string prova = "0";
 
-	
-
-	if (super_running)
+	//int porco = std::stoi(prova);
+	//std::cout << porco << "\n";
+	/*if (super_running)
 		std::cout << "moving\n";
 	else
-		std::cout << "not_moving\n";
+		std::cout << "not_moving\n";*/
+
+	std::cout << "moving_start_counter"<<moving_start_counter << "\n";
 
 	//std::cout << speedPower()<<"\n";
 	//std::cout << moving_start_counter<<"\n";
@@ -1442,42 +1445,51 @@ bool Mario::isUnderPipe(std::string level_name)
 		return false;
 }
 
-int Mario::getSpeed() const
+void Mario::Speed() 
 {
 	if (outOfWater)
 	{
-		if (moving_start_counter > 25 && moving_start_counter < 40)
-			return 1;
-		else if (moving_start_counter >= 40 && moving_start_counter < 55)
-			return 2;
-		else if (moving_start_counter >= 55 && moving_start_counter < 70)
-			return 3;
-		else if (moving_start_counter >= 70 && moving_start_counter < 85)
-			return 4;
-		else if (moving_start_counter >= 85 && moving_start_counter < 100)
-			return 5;
-		else if (moving_start_counter >= 100 && moving_start_counter < 115)
-			return 6;
-		else if (moving_start_counter >= 115 && moving_start_counter < 130)
-			return 6;
-		else if (moving_start_counter >= 130)
-			return 7;
-	}
-	return 0; //not running, don't update power meter
+		//todo da controllare questa condizione
+		if (moving_stop_counter < 0 && moving)
+		{
+			if (moving_start_counter > 25 && moving_start_counter < 40)
+				speed = 0;
+			if (moving_start_counter >= 40 && moving_start_counter < 55)
+				speed = 1;
+			if (moving_start_counter >= 55 && moving_start_counter < 70)
+				speed = 2;
+			if (moving_start_counter >= 70 && moving_start_counter < 85)
+				speed = 3;
+			if (moving_start_counter >= 85 && moving_start_counter < 100)
+				speed = 4;
+			if (moving_start_counter >= 100 && moving_start_counter < 130)
+				speed = 5;
+			/*if (moving_start_counter >= 115 && moving_start_counter < 130)
+				return 5;*/
+			if (moving_start_counter >= 130)
+				speed = 6;
+		}
+	} //not running, don't update power meter
+	else
+		speed = -1;
+
 }
 
-std::string Mario::speedPower() 
+std::string Mario::speedPower()
 {
+	
 	prev_speed = speed;
 
-	speed = getSpeed();
-	if (speed != prev_speed)
-	{
-		return std::to_string(speed);
-	}
-	else
-		return "notchange";
+	//calculate current speed
+	Speed();
+
+	//std::cout << getSpeed() << "\n";
 	
+
+	if (speed != prev_speed)
+		return std::to_string(speed);
+	else 
+		return "0";
 }
 
 QPainterPath Mario::shape() const

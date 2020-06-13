@@ -12,6 +12,7 @@
 #include "SwitchBlock.h"
 #include "EndLevelText.h"
 #include "Card.h"
+#include <iostream>
 
 // Singleton design pattern
 Game* Game::uniqueInstance = nullptr;
@@ -377,8 +378,11 @@ void Game::advance()
 
 	// todo update mario power
 	//turn on the arrow
-	if(mario->speedPower() != "notchange")
+	std::cout << mario->speedPower() << "\n";
+	
+	//(mario->speedPower() != "dio")
 		Hud::instance()->updatePanel("PowerMeter", mario->speedPower());
+	
 
 	//todo update mario score
 	

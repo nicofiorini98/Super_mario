@@ -3,6 +3,8 @@
 
 HudSubPanel::HudSubPanel()
 {
+	
+	
 	Hud::instance()->getScene()->addItem(this);
 	setZValue(2);
 }

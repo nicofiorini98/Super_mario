@@ -145,7 +145,7 @@ class Mario : public Entity
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
 		Direction getDirection() { return dir;}
-		int getSpeed() const;
+		void Speed();
 		std::string ItemTaken() const { return item_taken; }
 		std::string speedPower();
 
