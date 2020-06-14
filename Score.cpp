@@ -1,51 +1,79 @@
 #include "Score.h"
 #include "Hud.h"
 #include "GameTime.h"
+#include <iostream>
 
 Score::Score() : NumericalPanel()
 {
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	panel_numbers.push_back(new QGraphicsPixmapItem());
-	//	panel_numbers[i]->setPos(89 + 8 * i, 17);
-	//	addToGroup(panel_numbers[i]);
-	//}
+	units =0;
+	dozens =0;
+	hundreds =0;
+	thousands =0;
+	ten_thousands=0;
+	hundreds_thousands=0;
+	millions =0;
 
-	//units = 0;
-	//dozens = 0;
-	//hundreds = 0;
-	//panel_numbers[0]->setPixmap(numbers[hundreds]);
-	//panel_numbers[1]->setPixmap(numbers[dozens]);
-	//panel_numbers[2]->setPixmap(numbers[units]);
+	
+
+	
+	for (int i = 0; i < 7; i++)
+	{
+		panel_numbers.push_back(new QGraphicsPixmapItem());
+		panel_numbers[i]->setPos(57 + 8 * i, 17);
+		addToGroup(panel_numbers[i]);
+	}
+	
+	drawScore();
+
+	
 }
 
 void Score::doUpdate(const std::string& update_info)
 {
-	//if(update_info == "add-time-left")
-	//	addTimeLeft();
+	
+	int info = std::stoi(update_info);
+
+	millions = info / 1000000;
+	info = info % 1000000;
+
+	hundreds_thousands = info / 100000;
+	info = info % 100000;
+
+	ten_thousands = info / 10000;
+	info = info % 10000;
+
+	thousands = info / 1000;
+	info = info % 1000;
+	
+	hundreds = info / 100;
+	info = info % 100;
+	
+	dozens = info / 10;
+	info = info % 10;
+	
+	units = info;
+
+	drawScore();
+}
+
+void Score::drawScore()
+{
+	panel_numbers[0]->setPixmap(numbers[millions]);
+	panel_numbers[1]->setPixmap(numbers[hundreds_thousands]);
+	panel_numbers[2]->setPixmap(numbers[ten_thousands]);
+	panel_numbers[3]->setPixmap(numbers[thousands]);
+	panel_numbers[4]->setPixmap(numbers[hundreds]);
+	panel_numbers[5]->setPixmap(numbers[dozens]);
+	panel_numbers[6]->setPixmap(numbers[units]);
 }
 
 void Score::reset()
 {
-}
-
-void Score::addTimeLeft()
-{
-
-	//GameTime* game_time = dynamic_cast<GameTime*>(Hud::instance()->getPanel("GameTime"));
-	//if (game_time)
-	//{
-	//	// C++17  required for the following (view CMakeLists.txt in source folder) 
-	//	// REMOVE ABOVE COMMENT AFTER REFACTORING
-	//	auto [time_hundreds, time_dozens, time_units] = game_time->getTimeRemaining();
-
-	//	units += time_units;
-	//	dozens += time_dozens;
-	//	hundreds += time_hundreds;
-
-	//	panel_numbers[0]->setPixmap(numbers[hundreds]);
-	//	panel_numbers[1]->setPixmap(numbers[dozens]);
-	//	panel_numbers[2]->setPixmap(numbers[units]);
-
-	//}
+	units = 0;
+	dozens = 0;
+	hundreds = 0;
+	thousands = 0;
+	ten_thousands = 0;
+	hundreds_thousands = 0;
+	millions = 0;
 }

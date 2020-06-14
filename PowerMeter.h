@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HudSubPanel.h"
-#include <QTimer>
+//#include <QTimer>
 
 
 class PowerMeter : public HudSubPanel

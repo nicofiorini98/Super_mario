@@ -7,7 +7,6 @@ PowerMeter::PowerMeter()
 {
 	speed = 0;
 
-
 	texture_arrow[0] = Sprites::instance()->get("arrow");
 	texture_arrow[1] = Sprites::instance()->get("arrow-transparent");
 	texture_arrow[2] = Sprites::instance()->get("P");

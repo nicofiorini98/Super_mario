@@ -80,7 +80,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		
 		//todo, non lo istanzia
 		//new JumpBlock(QPoint(2 * 16, terrain_level - 80), MUSHROOM);
-		
+		new Coin(QPoint(80 * 16, terrain_level-32));
 		// Mario
 		//mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
 		mario = new Mario(QPoint(80 * 16, terrain_level), level_name); //mario fine livello

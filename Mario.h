@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Collectable.h"
+#include "Hud.h"
 
 
 class Mario : public Entity 
@@ -107,8 +108,12 @@ class Mario : public Entity
 		// counters
 		int script_move_counter;
 
+		//attribute for hud
 		int speed;
 		int prev_speed;
+		int score;
+		int prev_score;
+	
 		int moving_start_counter;			// counts the number of frames since moving started
 
 		int moving_stop_counter;			// counts the number of frames since moving stopped
@@ -145,6 +150,9 @@ class Mario : public Entity
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
 		Direction getDirection() { return dir;}
+
+		//function for update attribute for hud
+		void update_score(int score2add);
 		void Speed();
 		std::string ItemTaken() const { return item_taken; }
 		std::string speedPower();

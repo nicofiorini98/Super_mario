@@ -378,10 +378,12 @@ void Game::advance()
 
 	// todo update mario power
 	//turn on the arrow
-	std::cout << mario->speedPower() << "\n";
+	//std::cout <<"\n" <<mario->speedPower() << "\n";
 	
-	//(mario->speedPower() != "dio")
+	/*if (mario->speedPower() != "boh")
+	{
 		Hud::instance()->updatePanel("PowerMeter", mario->speedPower());
+	}*/
 	
 
 	//todo update mario score
