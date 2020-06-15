@@ -33,6 +33,7 @@ void Leaf::hit(Object* what, Direction fromDir)
 	if (mario)
 	{
 		mario->powerUp(LEAF);
+		mario->updateScore(1000, pos().toPoint());
 		die();
 	}
 }

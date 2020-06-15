@@ -9,6 +9,7 @@
 #include "GoalRoulette.h"
 #include <iostream>
 #include "FireBall.h"
+#include "ScoreSpawnable.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
@@ -1450,10 +1451,14 @@ bool Mario::isUnderPipe(std::string level_name)
 		return false;
 }
 
-void Mario::update_score(int score2add)
+void Mario::updateScore(int score2add,QPoint pos)
 {
 	score += score2add;
-
+	
+	//if(score2add != 50)
+	std::cout << std::to_string(score2add) << "\n";
+		new ScoreSpawnable(pos, std::to_string(score2add));
+	
 	Hud::instance()->updatePanel("Score", std::to_string(score));
 }
 

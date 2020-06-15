@@ -43,7 +43,7 @@ void Coin::hit(Object* what, Direction fromDir)
 	{
 		Sounds::instance()->play("coin");
 		Hud::instance()->updatePanel("CoinCounter");
-		mario->update_score(50);
+		mario->updateScore(50, pos().toPoint());
 		die();
 	}
 }

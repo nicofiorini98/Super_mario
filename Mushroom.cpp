@@ -40,6 +40,7 @@ void Mushroom::hit(Object* what, Direction fromDir)
 	if (mario)
 	{
 		mario->powerUp(type);
+		mario->updateScore(1000,pos().toPoint());
 		die();
 		return;
 	}

@@ -430,6 +430,29 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "P-transparent")
 		return hud.copy(QRect(240,3, 15, 7));
 
+
+	//Score Spawnable
+	if (id == "100")
+		return hud.copy(QRect(82,64, 11, 8));
+	if (id == "200")
+		return hud.copy(QRect(96,64, 12, 8));
+	if (id == "400")
+		return hud.copy(QRect(111, 64, 12, 8));
+	if (id == "800")
+		return hud.copy(QRect(126, 64, 12, 8));
+	if (id == "1000")
+		return hud.copy(QRect(141, 64, 15, 8));
+	if (id == "2000")
+		return hud.copy(QRect(159, 64, 16, 8));
+	if (id == "4000")
+		return hud.copy(QRect(178, 64, 16, 8));
+	if (id == "8000")
+		return hud.copy(QRect(197, 64, 16, 8));
+	if (id == "1up")
+		return hud.copy(QRect(216, 64, 16, 8));
+	
+	
+
 	if (id == "pipe1-NW")
 		return stage_tiles.copy(moveBy(pipe, 0, 0));
 	if (id == "pipe1-NE")

@@ -83,8 +83,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new Coin(QPoint(80 * 16, terrain_level-32));
 		// Mario
 		//mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
-		mario = new Mario(QPoint(80 * 16, terrain_level), level_name); //mario fine livello
-		//mario = new Mario(QPoint(6 * 16, terrain_level), level_name); // mario sopra l'iceberg
+		//mario = new Mario(QPoint(80 * 16, terrain_level), level_name); //mario fine livello
+		mario = new Mario(QPoint(6 * 16, terrain_level), level_name); // mario sopra l'iceberg
 
 	}
 	else if (level_name == "World 6-9-2" ) 

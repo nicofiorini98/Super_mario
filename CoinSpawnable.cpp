@@ -1,6 +1,7 @@
 #include "CoinSpawnable.h"
 #include "Sprites.h"
 #include "Sounds.h"
+#include "Game.h"
 
 CoinSpawnable::CoinSpawnable(QPoint position) : Entity()
 {
@@ -33,7 +34,7 @@ void CoinSpawnable::animate()
 	setPixmap(texture_animation[(animation_counter/10)%4]);
 }
 
-// @override
+// @overridee
 void CoinSpawnable::advance()
 {
 	if(animation_counter < 28)
@@ -41,5 +42,10 @@ void CoinSpawnable::advance()
 	else if(animation_counter >= 28 && animation_counter < 54)
 		setY(y()+2);
 	else
+	{
+		//todo check this
+		Mario* mario = Game::instance()->getMario();
+		mario->updateScore(100,pos().toPoint());
 		die();
+	}
 }
