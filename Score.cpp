@@ -13,9 +13,6 @@ Score::Score() : NumericalPanel()
 	hundreds_thousands=0;
 	millions =0;
 
-	
-
-	
 	for (int i = 0; i < 7; i++)
 	{
 		panel_numbers.push_back(new QGraphicsPixmapItem());
@@ -76,4 +73,9 @@ void Score::reset()
 	ten_thousands = 0;
 	hundreds_thousands = 0;
 	millions = 0;
+
+	
+		//resetValues();
+	HudSubPanel::reset();
+	
 }

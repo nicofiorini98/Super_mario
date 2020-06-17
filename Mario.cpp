@@ -13,8 +13,8 @@
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
-	speed = -1;
-	prev_speed = -1;
+	power = 0;
+	prev_power = -1;
 	score = 0;
 		
 	prev_dir = dir;
@@ -103,12 +103,16 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_walking[1][2] = Sprites::instance()->get("mario-big-walk-2");
 	texture_walking[1][3] = Sprites::instance()->get("mario-big-walk-3");
 
+	//texture in super_running mode
 	texture_super_running[0][0] = Sprites::instance()->get("mario-small-run-0");
 	texture_super_running[0][1] = Sprites::instance()->get("mario-small-run-1");
 	texture_super_running[0][2] = Sprites::instance()->get("mario-small-run-2");
 	texture_super_running[1][0] = Sprites::instance()->get("mario-big-run-0");
 	texture_super_running[1][1] = Sprites::instance()->get("mario-big-run-1");
 	texture_super_running[1][2] = Sprites::instance()->get("mario-big-run-2");
+	texture_super_jumping[0]    = Sprites::instance()->get("mario-small-super-jump");
+	texture_super_jumping[1]    = Sprites::instance()->get("mario-big-super-jump");
+	texture_fire_super_jumping  = Sprites::instance()->get("mario-fire-super-jump");
 
 
 	//texture transformation small2big
@@ -239,22 +243,10 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 void Mario::advance()
 {
 
+	if(prev_power!=power)
+		Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
 	
-	//std::string prova = "0";
-
-	//int porco = std::stoi(prova);
-	//std::cout << porco << "\n";
-	/*if (super_running)
-		std::cout << "moving\n";
-	else
-		std::cout << "not_moving\n";*/
-	//std::string prova = speedPower();
-
-	//std::cout <<"\n"<< prova;
-	//std::cout << "moving_start_counter"<<moving_start_counter << "\n";
-
-	//std::cout << speedPower()<<"\n";
-	//std::cout << moving_start_counter<<"\n";
+	
 
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
@@ -514,6 +506,10 @@ void Mario::advance()
 		else
 			falling_speed = 3;
 
+
+		//memorize power and then update
+		prev_power = power;
+		
 		// horizontal acceleration when moving starts and moving stop is not active yet
 		if (moving_start_counter >= 0 && moving_stop_counter < 0)
 		{
@@ -534,115 +530,132 @@ void Mario::advance()
 			}
 			if (moving_start_counter > 25 && moving_start_counter <= 40 && running)
 			{
+				power = 1;
 				moving_speed = (moving_start_counter % 4 == 0) + 1;	// 1.25 speed
 				//animation_div = 3;
 				animation_div = 4;
 			}
 			if (moving_start_counter > 40 && moving_start_counter <= 55 && running)
 			{
+				power = 2;
 				moving_speed = moving_start_counter % 2 + 1;        //1.5 speed                              
 				animation_div = 3;
 			}
 			if (moving_start_counter > 55 && moving_start_counter <= 70 && running)
 			{
+				power = 3;
 				moving_speed = (moving_start_counter % 4 != 0) + 1;  //1.75 speed
 				animation_div = 3;
 			}
 			if (moving_start_counter > 70 && moving_start_counter <= 85 && running)
 			{
+				power = 4;
 				moving_speed = 2;	                                // 2 speed
 				animation_div = 3;
 			}
 			if (moving_start_counter > 85 && moving_start_counter <= 100 && running)
 			{
+				power = 5;
 				moving_speed = moving_start_counter % 2 + 2;        //2.5 speed
 				animation_div = 3;
 			}
 			if (moving_start_counter > 100 && moving_start_counter <= 115 && running)
 			{
+				power = 6;
 				moving_speed = 3;                                   // 3 speed
 				animation_div = 2;
 			}
 			if (moving_start_counter > 115 && moving_start_counter <= 130 && running)
 			{
+				power = 6;
 				moving_speed = moving_start_counter % 2 + 3;         // 3.5 speed
 				animation_div = 2;
 			}
 			if (moving_start_counter > 130 && running)
 			{
+				//
+				power = 7;
 				moving_speed = 4;                                    //4 speed
 				super_running = true; 
 				animation_div = 1;
 			}
 		}
 	}
-	else if(inWater && !script_move)
-	{
+	//manage phisyc parameters for moving inWater
+	if (inWater && !script_move) {
 
-	// update moving acceleration / deceleration counters
-	if (moving_stop_counter >= 0 && !walkable_object)
-		moving_stop_counter++;
-	else if(moving_stop_counter<0 && !walkable_object)
-		moving_start_counter++;
-
-	// update direction change counter
-	if (dir_change_counter >= 0 && walkable_object) //se ho il walkable object in acqua devo cambiare direzione istantaneamente
-	{
-		Entity::setDirection(inverse(dir));
-		dir_change_counter = -1;
-	}
-	else if (dir_change_counter >= 0 && dir_change_counter < 20)
-		dir_change_counter++;
-
-	else if (dir_change_counter >= 20)
-	{
-		Entity::setDirection(inverse(dir));
-		dir_change_counter = -1;
-	}
-
-	//constant speed for the walking in backdrop
-	if (walkable_object)
-	{
-		moving_start_counter = 0;
-		moving_speed = animation_counter % 2; 
-	}
-	// horizontal acceleration in water, when mario isn't walking in the backdrop
-
-	if (moving_start_counter>=0 && moving_stop_counter<0 && !walkable_object)
-	{
-		if (moving_start_counter <= 12)											//  0.5 speed
-		{
-			moving_speed = moving_start_counter % 2;		
-			animation_div = 12;
-		}
-		if (moving_start_counter > 12 && moving_start_counter <= 25)			//0.75 speed
-		{
-			moving_speed = moving_start_counter % 4 != 0;
-			animation_div = 10;  
-		}
-		if (moving_start_counter > 25 && moving_start_counter<=50)				//1 speed
-		{
-			moving_speed = 1;                               
-			animation_div = 8;
-		}
-		if (moving_start_counter > 50)											//2   speed									
-		{
-			moving_speed = 1 + moving_start_counter % 2;
-			animation_div=6;
-		} 
-	}
+		//power meter is disabled in water
+		prev_power = power;
+		power = 0;
 		
-	if (falling_start_counter >= 0)  // incremento il falling_start_counter in entity ho messo che falling_counter+=falling_speed
-		falling_start_counter++;
+		// update moving acceleration / deceleration counters
+		if (moving_stop_counter >= 0 && !walkable_object)
+			moving_stop_counter++;
+		else if (moving_stop_counter < 0 && !walkable_object)
+			moving_start_counter++;
 
-	//l'accellerazione iniziale fa parte della nuotata
+		// update direction change counter
+		if (dir_change_counter >= 0 && walkable_object) //se ho il walkable object in acqua devo cambiare direzione istantaneamente
+		{
+			Entity::setDirection(inverse(dir));
+			dir_change_counter = -1;
+		}
+		else if (dir_change_counter >= 0 && dir_change_counter < 20)
+			dir_change_counter++;
 
-	falling_speed = 1;
+		else if (dir_change_counter >= 20)
+		{
+			Entity::setDirection(inverse(dir));
+			dir_change_counter = -1;
+		}
+
+		//constant speed for the walking in backdrop
+		if (walkable_object)
+		{
+			moving_start_counter = 0;
+			moving_speed = animation_counter % 2;
+		}
+		// horizontal acceleration in water, when mario isn't walking in the backdrop
+
+		if (moving_start_counter >= 0 && moving_stop_counter < 0 && !walkable_object)
+		{
+			if (moving_start_counter <= 12)											//  0.5 speed
+			{
+				moving_speed = moving_start_counter % 2;
+				animation_div = 12;
+			}
+			if (moving_start_counter > 12 && moving_start_counter <= 25)			//0.75 speed
+			{
+				moving_speed = moving_start_counter % 4 != 0;
+				animation_div = 10;
+			}
+			if (moving_start_counter > 25 && moving_start_counter <= 50)				//1 speed
+			{
+				moving_speed = 1;
+				animation_div = 8;
+			}
+			if (moving_start_counter > 50)											//2   speed									
+			{
+				moving_speed = 1 + moving_start_counter % 2;
+				animation_div = 6;
+			}
+		}
+
+		if (falling_start_counter >= 0)  // incremento il falling_start_counter in entity ho messo che falling_counter+=falling_speed
+			falling_start_counter++;
+
+		//l'accellerazione iniziale fa parte della nuotata
+
+		falling_speed = 1;
+
+
 	}
+	
 
 	//horizontal deceleration when moving ends
 	if (!script_move && moving_start_counter >= 0 && moving_stop_counter >= 0)
 	{
+		//todo migliorare il power decelleration
 		// decelerate for the same extent of the initial acceleration (max 30 frames)
 		if (moving_stop_counter < std::min(moving_start_counter, 30))
 		{
@@ -653,6 +666,7 @@ void Mario::advance()
 		// finally stop
 		else
 		{
+			power = 0;
 			moving = false;
 			moving_start_counter = -1;
 			moving_stop_counter = -1;
@@ -993,9 +1007,11 @@ void Mario::animate()
 	}
 	else if(outOfWater) //animate out of the water
 	{
-		//animation of raccoon brake_fly
+		//animation of raccoon in fly float
 		if (raccoon && fly_float)
 			setPixmap(texture_raccoon_falling[(animation_counter / 6) % 3]);
+		else if (flying && !fly_float)
+			setPixmap(texture_raccoon_flying[(animation_counter / 6) % 3]);
 
 		else if (big && crouch)
 		{
@@ -1008,7 +1024,7 @@ void Mario::animate()
 		}
 
 		//all texture of jumping
-		else if (jumping)
+		else if (jumping && !super_running)
 		{
 			if (!fire && !raccoon)
 				setPixmap(texture_jumping[big]);
@@ -1019,8 +1035,16 @@ void Mario::animate()
 			else
 				setPixmap(texture_jumping[1]);
 		}
+		else if (jumping && super_running)
+		{
+			if (!fire && !raccoon)
+				setPixmap(texture_super_jumping[big]);
+			else if (fire)
+				setPixmap(texture_fire_super_jumping);
+			//raccoon not jump in super running, but start to fly
+		}
 
-		else if (falling)
+		else if (falling && !super_running)
 		{
 			if (!fire && !raccoon)
 				setPixmap(texture_falling[big]);
@@ -1028,6 +1052,13 @@ void Mario::animate()
 				setPixmap(texture_fire_falling);
 			else if (raccoon)
 				setPixmap(texture_raccoon_falling[0]);
+		}
+		else if (falling && super_running)
+		{
+			if (!fire && !raccoon)
+				setPixmap(texture_super_jumping[big]);
+			else if (fire)
+				setPixmap(texture_fire_super_jumping);
 		}
 		else if (moving && !super_running)
 		{
@@ -1133,9 +1164,6 @@ void Mario::animate()
 
 			}
 		}
-
-		if (flying && !fly_float)
-			setPixmap(texture_raccoon_flying[(animation_counter / 6) % 3]);
 
 	}
 	//animazione dentro l'acqua
@@ -1453,15 +1481,18 @@ bool Mario::isUnderPipe(std::string level_name)
 
 void Mario::updateScore(int score2add,QPoint pos)
 {
+	//update score 
 	score += score2add;
-	
-	//if(score2add != 50)
-	std::cout << std::to_string(score2add) << "\n";
+
+	//spawn score animation
+	if(score2add != 50)
 		new ScoreSpawnable(pos, std::to_string(score2add));
-	
+
+	//update score in the hud
 	Hud::instance()->updatePanel("Score", std::to_string(score));
 }
 
+//todo questo andrà tolto, posso farlo nell'advance, nel momento in cui si aggiorna la velocità
 void Mario::Speed() 
 {
 	//prev_speed = speed;
@@ -1493,24 +1524,25 @@ void Mario::Speed()
 
 }
 
-std::string Mario::speedPower()
-{
-	//calculate current speed
-	Speed();
-	/*std::cout << "\nspeed: " << speed;
-	std::cout << "\nprev_speed: " << prev_speed;*/
-
-	//std::cout << getSpeed() << "\n";
-	if (speed != prev_speed)
-	{
-		return std::to_string(speed);
-	}
-	else
-		return "boh";
-	
-	/*else 
-		return "0";*/
-}
+//todo questo mi serve per aggiornare il powerMeter nell'hud
+//std::string Mario::speedPower()
+//{
+//	//calculate current speed
+//	Speed();
+//	/*std::cout << "\nspeed: " << speed;
+//	std::cout << "\nprev_speed: " << prev_speed;*/
+//
+//	//std::cout << getSpeed() << "\n";
+//	if (speed != prev_speed)
+//	{
+//		return std::to_string(speed);
+//	}
+//	else
+//		return "boh";
+//	
+//	/*else 
+//		return "0";*/
+//}
 
 QPainterPath Mario::shape() const
 {

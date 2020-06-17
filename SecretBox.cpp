@@ -10,6 +10,7 @@ SecretBox::SecretBox(QPoint position,spawnable_t _spawnable) : BouncingBlock()
 	//todo vedere se c'è un animazione nella mega secret box
 	// textures
 	animation_counter = 0;
+	spawn_counter = -1;
 	content = _spawnable;
 
 	texture_active[0] = Sprites::instance()->get("mega-secret-box");
@@ -55,10 +56,21 @@ void SecretBox::advance()
 		else
 		{
 			hit_counter = -1;
+			spawn_counter = 0;
 			//new Mushroom(QPoint(x(), y()), UP);
 			BouncingBlock::spawn(UP);  //spawn of mushroom
 		}
 		BouncingBlock::advance();
+	}
+	if (spawn_counter >= 0) {
+		spawn_counter++;
+		if (spawn_counter == 120)
+			BouncingBlock::spawn(UP);  //spawn of mushroom
+		else if (spawn_counter == 240) {
+			BouncingBlock::spawn(UP);  //spawn of mushroom
+			spawn_counter = -1;
+
+		}
 	}
 }
 

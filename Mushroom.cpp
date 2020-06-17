@@ -3,6 +3,7 @@
 #include "Sounds.h"
 #include "Sprites.h"
 #include <iostream>
+#include "Iceberg.h"
 
 Mushroom::Mushroom(QPoint position, Direction _dir, bool _red) : Collectable(position)
 {
@@ -35,6 +36,23 @@ void Mushroom::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
 
+
+	if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "downhill")
+	{
+		falling = false;
+		script_move = true;
+		downhill = true;
+	}
+	else if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "uphill")
+	{
+		falling = false;
+		script_move = true;
+		downhill = false;
+	}
+	else
+		script_move = false;
+
+	
 	// if hit by Mario, Mario eats mushroom and mushroom dies
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
@@ -62,22 +80,29 @@ void Mushroom::advance()
 	/*if (level_name == "World 6-9-2" && pos().y() > 15.8 * 16 && pos().y() < 16 * 16)
 		new Splash(pos());*/
 
-	if (dir == UP)
-	{
+	Entity::advance();
+	if (dir == UP) {
 		collidable = true;
 		setY(y() - moving_speed);
 		if (y() == spawned_position.y() - pixmap().height())
 		{
-			falling = true;
-			//slow = false; //todo vedere perchè ci stavano prima
+			
+			if (type == LIFE) {
+				jumping = true;
+				jumping_duration = 60;
+				
+			}
+			else
+			    falling = true;
+			slow = false;
 			moving_speed = 1;
 			dir = RIGHT;
 		}
 	}
 	if (dir == DOWN) {
-		//slow = false;
+		slow = false;
 		falling = true;
-		falling_speed = 2;
+		
 		if (y() >= spawned_position.y() + pixmap().height() + 16) {
 			collidable = true;
 			moving_speed = 1;
@@ -91,7 +116,6 @@ void Mushroom::advance()
 
 
 }
-
 
 
 //#include "Mushroom.h"

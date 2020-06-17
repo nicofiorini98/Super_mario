@@ -42,8 +42,10 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	
 	// setup game music
+	
+	
 	music1      = new QSound(":/sounds/overworld.wav");
-	music2      = new QSound(":/sounds/underwater.wav");
+	music2      = new QSound("sounds/underwater.wav");
 	music3      = new QSound(":/sounds/super-mario-rap.wav");
 	fast_music1 = new QSound(":/sounds/overworld-hurry-up.wav");
 	fast_music2 = new QSound(":/sounds/underwater-hurry-up.wav");
@@ -51,7 +53,8 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	music1->setLoops(QSound::Infinite);
 	music2->setLoops(QSound::Infinite);
 	music3->setLoops(QSound::Infinite);
-	fast_music1->setLoops(QSound::Infinite);
+	//fast_music1->setLoops(QSound::Infinite);
+	
 	fast_music2->setLoops(QSound::Infinite);
 	fast_music3->setLoops(QSound::Infinite);
 

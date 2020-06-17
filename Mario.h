@@ -14,6 +14,7 @@ class Mario : public Entity
 		QPixmap texture_stand[2];			// small/big stand texture
 		QPixmap texture_walking[2][4];		// small/big walking animations
 		QPixmap texture_super_running[2][3];//small/big super running animations
+		QPixmap texture_super_jumping[2];
 		QPixmap texture_jumping[2];			// small/big jumping texture
 		QPixmap texture_falling[2];			// small/big falling texture
 		QPixmap texture_brake[2];			// small/big brake texture
@@ -29,6 +30,7 @@ class Mario : public Entity
 		QPixmap texture_fire_stand;
 		QPixmap texture_fire_walking[4];
 		QPixmap texture_fire_super_running[3];
+		QPixmap texture_fire_super_jumping;
 		QPixmap texture_fire_jumping;		    // small/big jumping texture
 		QPixmap texture_fire_falling;		    // small/big falling texture
 		QPixmap texture_fire_brake;			    // small/big brake texture
@@ -109,8 +111,8 @@ class Mario : public Entity
 		int script_move_counter;
 
 		//attribute for hud
-		int speed;
-		int prev_speed;
+		int power;
+		int prev_power;
 		int score;
 		
 		int moving_start_counter;			// counts the number of frames since moving started

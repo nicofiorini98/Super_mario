@@ -38,6 +38,7 @@ class Game : public QGraphicsView
 		QSound* fast_music2;             // faster version of music2
 		QSound* fast_music3;             // faster version of music3
 	
+	
 		SpinningItem* spinning_item;
 
 		// flags

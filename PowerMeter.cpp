@@ -5,7 +5,7 @@
 
 PowerMeter::PowerMeter()
 {
-	speed = 0;
+	power = 0;
 
 	texture_arrow[0] = Sprites::instance()->get("arrow");
 	texture_arrow[1] = Sprites::instance()->get("arrow-transparent");
@@ -35,7 +35,7 @@ void PowerMeter::reset()
 	if(speed <7)
 		pan[6]->setPixmap(texture_arrow[3]);*/
 
-	pan[0]->setPixmap(texture_arrow[0]);
+	pan[0]->setPixmap(texture_arrow[1]);
 	pan[1]->setPixmap(texture_arrow[1]);
 	pan[2]->setPixmap(texture_arrow[1]);
 	pan[3]->setPixmap(texture_arrow[1]);
@@ -59,26 +59,26 @@ void PowerMeter::reset()
 
 void PowerMeter::doUpdate(const std::string& update_info)
 {
-	std::cout <<"prima: "<< speed << "\n";
+	std::cout <<"prima: "<< power << "\n";
 	std::cout << update_info << "\n";
 	
-	speed = std::stoi(update_info);
+	power = std::stoi(update_info);
 
-	std::cout << "dopo: " << speed << "\n";
+	std::cout << "dopo: " << power << "\n";
 
-	if (speed == -1)
+	if (power == 0)
 	{
 		reset();
 		return;
 	}
 	
-	for (int i = 0; i <= speed; i++)					//turn on arrow
+	for (int i = 0; i < power; i++)					//turn on arrow
 		pan[i]->setPixmap(texture_arrow[0]);
 
-	for (int i = speed -1; i < 6; i++)					//turn of arrow
+	for (int i = power -1; i < 6; i++)					//turn of arrow
 		pan[i]->setPixmap(texture_arrow[1]);
 
-	if (speed == 7 )									//turn on P
+	if (power == 7 )									//turn on P
 		pan[6]->setPixmap(texture_arrow[2]);
 	else											//turn off P
 		pan[6]->setPixmap(texture_arrow[3]);

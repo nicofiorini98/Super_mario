@@ -75,7 +75,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new GoalRoulette(QPoint(88*16, 337));
 
 		
-		new SecretBox(QPoint(6 * 16, terrain_level - 80), LEAF);
+	    new SecretBox(QPoint(11 * 16, terrain_level - 180), LIFE);
 		//new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
 		
 		//todo, non lo istanzia
@@ -87,7 +87,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		mario = new Mario(QPoint(6 * 16, terrain_level), level_name); // mario sopra l'iceberg
 
 	}
-	else if (level_name == "World 6-9-2" ) 
+	else if (level_name == "World 6-9-2" )
 	{
 		scene->setSceneRect(0, 0, 128*16, 27*16);
 		
