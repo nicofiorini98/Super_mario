@@ -32,6 +32,9 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	scene3 = nullptr;
 	black_scene = nullptr;
 	cur_scene = scene1;
+	//todo check it
+	lives = 4;
+	score = 0;
 	
 	scale(3.0, 3.0);
 	centerOn(0, 0);
@@ -43,9 +46,8 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	
 	// setup game music
 	
-	
 	music1      = new QSound(":/sounds/overworld.wav");
-	music2      = new QSound("sounds/underwater.wav");
+	music2      = new QSound(":/sounds/underwater.wav");
 	music3      = new QSound(":/sounds/super-mario-rap.wav");
 	fast_music1 = new QSound(":/sounds/overworld-hurry-up.wav");
 	fast_music2 = new QSound(":/sounds/underwater-hurry-up.wav");
@@ -135,13 +137,20 @@ void Game::gameover()
 	cur_state = GAME_OVER;
 	engine.stop();
 	game_time->stop();
+	//update attributes
+	lives = mario->getLives()-1;
+	score = mario->getScore();
+
+	//todo vedere che succede qui, il gioco deve finire
+	/*if (lives == 0)
+		reset();*/
 	
 	// set black background
-	cur_scene->setBackgroundBrush(QBrush(Qt::black));
+	//cur_scene->setBackgroundBrush(QBrush(Qt::black));
 
 	//  stop music and play game over sound
-	stopMusic();
-	Sounds::instance()->play("gameover");
+	/*stopMusic();
+	Sounds::instance()->play("gameover");*/
 }
 
 // start new game
@@ -149,7 +158,6 @@ void Game::start()
 {
 	if (cur_state == READY)
 	{
-
 		scene1->clear();
 		engine.start();
 		game_time->start();
@@ -160,6 +168,10 @@ void Game::start()
 		mario = LevelManager::load(cur_level_name,scene1);
 
 		Hud::instance()->start();
+		
+		//update attribbute
+		mario->updateLives(lives);
+		mario->updateScore(score);
 
 		// add debug grid                                                        
 		for (int i = 0; i <= 27; i++)
@@ -301,12 +313,17 @@ void Game::keyPressEvent(QKeyEvent* e)
 	
 	// Mario's jump
 	if (e->key() == Qt::Key_Space)
+	{
 		if (mario->isInWater())
 			mario->swim();
-		else if (mario->isRaccoon() && mario->isSuperRunning()) //isRaccoon è momentaneo
+		else if (mario->isBouncing())
+			mario->setRebound(true);
+		else if (mario->isRaccoon() && mario->isSuperRunning())
 			mario->fly();
 		else
 			mario->jump();
+	}
+		
 	
 
 	// Mario's running
@@ -364,6 +381,19 @@ void Game::wheelEvent(QWheelEvent* e)
 		scale(1.1, 1.1);
 	else
 		scale(1 / 1.1 ,1 / 1.1);
+}
+
+void Game::dying()
+{
+	//game_time->stop();
+	
+	// set black background
+	cur_scene->setBackgroundBrush(QBrush(Qt::black));
+
+	//  stop music and play game over sound
+	stopMusic();
+	
+	Sounds::instance()->play("gameover");
 }
 
 void Game::advance()

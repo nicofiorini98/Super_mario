@@ -37,6 +37,10 @@ class Game : public QGraphicsView
 		QSound* fast_music1;             // faster version of music1 
 		QSound* fast_music2;             // faster version of music2
 		QSound* fast_music3;             // faster version of music3
+
+	//todo check it
+		int lives;
+		int score;
 	
 	
 		SpinningItem* spinning_item;
@@ -81,6 +85,7 @@ class Game : public QGraphicsView
 	
 		// setters
 		void setSpinningItem(SpinningItem* _spinning_item) { spinning_item = _spinning_item; }
+		void dying();
 	
 	public slots:
 

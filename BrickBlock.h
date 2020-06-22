@@ -1,5 +1,5 @@
 #pragma once
-//#include "Koopa_Troopa.h"
+#include "KoopaTroopa.h"
 #include "BouncingBlock.h"
 #include "BrokenBlock.h"
 class BrickBlock : public BouncingBlock

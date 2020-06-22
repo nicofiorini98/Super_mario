@@ -27,6 +27,8 @@ class Mushroom : public Collectable
 protected:
 
 	bool red;					// whether the mushroom is red (power up) or green (life up)
+	int fall_counter;
+	int moving_counter;
 	
 	
 public:

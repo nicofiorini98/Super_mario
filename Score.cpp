@@ -5,6 +5,7 @@
 
 Score::Score() : NumericalPanel()
 {
+	score = 0;
 	units =0;
 	dozens =0;
 	hundreds =0;
@@ -73,6 +74,8 @@ void Score::reset()
 	ten_thousands = 0;
 	hundreds_thousands = 0;
 	millions = 0;
+	
+	drawScore();
 
 	
 		//resetValues();

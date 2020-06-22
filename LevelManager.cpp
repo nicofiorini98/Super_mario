@@ -75,7 +75,12 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new GoalRoulette(QPoint(88*16, 337));
 
 		
-	    new SecretBox(QPoint(11 * 16, terrain_level - 180), LIFE);
+	   // new JumpBlock(QPoint(6 * 16, terrain_level - 48));
+	    new SecretBox(QPoint(8 * 16, terrain_level - 150),LIFE);
+		new Cheep(QPoint(5 * 16, terrain_level - 32));
+		
+		//new BrickBlock(QPoint(4 * 16, terrain_level-48),"ice");
+
 		//new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
 		
 		//todo, non lo istanzia
@@ -247,10 +252,14 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   new FixedBlock(QPoint(89*16,  9*16), "wood");
 	   for(int i = 0; i <= 2 ; i++)
 		   new FixedBlock(QPoint((97+i)*16, 6*16), "wood");
+	
 	   
 	   //new BrickBlock(QPoint(82*16, 5*16));
 	   
 	   new HiddenBlock(QPoint(80 * 16, 7 * 16));
+		//todo controllare se le posizioni sono giuste
+	   new JumpBlock(QPoint(47 * 16, 7 * 16));
+	   new JumpBlock(QPoint(95 * 16, 9 * 16));
 
 	   // enemies
 	   // first cheep

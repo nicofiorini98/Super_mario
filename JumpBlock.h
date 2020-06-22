@@ -1,20 +1,29 @@
 #pragma once
-
+#include "Game.h"
 #include "BouncingBlock.h"
-
+#include "Mushroom.h"
+#include "Mario.h"
 class JumpBlock : public BouncingBlock
 {
-	protected:
+protected:
+	Mario* mario;
 
-		QPixmap texture_animation[3];
+	bool down;
+	bool up;
 
-	public:
+	QPoint pos_in;
+	QPixmap texture_animation[3];
+	int hit_start_counter;
+	int hit_duration;
 
-		JumpBlock(QPoint position,spawnable_t _content);
+public:
 
-		virtual std::string name() { return "JumpBlock"; }
-		virtual void hit(Object* what, Direction fromDir);
-		virtual void animate();
-		virtual void advance();
+	JumpBlock(QPoint position);
+	bool isUp() { return up; }
+	bool isDown() { return down; }
 
+	virtual std::string name() { return "JumpBlock"; }
+	virtual void animate();
+	virtual void advance();
+	virtual void hit(Object* what, Direction fromDir);
 };

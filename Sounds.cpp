@@ -32,6 +32,7 @@ Sounds::Sounds()
 	sounds["vine"]		   = new QSound(":/sounds/vine.wav");
 	sounds["kick"]		   = new QSound(":/sounds/kick.wav");
 	sounds["power-meter"]		   = new QSound(":/sounds/power_meter.wav");
+	sounds["tail"]		   = new QSound(":/sounds/tail.wav");
 	//sounds["raccoon-transform"]    = new QSound(":/sounds/raccoon_transfrom.wav");
 }
 

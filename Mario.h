@@ -22,7 +22,8 @@ class Mario : public Entity
 		QPixmap texture_small2big[12];		// transformation small-to-big
 		QPixmap texture_small_swimming[4];	// smallswimming texture
 		QPixmap texture_big_swimming[7];	// big swimming texture
-		QPixmap texture_entering_pipe[2];	// small/big enetering into pipe texture 
+		QPixmap texture_entering_pipe[2];	// small/big enetering into pipe texture
+		QPixmap texture_dying;
 		
 		std::string item_taken;
 
@@ -88,7 +89,6 @@ class Mario : public Entity
 		int falling_start_counter;
 
 		
-		
 		int swim_counter;
 		int swim_start_counter;
 		int swim_rise_duration;
@@ -107,6 +107,9 @@ class Mario : public Entity
 		bool script_move_in_pipe;           // is Mario 
 		bool entering_pipe;                 // is Mario entering the pipe?
 		bool running_out_of_view;
+
+		bool bounce_block;
+		bool rebound;
 		// counters
 		int script_move_counter;
 
@@ -114,6 +117,7 @@ class Mario : public Entity
 		int power;
 		int prev_power;
 		int score;
+		int lives;
 		
 		int moving_start_counter;			// counts the number of frames since moving started
 
@@ -121,10 +125,14 @@ class Mario : public Entity
 		int dir_change_counter;				// counts the number of frames since direction changed
 		int transformation_counter;			// counts the number of frames since transformation started
 		
+
+		virtual void endJumping();
+
 		//da riunificare
 		void startSwimming();
 		void endSwimming();
-
+		
+		
 		void startFlying();
 		void endFlying();
 	
@@ -150,24 +158,27 @@ class Mario : public Entity
 		bool isOnPipe(std::string level_name);
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
+		bool isBouncing() { return bounce_block; }
 		Direction getDirection() { return dir;}
+		int getLives() { return lives; }
+		int getScore() { return score; }
 
 		//function for update attribute for hud
-		void updateScore(int score2add,QPoint pos);
-		void Speed();
+		void updateScore(int score2add,QPoint pos = QPoint(0,0));
+		void updateLives(int lives2add,QPoint pos = QPoint(0, 0));
 		std::string ItemTaken() const { return item_taken; }
-		std::string speedPower();
+		
 
 		bool isInWater() { return inWater; }
 		bool isRaccoonAttack() { return raccoon_attack; }
 		bool isSuperRunning() { return super_running; }
 	
-		//bool isRaccoon() { return raccoon; } //todo credo conviene fare una funzione che restituisce in che stato è mario
-
+		
+		void setRebound(bool _rebound) { rebound = _rebound; }
 		void setRunning(bool _running);
 		void setScriptMove(bool _script_move) { script_move = _script_move; }
 		
-		void setAttack(bool _attack) { attack = _attack; } //vedere nome
+		void setAttack(bool _attack) { attack = _attack; } 
 
 
 		// pure virtual methods that must be implemented
@@ -197,6 +208,8 @@ class Mario : public Entity
 
 		// bounce
 		void bounce();
+
+		void bounceBlock();
 
 		// crouch
 		void setCrouch(bool active);

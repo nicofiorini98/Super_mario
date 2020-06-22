@@ -13,7 +13,9 @@ class Score : public NumericalPanel
 		int thousands; 
 		int ten_thousands;
 		int hundreds_thousands;
-		int millions;  
+		int millions;
+
+		int score;
 
 		virtual void doUpdate(const std::string& update_info);
 		void drawScore();

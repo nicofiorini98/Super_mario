@@ -8,12 +8,16 @@
 Mushroom::Mushroom(QPoint position, Direction _dir, bool _red) : Collectable(position)
 {
 	// set attributes
+	//slow = false;
 	red = _red;
 	dir = _dir;
 	if (red)
 		type = MUSHROOM;
 	else
 		type = LIFE;
+
+	fall_counter = 0;
+	moving_counter = 0;
 
 	// set texture and position
 	setPixmap(Sprites::instance()->get(red ? "mushroom-red" : "mushroom-green"));
@@ -34,7 +38,7 @@ void Mushroom::animate()
 
 void Mushroom::hit(Object* what, Direction fromDir)
 {
-	Object::hit(what, fromDir);
+	Object::hit(what, fromDir); 
 
 
 	if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "downhill")
@@ -58,7 +62,10 @@ void Mushroom::hit(Object* what, Direction fromDir)
 	if (mario)
 	{
 		mario->powerUp(type);
-		mario->updateScore(1000,pos().toPoint());
+		if(type==LIFE)
+			mario->updateLives(1, pos().toPoint());
+		else 
+			mario->updateScore(1000,pos().toPoint());
 		die();
 		return;
 	}
@@ -80,25 +87,48 @@ void Mushroom::advance()
 	/*if (level_name == "World 6-9-2" && pos().y() > 15.8 * 16 && pos().y() < 16 * 16)
 		new Splash(pos());*/
 
-	Entity::advance();
+	//todo controllare se l'entity advance da problemi alla fine, anche se non dovrebbe
+	//Entity::advance();
+	//
+	/*if (walkable_object)
+	{
+		falling_counter = 0;
+		moving = true;
+	}
+
+	if(falling)
+	{
+		falling_counter++;
+		if (falling_counter >= 80)
+		{
+			moving = false;
+		}
+
+	}*/
+	std::cout << "jump_counter" << falling_counter<<"\n";
+	
 	if (dir == UP) {
 		collidable = true;
-		setY(y() - moving_speed);
+		if(y()>= spawned_position.y() - pixmap().height())
+		{
+			setY(y() - moving_speed);
+		}
 		if (y() == spawned_position.y() - pixmap().height())
 		{
-			
-			if (type == LIFE) {
+			if (type == LIFE) 
+			{
 				jumping = true;
 				jumping_duration = 60;
-				
 			}
 			else
 			    falling = true;
+			
 			slow = false;
 			moving_speed = 1;
 			dir = RIGHT;
 		}
 	}
+	
 	if (dir == DOWN) {
 		slow = false;
 		falling = true;
@@ -109,11 +139,10 @@ void Mushroom::advance()
 		}
 		if (walkable_object) {
 			dir = RIGHT;
-
 		}
 	}
 
-
+	Entity::advance();
 
 }
 

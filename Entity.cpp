@@ -135,24 +135,42 @@ void Entity::advance()
 		solveCollisions();
 	}
 
-	//jumping
+	////jumping
+	//if (jumping)
+	//{
+	//	prevPos = pos();
+
+	//	//move upwards
+	//	setY(y() - jumping_speed);
+
+	//	//increase jump frame count
+	//	jump_counter += jumping_speed;
+	//	
+	//	//end jumping when frame count reaches the defined limit
+	//	if (jump_counter > jumping_duration)
+	//		endJumping();
+	//	
+	//	solveCollisions();
+	//}
 	if (jumping)
-	{
-		prevPos = pos();
+    {
+        prevPos = pos();
 
-		//move upwards
-		setY(y() - jumping_speed);
+        //move upwards
+        setY(y() - jumping_speed);
 
-		//increase jump frame count
-		jump_counter += jumping_speed;
-		
-		//end jumping when frame count reaches the defined limit
-		if (jump_counter > jumping_duration)
-			endJumping();
-		
-		solveCollisions();
-	}
+        //increase jump frame count
+        if (jumping_speed < 0)
+            jump_counter -= jumping_speed;
+        else 
+            jump_counter += jumping_speed;
 
+        //end jumping when frame count reaches the defined limit
+        if (jump_counter > jumping_duration)
+            endJumping();
+
+        solveCollisions();
+    }
 	//if the entity is not touching its walkable object anymore
 	//we have to start falling
 	if ( walkable_object && !touchingDirection(walkable_object))
@@ -162,10 +180,8 @@ void Entity::advance()
 		script_move = false;
 		
 		if (Game::instance()->getCurState() == "RUNNING")
-		{
-			//std::cout << "a\n";
 			falling = true;
-		}
+		
 	}
 
 	//falling
@@ -192,11 +208,12 @@ void Entity::animate()
 	animation_counter++;
 
 	//increase death counter if dying
-	if(dying &&!dead)
+	if(dying && !dead)
 	{
+		std::cout << "AOO\n";
 		death_counter++;
 		if (death_counter >= death_duration)
-			die();
+			Entity::die();
 	}
 }
 
@@ -262,7 +279,7 @@ void Entity::solveCollisions()
 
 
 		// BUG FIX MIO, manage corner-corner collision
-	   //gestione collisione angolo angolo fuori dall'acqua
+	    //manage corner-corner collision in outOfWater
 		if (dynamic_cast<Mario*>(this) && !dynamic_cast<Mario*>(this)->isInWater() && coll_dir == UNDETERMINED)//bug fix mio
 		{
 			if (falling)
@@ -280,7 +297,7 @@ void Entity::solveCollisions()
 				coll_dir = UNDETERMINED;
 			}
 		}
-		//gestione collisione angolo algolo dentro l'acqua
+		//manage corner-corner collision in InWater
 		else if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isInWater() && coll_dir == UNDETERMINED)
 		{
 			/*
@@ -289,9 +306,7 @@ void Entity::solveCollisions()
 			 * l'importante è che non crasha , po vedamo nsomma
 			 */
 
-
 		}
-
 		// bug fix collision per la medusa
 		else if (dynamic_cast<BlooberNanny*>(this) && coll_dir == UNDETERMINED)
 		{
@@ -304,8 +319,7 @@ void Entity::solveCollisions()
 				coll_dir = dir;
 		}
 
-
-		//da vedere questa if
+		//todo da vedere questa if
 		if (coll_dir == RIGHT || coll_dir == LEFT || coll_dir == UP)
 			touching_correction = false;
 
@@ -415,6 +429,5 @@ void Entity::die()
 
 		//dead
 		dead = true;
-		
 	}
 }

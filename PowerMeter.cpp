@@ -1,6 +1,7 @@
 #include "PowerMeter.h"
 #include "Sprites.h"
 #include <iostream>
+#include "Sounds.h"
 //#include <QObject>
 
 PowerMeter::PowerMeter()
@@ -28,13 +29,6 @@ PowerMeter::PowerMeter()
 void PowerMeter::reset()
 {
 	
-	/*for (int i = speed;i<5;i++)
-	{
-		pan[i]->setPixmap(texture_arrow[1]);
-	}
-	if(speed <7)
-		pan[6]->setPixmap(texture_arrow[3]);*/
-
 	pan[0]->setPixmap(texture_arrow[1]);
 	pan[1]->setPixmap(texture_arrow[1]);
 	pan[2]->setPixmap(texture_arrow[1]);
@@ -44,27 +38,10 @@ void PowerMeter::reset()
 	pan[6]->setPixmap(texture_arrow[3]);
 }
 
-//void PowerMeter::decrease_speed()
-//{
-//	std::cout << "porcodio\n";
-//	for (int i = speed; i < 5; i++)
-//	{
-//		pan[i]->setPixmap(texture_arrow[1]);
-//	}
-//	if (speed < 7)
-//		pan[6]->setPixmap(texture_arrow[3]);
-
-//}
-
 
 void PowerMeter::doUpdate(const std::string& update_info)
 {
-	std::cout <<"prima: "<< power << "\n";
-	std::cout << update_info << "\n";
-	
 	power = std::stoi(update_info);
-
-	std::cout << "dopo: " << power << "\n";
 
 	if (power == 0)
 	{
@@ -75,11 +52,14 @@ void PowerMeter::doUpdate(const std::string& update_info)
 	for (int i = 0; i < power; i++)					//turn on arrow
 		pan[i]->setPixmap(texture_arrow[0]);
 
-	for (int i = power -1; i < 6; i++)					//turn of arrow
+	for (int i = power -1; i < 6; i++)				//turn of arrow
 		pan[i]->setPixmap(texture_arrow[1]);
 
-	if (power == 7 )									//turn on P
+	if (power == 7 )							    //turn on P
+	{
 		pan[6]->setPixmap(texture_arrow[2]);
+		Sounds::instance()->play("power-meter");
+	}
 	else											//turn off P
 		pan[6]->setPixmap(texture_arrow[3]);
 

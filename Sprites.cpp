@@ -120,6 +120,8 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(moveMarioBy(mario_small, 14, 0));
 	if (id == "mario-small-swim-3")
 		return mario.copy(moveMarioBy(mario_small, 15, 0));
+	if (id == "mario-small-dying")
+		return mario.copy(moveMarioBy(mario_small, 17, 0));
 
 	if (id == "mario-big-stand")
 		return mario.copy(mario_big);
@@ -626,6 +628,17 @@ QPixmap Sprites::get(const std::string & id)
 		return stage_tiles.copy(moveBy(brick_block, 2, 0));
 	if (id == "brick-block-3")
 		return stage_tiles.copy(moveBy(brick_block, 3, 0));
+	
+
+	//bug, inserire anche lo static sopra
+	/*if (id == "ice-brick-block-0")
+		return stage_tiles.copy(ice_brick_block);
+	if (id == "ice-brick-block-1")
+		return stage_tiles.copy(moveBy(ice_brick_block, 1, 0));
+	if (id == "ice-brick-block-2")
+		return stage_tiles.copy(moveBy(ice_brick_block, 2, 0));
+	if (id == "ice-brick-block-3")
+		return stage_tiles.copy(moveBy(ice_brick_block, 2, 0));*/
 
 	if (id == "jump-block-0")
 		return stage_tiles.copy(jump_block);

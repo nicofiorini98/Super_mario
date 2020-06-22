@@ -16,6 +16,10 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	power = 0;
 	prev_power = -1;
 	score = 0;
+	lives = 0;
+
+	bounce_block = false;
+	rebound = false;
 		
 	prev_dir = dir;
 	// set flags
@@ -72,6 +76,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	dir_change_counter = -1;
 	dir_change_duration = 30;  //todo controllare, per il cambio direzione, uso 30 di default
 	transformation_counter = -1;
+	death_duration = 64;
 	//livel_ended_counter = 0;
 
 	item_taken = "";
@@ -128,6 +133,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_small2big[9] = texture_stand[1];
 	texture_small2big[10] = Sprites::instance()->get("mario-half");
 	texture_small2big[11] = texture_stand[1];
+	texture_dying= Sprites::instance()->get("mario-small-dying");
 
 	//texture transformation fire and raccoon
 	texture_transformation[0] = Sprites::instance()->get("mario-transformation-0");
@@ -143,6 +149,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_small_swimming[1] = Sprites::instance()->get("mario-small-swim-1");
 	texture_small_swimming[2] = Sprites::instance()->get("mario-small-swim-2");
 	texture_small_swimming[3] = Sprites::instance()->get("mario-small-swim-3");
+
 
 	//mario big texture InWater
 	texture_big_swimming[0] = Sprites::instance()->get("mario-big-swim-0");
@@ -245,9 +252,21 @@ void Mario::advance()
 
 	if(prev_power!=power)
 		Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
-	
-	
 
+	if (dying)
+	{
+		moving = false;
+		collidable = false;
+		falling = false;
+		
+		if (death_counter < death_duration / 3)
+			setY(y() - 2);
+		else
+			setY(y() + 2);
+		Entity::advance();
+		return;
+	}
+	
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
 	{
@@ -277,10 +296,11 @@ void Mario::advance()
 	}
 	if (raccoon)
 	{
+		//manage asymmetry texture of mario raccoon
 		if (prev_dir != dir)
 		{
-			//std::cout << "porcodio sto a vola\n";
-			setX(x() + (dir == LEFT ? 8 : -8));
+			if(!moving)
+				setX(x() + (dir == LEFT ? 8 : -8));
 			prev_dir = dir;
 			solveCollisions();
 		}
@@ -423,7 +443,7 @@ void Mario::advance()
 
 		moving_speed = 2;
 
-		//todo, vedere se si può evitare, è il cambio di direzione di mario raccoon
+		//todo, vedere se si può evitare, è il cambio di direzione di mario raccoon in volo
 		if (dir_change_counter >= 0 && !walkable_object)
 		{
 			prev_dir = dir;
@@ -454,6 +474,8 @@ void Mario::advance()
 
 		solveCollisions();
 	}
+
+	
 
 	//advance standard out of the water
 	if (outOfWater && !flying && !script_move && !running_out_of_view)
@@ -497,16 +519,37 @@ void Mario::advance()
 		}
 
 		// slow down jumping speed during last iterations
-		if (jump_counter >= jumping_duration - 16)
-			jumping_speed = 2;
+		//questo pezzo va nell'advance di mario
+		//
+		//bug bounce block
+		if (bounce_block)
+		{
+			falling = false;
+			if (rebound)
+				jumping_duration = 4 * 16 + 24;
+			else if (!rebound)
+				jumping_duration = 20 * 16 + 24;
 
-		// slow down falling speed during first iterations
-		if (falling_counter < 16)
-			falling_speed = 2;
+			if (jump_counter < 12)
+				jumping_speed = -1;
+			else if (jump_counter >= 12 && jump_counter < 24)
+				jumping_speed = 1;
+
+			else if (jump_counter >= 24)
+				jumping_speed = 3;
+		}
 		else
-			falling_speed = 3;
+		{
+			if (jump_counter >= jumping_duration - 16)
+				jumping_speed = 2;
 
-
+			// slow down falling speed during first iterations
+			if (falling_counter < 16)
+				falling_speed = 2;
+			else
+				falling_speed = 3;
+		}
+		
 		//memorize power and then update
 		prev_power = power;
 		
@@ -532,7 +575,6 @@ void Mario::advance()
 			{
 				power = 1;
 				moving_speed = (moving_start_counter % 4 == 0) + 1;	// 1.25 speed
-				//animation_div = 3;
 				animation_div = 4;
 			}
 			if (moving_start_counter > 40 && moving_start_counter <= 55 && running)
@@ -553,27 +595,26 @@ void Mario::advance()
 				moving_speed = 2;	                                // 2 speed
 				animation_div = 3;
 			}
-			if (moving_start_counter > 85 && moving_start_counter <= 100 && running)
+			if (moving_start_counter > 85 && moving_start_counter <= 110 && running)
 			{
 				power = 5;
 				moving_speed = moving_start_counter % 2 + 2;        //2.5 speed
 				animation_div = 3;
 			}
-			if (moving_start_counter > 100 && moving_start_counter <= 115 && running)
+			if (moving_start_counter > 110 && moving_start_counter <= 130 && running)
 			{
 				power = 6;
 				moving_speed = 3;                                   // 3 speed
 				animation_div = 2;
 			}
-			if (moving_start_counter > 115 && moving_start_counter <= 130 && running)
-			{
-				power = 6;
-				moving_speed = moving_start_counter % 2 + 3;         // 3.5 speed
-				animation_div = 2;
-			}
+			//if (moving_start_counter > 115 && moving_start_counter <= 130 && running)
+			//{
+			//	power = 6;
+			//	moving_speed = moving_start_counter % 2 + 3;         // 3.5 speed
+			//	animation_div = 2;
+			//}
 			if (moving_start_counter > 130 && running)
 			{
-				//
 				power = 7;
 				moving_speed = 4;                                    //4 speed
 				super_running = true; 
@@ -745,7 +786,7 @@ void Mario::swim()
 	//is mario in water surface?
 	inWater_surface = pos().y() < (16 * 16) + 10;
 
-	//when mario in on the walkable object, he takes a standard swim
+	//when mario is on the walkable object, he takes a standard swim
 	if (walkable_object)
 	{
 		small_swim = false;
@@ -808,6 +849,15 @@ void Mario::swim()
 
 	if (swimming)
 		Sounds::instance()->play("jump"); //todo mettere suono swim
+}
+
+void Mario::endJumping()
+{
+	std::cout << "porcodio perchè entri qua\n";
+
+	jumping_duration = 4 * 16;
+    bounce_block = false;
+    Entity::endJumping();
 }
 
 void Mario::startSwimming()
@@ -875,6 +925,7 @@ void Mario::startFlying()
 	fly_counter = 0;
 	falling = false;
 	fly_duration = 64;
+
 }
 
 void Mario::endFlying()
@@ -912,6 +963,20 @@ void Mario::bounce()
 	jumping_duration = 1.5 * 16;
 	falling = false;
 	startJumping();
+}
+
+void Mario::bounceBlock()
+{
+	jumping_duration = 1 * 16 + 24;
+	bounce_block = true;
+	falling_counter = 0;
+
+	//jumping_speed =1;
+	
+	//if (jump_counter >= 12)
+		//jumping_speed = 3;
+	jumping = true;
+
 }
 
 // @override setMoving() to add horizontal acceleration
@@ -975,6 +1040,12 @@ void Mario::animate()
 
 	// save current texture height (for later correction)
 	int prev_h = boundingRect().height();
+
+	if (dying)
+	{
+		setPixmap(texture_dying);
+		return;
+	}
 	
 	if (script_move_in_pipe)
 	{
@@ -1102,7 +1173,6 @@ void Mario::animate()
 			}
 			else if (raccoon)
 			{
-				//std::cout << "ci entra \n";
 				if (dir_change_counter > 0)
 					setPixmap(texture_raccoon_brake);
 				else
@@ -1133,6 +1203,7 @@ void Mario::animate()
 				if (attack_counter > 7)
 				{
 					new FireBall(pos().toPoint() + QPoint(((dir == RIGHT) ? 16 : -6), 12), dir, false, 0);
+					Sounds::instance()->play("fireball");
 					attack = false;
 					attack_counter = 0;
 				}
@@ -1145,12 +1216,14 @@ void Mario::animate()
 				//la terza texture è qualla ruotata 
 				if (attack_counter == 12)
 				{
+					
 					raccoon_attack = true;
 					prev_dir = dir;  //dir precedente
 					dir = inverse(dir); //dir corrente
 				}
 				else if (attack_counter == 18)
 				{
+					Sounds::instance()->play("tail");
 					raccoon_attack = false;
 					prev_dir = dir;     //dir precedente
 					dir = inverse(dir); //dir corrente
@@ -1313,7 +1386,7 @@ void Mario::hit(Object* what, Direction fromDir)
 	if (dynamic_cast<Inert*>(what) && (fromDir == LEFT || fromDir == RIGHT))
 	{
 		moving_start_counter = 0;
-		if(script_move)  //todo vedere se effettivamente serve oppure è inutile, dovrebbe essere inutile
+		if(script_move)  
 			falling = true;
 	}
 	if (dynamic_cast<Enemy*>(what))
@@ -1322,10 +1395,10 @@ void Mario::hit(Object* what, Direction fromDir)
 		{
 			dynamic_cast<Enemy*>(what)->hurt();
 			Muncher* muncher_obj = dynamic_cast<Muncher*>(what);
-			if(!muncher_obj)
+			if (!muncher_obj)
 				bounce();
 		}
-		else if(big)
+		else if (big)
 			big = false;
 		else
 			die();
@@ -1396,10 +1469,11 @@ void Mario::endPipeTravel()
 void Mario::die()
 {
 	// call superclass method
-	Entity::die();
+	dying = true;
+	Game::instance()->dying();
 
 	// stop level music
-	Game::instance()->stopMusic();
+	//Game::instance()->stopMusic();
 }
 
 // crouch
@@ -1485,64 +1559,20 @@ void Mario::updateScore(int score2add,QPoint pos)
 	score += score2add;
 
 	//spawn score animation
-	if(score2add != 50)
+	if(score2add != 50 )
 		new ScoreSpawnable(pos, std::to_string(score2add));
 
-	//update score in the hud
+	//update score in the huds
 	Hud::instance()->updatePanel("Score", std::to_string(score));
 }
 
-//todo questo andrà tolto, posso farlo nell'advance, nel momento in cui si aggiorna la velocità
-void Mario::Speed() 
+void Mario::updateLives(int lives2add, QPoint pos)
 {
-	//prev_speed = speed;
-	//if (outOfWater)
-	//{
-	//	//todo da controllare questa condizione
-	//	if (moving_stop_counter < 0 && moving)
-	//	{
-	//		if (moving_start_counter > 25 && moving_start_counter < 40)
-	//			speed = 0;
-	//		if (moving_start_counter >= 40 && moving_start_counter < 55)
-	//			speed = 1;
-	//		if (moving_start_counter >= 55 && moving_start_counter < 70)
-	//			speed = 2;
-	//		if (moving_start_counter >= 70 && moving_start_counter < 85)
-	//			speed = 3;
-	//		if (moving_start_counter >= 85 && moving_start_counter < 100)
-	//			speed = 4;
-	//		if (moving_start_counter >= 100 && moving_start_counter < 130)
-	//			speed = 5;
-	//		/*if (moving_start_counter >= 115 && moving_start_counter < 130)
-	//			return 5;*/
-	//		if (moving_start_counter >= 130)
-	//			speed = 6;
-	//	}
-	//} //not running, don't update power meter
-	//else
-	//	speed = -1;
-
+	lives += lives2add;
+	
+	new ScoreSpawnable(pos, "1up");
+	Hud::instance()->updatePanel("LifeCounter", std::to_string(lives));
 }
-
-//todo questo mi serve per aggiornare il powerMeter nell'hud
-//std::string Mario::speedPower()
-//{
-//	//calculate current speed
-//	Speed();
-//	/*std::cout << "\nspeed: " << speed;
-//	std::cout << "\nprev_speed: " << prev_speed;*/
-//
-//	//std::cout << getSpeed() << "\n";
-//	if (speed != prev_speed)
-//	{
-//		return std::to_string(speed);
-//	}
-//	else
-//		return "boh";
-//	
-//	/*else 
-//		return "0";*/
-//}
 
 QPainterPath Mario::shape() const
 {

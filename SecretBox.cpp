@@ -69,7 +69,6 @@ void SecretBox::advance()
 		else if (spawn_counter == 240) {
 			BouncingBlock::spawn(UP);  //spawn of mushroom
 			spawn_counter = -1;
-
 		}
 	}
 }

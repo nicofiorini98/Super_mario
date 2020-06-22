@@ -86,4 +86,5 @@ void BouncingBlock::spawn(Direction _dir)
 	}
 	else if (content == LIFE)
 		new Mushroom(QPoint(x(), y()), _dir, false);
+	
 }
