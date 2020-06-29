@@ -19,7 +19,7 @@ class Game : public QGraphicsView
 	private:
 
 		static Game* uniqueInstance;     // Singleton design pattern
-		Game(QWidget* parent = 0);	     // Singleton design pattern
+		Game(QWidget* parent = nullptr);	     // Singleton design pattern
 
 	
 		QGraphicsScene* cur_scene;       // the scene used to render current game level (2D)

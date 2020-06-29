@@ -8,7 +8,10 @@
 
 BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
 {
+    //std::cout << "prima di prendere mario\n";
     mario = Game::instance()->getMario();
+
+    //std::cout << "dopo prendere mario\n";
 
     baby1 = nullptr;
     baby2 = nullptr;

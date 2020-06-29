@@ -20,6 +20,7 @@
 #include "Leaf.h"
 #include "JumpBlock.h"
 #include "Mushroom.h"
+#include "BlooberNanny.h"
 //#include "Collectable.h"
 
 // load all items from the given level in the given scene
@@ -80,16 +81,21 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new Cheep(QPoint(5 * 16, terrain_level - 32));
 		
 		//new BrickBlock(QPoint(4 * 16, terrain_level-48),"ice");
+		new KoopaTroopa(QPoint(38 * 16, terrain_level-200));
+		//new BrickBlock(QPoint(27 * 16, terrain_level-200),"ice");
+		//new JumpBlock(QPoint(4 * 16, terrain_level-48));
 
 		//new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
+
 		
-		//todo, non lo istanzia
 		//new JumpBlock(QPoint(2 * 16, terrain_level - 80), MUSHROOM);
 		new Coin(QPoint(80 * 16, terrain_level-32));
+		
 		// Mario
 		//mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
+		mario = new Mario(QPoint(15 * 16, terrain_level-64), level_name); //mario sopra la pipe
 		//mario = new Mario(QPoint(80 * 16, terrain_level), level_name); //mario fine livello
-		mario = new Mario(QPoint(6 * 16, terrain_level), level_name); // mario sopra l'iceberg
+		//mario = new Mario(QPoint(26 * 16, terrain_level-192), level_name); // mario sopra l'iceberg
 
 	}
 	else if (level_name == "World 6-9-2" )
@@ -258,12 +264,13 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   
 	   new HiddenBlock(QPoint(80 * 16, 7 * 16));
 		//todo controllare se le posizioni sono giuste
-	   new JumpBlock(QPoint(47 * 16, 7 * 16));
-	   new JumpBlock(QPoint(95 * 16, 9 * 16));
+	  /* new JumpBlock(QPoint(47 * 16, 7 * 16));
+	   new JumpBlock(QPoint(95 * 16, 9 * 16));*/
 
 	   // enemies
 	   // first cheep
 	   new Cheep(QPoint(14*16, 22*16), RIGHT);
+	  // new BlooberNanny(QPoint(20 * 16, 23 * 16));
 	}
 	else if(level_name == "World 6-9-3")
     {

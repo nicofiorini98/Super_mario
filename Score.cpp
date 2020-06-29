@@ -5,7 +5,6 @@
 
 Score::Score() : NumericalPanel()
 {
-	score = 0;
 	units =0;
 	dozens =0;
 	hundreds =0;
@@ -22,8 +21,6 @@ Score::Score() : NumericalPanel()
 	}
 	
 	drawScore();
-
-	
 }
 
 void Score::doUpdate(const std::string& update_info)

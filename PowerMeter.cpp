@@ -41,13 +41,18 @@ void PowerMeter::reset()
 
 void PowerMeter::doUpdate(const std::string& update_info)
 {
+	
+	std::cout << "doUpdate powerMeter\n";
 	power = std::stoi(update_info);
 
+	/*
 	if (power == 0)
 	{
 		reset();
 		return;
-	}
+	}*/
+	reset();
+	std::cout << "doUpdate powerMeter2\n";
 	
 	for (int i = 0; i < power; i++)					//turn on arrow
 		pan[i]->setPixmap(texture_arrow[0]);

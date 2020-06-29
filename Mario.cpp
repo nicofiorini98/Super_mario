@@ -10,6 +10,7 @@
 #include <iostream>
 #include "FireBall.h"
 #include "ScoreSpawnable.h"
+#include "KoopaTroopa.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
@@ -222,8 +223,6 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_raccoon_tail_attack[3] = Sprites::instance()->get("mario-raccoon-tail-attack-3");
 	texture_raccoon_tail_attack[4] = Sprites::instance()->get("mario-raccoon-tail-attack-4");
 
-
-
 	//mario raccon texture InWater
 	texture_raccoon_swimming[0] = Sprites::instance()->get("mario-raccoon-swim-0");
 	texture_raccoon_swimming[1] = Sprites::instance()->get("mario-raccoon-swim-1");
@@ -250,9 +249,13 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 void Mario::advance()
 {
 
-	if(prev_power!=power)
+	/*if (prev_power != power)
+	{
+		std::cout << "prima del powerMeter\n";
 		Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
 
+		std::cout << "dopo del powerMeter\n";
+	}*/
 	if (dying)
 	{
 		moving = false;
@@ -299,8 +302,7 @@ void Mario::advance()
 		//manage asymmetry texture of mario raccoon
 		if (prev_dir != dir)
 		{
-			if(!moving)
-				setX(x() + (dir == LEFT ? 8 : -8));
+			setX(x() + (dir == LEFT ? 8 : -8));
 			prev_dir = dir;
 			solveCollisions();
 		}
@@ -1046,7 +1048,6 @@ void Mario::animate()
 		setPixmap(texture_dying);
 		return;
 	}
-	
 	if (script_move_in_pipe)
 	{
 		if (big && !fire && !raccoon)
@@ -1076,6 +1077,7 @@ void Mario::animate()
 			Game::instance()->setFreezed(false);
 		}
 	}
+	//todo vedere qui, prima ci stava else if
 	else if(outOfWater) //animate out of the water
 	{
 		//animation of raccoon in fly float
@@ -1192,135 +1194,138 @@ void Mario::animate()
 		//todo sistemare opportunamente sopra questa parte
 		//todo toglire l'animation_div
 
-		if (attack)
-		{
-			//attack with fire is shoot a fireBall
-			if (fire)
-			{
-				attack_counter++;
-				setPixmap(texture_fire_shoot[(attack_counter / 7) % 2]);
-
-				if (attack_counter > 7)
-				{
-					new FireBall(pos().toPoint() + QPoint(((dir == RIGHT) ? 16 : -6), 12), dir, false, 0);
-					Sounds::instance()->play("fireball");
-					attack = false;
-					attack_counter = 0;
-				}
-			}
-			else if (raccoon)
-			{
-				attack_counter++;
-				setPixmap(texture_raccoon_tail_attack[(attack_counter / 6) % 5]);
-
-				//la terza texture è qualla ruotata 
-				if (attack_counter == 12)
-				{
-					
-					raccoon_attack = true;
-					prev_dir = dir;  //dir precedente
-					dir = inverse(dir); //dir corrente
-				}
-				else if (attack_counter == 18)
-				{
-					Sounds::instance()->play("tail");
-					raccoon_attack = false;
-					prev_dir = dir;     //dir precedente
-					dir = inverse(dir); //dir corrente
-				}
-
-				if (attack_counter > 30)
-				{
-					attack = false;
-					attack_counter = 0;
-				}
-
-			}
-		}
 
 	}
 	//animazione dentro l'acqua
-	else if (inWater)
+	if (inWater)
 	{
-	if (!walkable_object)
-	{
-		//mettere  trasformazione mario_fire e mario_raccoon
-	//per adesso distinguo tra acqua e non, perchè mi sembra che sono diverse 
-		if (transformation_counter >= 0)
+		if (!walkable_object)
 		{
-			if (raccoon)
-				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
-			else
-				setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
-			transformation_counter++;
-			if (transformation_counter >= 12 * 5)
+			//mettere  trasformazione mario_fire e mario_raccoon
+		//per adesso distinguo tra acqua e non, perchè mi sembra che sono diverse 
+			if (transformation_counter >= 0)
 			{
-				transformation_counter = -1;
-				Game::instance()->setFreezed(false);
+				if (raccoon)
+					setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
+				else
+					setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
+				transformation_counter++;
+				if (transformation_counter >= 12 * 5)
+				{
+					transformation_counter = -1;
+					Game::instance()->setFreezed(false);
+				}
 			}
-		}
 
-		//swimming and fall inWater animation of mario small
-		if (!big)
-		{
-			if (swimming)
-				setPixmap(texture_small_swimming[(animation_counter / animation_div) % 4]);
-			else if (falling)
-				setPixmap(texture_small_swimming[(animation_counter / animation_div) % 2]);
-		}
+			//swimming and fall inWater animation of mario small
+			if (!big)
+			{
+				if (swimming)
+					setPixmap(texture_small_swimming[(animation_counter / animation_div) % 4]);
+				else if (falling)
+					setPixmap(texture_small_swimming[(animation_counter / animation_div) % 2]);
+			}
 
-		//swimming and fall inWater animation of mario Big
-		else if (big && !fire && !raccoon)
-		{
-			if (swimming)
-				setPixmap(texture_big_swimming[((animation_counter / animation_div) % 3) + 4]);
-			else if (falling)
-				setPixmap(texture_big_swimming[(animation_counter / animation_div) % 4]);
-		}
-		else if (fire)
-		{
-			if (swimming)
-				setPixmap(texture_fire_swimming[((animation_counter / animation_div) % 3) + 4]);
-			else if (falling)
-				setPixmap(texture_fire_swimming[(animation_counter / animation_div) % 4]);
-		}
-		else if (raccoon)
-		{
-			if (swimming)
-				setPixmap(texture_raccoon_swimming[((animation_counter / animation_div) % 3) + 4]);
-			else if (falling)
-				setPixmap(texture_raccoon_swimming[(animation_counter / animation_div) % 4]);
-		}
-
-	}
-
-	//mario walk in the backdrop
-	else
-	{
-		if (moving)
-		{
-			if (!fire && !raccoon)
-				setPixmap(texture_walking[big][(animation_counter / animation_div) % 4]);
+			//swimming and fall inWater animation of mario Big
+			else if (big && !fire && !raccoon)
+			{
+				if (swimming)
+					setPixmap(texture_big_swimming[((animation_counter / animation_div) % 3) + 4]);
+				else if (falling)
+					setPixmap(texture_big_swimming[(animation_counter / animation_div) % 4]);
+			}
 			else if (fire)
-				setPixmap(texture_fire_walking[(animation_counter / animation_div) % 4]);
-			else
-				setPixmap(texture_raccoon_walking[(animation_counter / animation_div) % 4]);
+			{
+				if (swimming)
+					setPixmap(texture_fire_swimming[((animation_counter / animation_div) % 3) + 4]);
+				else if (falling)
+					setPixmap(texture_fire_swimming[(animation_counter / animation_div) % 4]);
+			}
+			else if (raccoon)
+			{
+				if (swimming)
+					setPixmap(texture_raccoon_swimming[((animation_counter / animation_div) % 3) + 4]);
+				else if (falling)
+					setPixmap(texture_raccoon_swimming[(animation_counter / animation_div) % 4]);
+			}
 
 		}
 		else
 		{
-			if (!fire && !raccoon)
-				setPixmap(texture_stand[big]);
-			else if (fire)
-				setPixmap(texture_fire_stand);
+			if (moving)
+			{
+				if (!fire && !raccoon)
+					setPixmap(texture_walking[big][(animation_counter / animation_div) % 4]);
+				else if (fire)
+					setPixmap(texture_fire_walking[(animation_counter / animation_div) % 4]);
+				else
+					setPixmap(texture_raccoon_walking[(animation_counter / animation_div) % 4]);
+
+			}
 			else
-				setPixmap(texture_raccoon_stand);
+			{
+				if (!fire && !raccoon)
+					setPixmap(texture_stand[big]);
+				else if (fire)
+					setPixmap(texture_fire_stand);
+				else
+					setPixmap(texture_raccoon_stand);
+			}
 		}
-	}
 	//mirror texture istantly in the water   
 	if (dir_change_counter > 0)
 		setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 
+	}
+
+
+	if (attack)
+	{
+		//attack with fire is shoot a fireBall
+		if (fire)
+		{
+			attack_counter++;
+
+			if (walkable_object)
+				setPixmap(texture_fire_shoot[(attack_counter / 7) % 2]);
+			else
+				setPixmap(texture_fire_super_jumping);
+
+			if (attack_counter > 7)
+			{
+				new FireBall(pos().toPoint() + QPoint(((dir == RIGHT) ? 16 : -6), 12), dir, false, 0);
+				Sounds::instance()->play("fireball");
+				attack = false;
+				attack_counter = 0;
+			}
+		}
+		else if (raccoon && outOfWater)
+		{
+			attack_counter++;
+			setPixmap(texture_raccoon_tail_attack[(attack_counter / 6) % 5]);
+
+			if (attack_counter == 12)
+			{
+
+				raccoon_attack = true;
+				prev_dir = dir;  //dir precedente
+				dir = inverse(dir); //dir corrente
+			}
+			else if (attack_counter == 18)
+			{
+				Sounds::instance()->play("tail");
+				raccoon_attack = false;
+				prev_dir = dir;     //dir precedente
+				dir = inverse(dir); //dir corrente
+			}
+
+			if (attack_counter > 30)
+			{
+				attack = false;
+				attack_counter = 0;
+			}
+
+		}
 	}
 	//todo qua l'indentazione è sbagliata, vidi mpo
 
@@ -1393,16 +1398,32 @@ void Mario::hit(Object* what, Direction fromDir)
 	{
 		if (fromDir == DOWN)
 		{
-			dynamic_cast<Enemy*>(what)->hurt();
-			Muncher* muncher_obj = dynamic_cast<Muncher*>(what);
-			if (!muncher_obj)
+
+			if (dynamic_cast<KoopaTroopa*>(what))
 				bounce();
+			else
+			{
+				dynamic_cast<Enemy*>(what)->hurt();
+				Muncher* muncher_obj = dynamic_cast<Muncher*>(what);
+				if (!muncher_obj)
+					bounce();
+			}
+			
 		}
 		else if (big)
 			big = false;
 		else
 			die();
 	}
+	 /*  if (fromDir == DOWN && dynamic_cast<Koopa_Troopa*>(what))
+        {
+    
+            bounce();
+        }
+        else if(big)
+            big = false;
+        else
+            die();*/
 }
 
 // running = double moving speed
@@ -1562,12 +1583,17 @@ void Mario::updateScore(int score2add,QPoint pos)
 	if(score2add != 50 )
 		new ScoreSpawnable(pos, std::to_string(score2add));
 
+	std::cout << "prima di update Panel\n";
 	//update score in the huds
 	Hud::instance()->updatePanel("Score", std::to_string(score));
+
+	std::cout << "dopo di update Panel\n";
+	
 }
 
 void Mario::updateLives(int lives2add, QPoint pos)
 {
+	
 	lives += lives2add;
 	
 	new ScoreSpawnable(pos, "1up");
