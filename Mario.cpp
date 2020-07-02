@@ -155,7 +155,6 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_small_swimming[2] = Sprites::instance()->get("mario-small-swim-2");
 	texture_small_swimming[3] = Sprites::instance()->get("mario-small-swim-3");
 
-
 	//mario big texture InWater
 	texture_big_swimming[0] = Sprites::instance()->get("mario-big-swim-0");
 	texture_big_swimming[1] = Sprites::instance()->get("mario-big-swim-1");
@@ -252,9 +251,6 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 // @override advance() for to add vertical/horizontal acceleration
 void Mario::advance()
 {
-	std::cout << "trasformation: " << transformation_counter << '\n';
-	//std::cout << "injured_counter : " << injured_counter << '\n';
-	std::cout << "altezza : " << boundingRect().height() << '\n';
 	std::cout << "walkable_object : " << walkable_object << '\n';
 	
 	if (dying)
@@ -1052,7 +1048,6 @@ void Mario::animate()
 		setPixmap(texture_dying);
 		return;
 	}
-	
 	if (script_move_in_pipe)
 	{
 		if (big && !fire && !raccoon)
@@ -1064,29 +1059,27 @@ void Mario::animate()
 		else
 			setPixmap(texture_entering_pipe[0]);
 	}
-	//todo, mettere mario che lampeggia
-	else if (injured && transformation_counter < 0 && animation_counter%3==0)
+	//flashing texture when mario is injured
+	else if (injured && transformation_counter < 0 && animation_counter % 6==0)
 	{
-		
 		injured_counter++;
-		//if (big)
+		if (big)
 			setPixmap(texture_transparent[0]);
-		/*else
-			setPixmap(texture_transparent[1]);*/
+		else
+			setPixmap(texture_transparent[1]);
 		if (injured_counter >= 30)
 		{
 			injured_counter = 0;
 			injured = false;
 		}
 	}
+	//texture powerUp and powerDown
 	else if(transformation_counter>=0)
 	{
-		//todo caricare tutte le trasformazioni
-
 		transformation_counter++;
 		if(!injured)
 		{ 
-			if (raccoon || fire)
+			if (raccoon || fire || inWater)
 			{
 				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
 			}
@@ -1103,10 +1096,10 @@ void Mario::animate()
 		}
 		else
 		{
-			if (big)
+			if (big || inWater)
 				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
 			else
-				setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
+				setPixmap(texture_small2big[(-(transformation_counter / 5) % 12)+11]); 
 
 
 			if (transformation_counter >= 12 * 5)
@@ -1117,9 +1110,7 @@ void Mario::animate()
 				Game::instance()->setFreezed(false);
 			}
 		}
-		
 	}
-	//todo vedere qui, prima ci stava else if
 	else if(outOfWater) //animate out of the water
 	{
 		//animation of raccoon in fly float
@@ -1232,20 +1223,12 @@ void Mario::animate()
 			else if (raccoon)
 				setPixmap(texture_raccoon_stand);
 		}
-
-		//todo sistemare opportunamente sopra questa parte
-		//todo toglire l'animation_div
-
-
 	}
-	//animazione dentro l'acqua
-	if (inWater)
+	else if (inWater)
 	{
 		if (!walkable_object)
 		{
-			//mettere  trasformazione mario_fire e mario_raccoon
-		//per adesso distinguo tra acqua e non, perchè mi sembra che sono diverse 
-			if (transformation_counter >= 0)
+			/*if (transformation_counter >= 0)
 			{
 				if (raccoon)
 					setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
@@ -1257,7 +1240,7 @@ void Mario::animate()
 					transformation_counter = -1;
 					Game::instance()->setFreezed(false);
 				}
-			}
+			}*/
 
 			//swimming and fall inWater animation of mario small
 			if (!big)
@@ -1313,12 +1296,14 @@ void Mario::animate()
 				else
 					setPixmap(texture_raccoon_stand);
 			}
-		}
-	//mirror texture istantly in the water   
-	if (dir_change_counter > 0)
-		setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 
+			//mirror texture istantly in the water   
+			if (dir_change_counter > 0)
+				setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
+
+		}
 	}
+	
 
 
 	if (attack)
@@ -1647,11 +1632,8 @@ void Mario::updateScore(int score2add,QPoint pos)
 	if(score2add != 50 )
 		new ScoreSpawnable(pos, std::to_string(score2add));
 
-	std::cout << "prima di update Panel\n";
 	//update score in the huds
 	Hud::instance()->updatePanel("Score", std::to_string(score));
-
-	std::cout << "dopo di update Panel\n";
 	
 }
 
@@ -1669,9 +1651,9 @@ QPainterPath Mario::shape() const
 	QPainterPath path;
 
 	if (!big)
-		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom() - 3);
+		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom());
 	else if ((big && !raccoon) || transformation_counter>0)
-		path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
+		path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom());
 	else if (raccoon)
 	{
 		if (attack && attack_counter == 12)

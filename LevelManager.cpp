@@ -323,5 +323,4 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		std::cerr << "Level not implemented";
 
 	return mario;
-
 }

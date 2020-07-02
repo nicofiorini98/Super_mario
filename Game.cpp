@@ -436,7 +436,7 @@ void Game::advance()
 
 	if (cur_state != END_OF_LEVEL) { //todo è giusto, tranne per mario attack, per mario attack lo shape cambia
 		if (!mario->isRaccoonAttack())// center view on shape of Mario
-			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()));
+			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()+mario->boundingRect().height()));
 		/*else
 			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()));*/
 	}
