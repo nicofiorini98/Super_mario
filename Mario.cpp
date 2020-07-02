@@ -21,6 +21,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 
 	bounce_block = false;
 	rebound = false;
+	injured = false;
 		
 	prev_dir = dir;
 	// set flags
@@ -77,7 +78,8 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	dir_change_counter = -1;
 	dir_change_duration = 30;  //todo controllare, per il cambio direzione, uso 30 di default
 	transformation_counter = -1;
-	death_duration = 64;
+	injured_counter = 0;
+	death_duration = 100; //todo prima era 64
 	//livel_ended_counter = 0;
 
 	item_taken = "";
@@ -135,6 +137,8 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_small2big[10] = Sprites::instance()->get("mario-half");
 	texture_small2big[11] = texture_stand[1];
 	texture_dying= Sprites::instance()->get("mario-small-dying");
+	texture_transparent[0]= Sprites::instance()->get("mario-small-transparent");
+	texture_transparent[1]= Sprites::instance()->get("mario-big-transparent");
 
 	//texture transformation fire and raccoon
 	texture_transformation[0] = Sprites::instance()->get("mario-transformation-0");
@@ -248,14 +252,11 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 // @override advance() for to add vertical/horizontal acceleration
 void Mario::advance()
 {
-
-	/*if (prev_power != power)
-	{
-		std::cout << "prima del powerMeter\n";
-		Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
-
-		std::cout << "dopo del powerMeter\n";
-	}*/
+	std::cout << "trasformation: " << transformation_counter << '\n';
+	//std::cout << "injured_counter : " << injured_counter << '\n';
+	std::cout << "altezza : " << boundingRect().height() << '\n';
+	std::cout << "walkable_object : " << walkable_object << '\n';
+	
 	if (dying)
 	{
 		moving = false;
@@ -302,7 +303,10 @@ void Mario::advance()
 		//manage asymmetry texture of mario raccoon
 		if (prev_dir != dir)
 		{
+			//if(!attack)
+			
 			setX(x() + (dir == LEFT ? 8 : -8));
+			
 			prev_dir = dir;
 			solveCollisions();
 		}
@@ -1048,6 +1052,7 @@ void Mario::animate()
 		setPixmap(texture_dying);
 		return;
 	}
+	
 	if (script_move_in_pipe)
 	{
 		if (big && !fire && !raccoon)
@@ -1059,23 +1064,60 @@ void Mario::animate()
 		else
 			setPixmap(texture_entering_pipe[0]);
 	}
+	//todo, mettere mario che lampeggia
+	else if (injured && transformation_counter < 0 && animation_counter%3==0)
+	{
+		
+		injured_counter++;
+		//if (big)
+			setPixmap(texture_transparent[0]);
+		/*else
+			setPixmap(texture_transparent[1]);*/
+		if (injured_counter >= 30)
+		{
+			injured_counter = 0;
+			injured = false;
+		}
+	}
 	else if(transformation_counter>=0)
 	{
 		//todo caricare tutte le trasformazioni
-		if (raccoon)
-		{
-			setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
+
+		transformation_counter++;
+		if(!injured)
+		{ 
+			if (raccoon || fire)
+			{
+				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
+			}
+			else
+				setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
+			
+			if (transformation_counter >= 12 * 5)
+			{
+				if (raccoon && dir == RIGHT) //correction asymmetry of raccoon transformation
+					setX(x() - 8);
+				transformation_counter = -1;
+				Game::instance()->setFreezed(false);
+			}
 		}
 		else
-			setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
-		transformation_counter++;
-		if (transformation_counter >= 12 * 5)
 		{
-			if (raccoon && dir == RIGHT) //correction asymmetry of raccoon transformation
-				setX(x() - 8);
-			transformation_counter = -1;
-			Game::instance()->setFreezed(false);
+			if (big)
+				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
+			else
+				setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
+
+
+			if (transformation_counter >= 12 * 5)
+			{
+				if (raccoon && dir == RIGHT) //correction asymmetry of raccoon transformation
+					setX(x() - 8);
+				transformation_counter = -1;
+				Game::instance()->setFreezed(false);
+			}
 		}
+		
 	}
 	//todo vedere qui, prima ci stava else if
 	else if(outOfWater) //animate out of the water
@@ -1408,12 +1450,14 @@ void Mario::hit(Object* what, Direction fromDir)
 				if (!muncher_obj)
 					bounce();
 			}
-			
+
 		}
-		else if (big)
+		else
+			powerDown();
+		/*else if (big)
 			big = false;
 		else
-			die();
+			die();*/
 	}
 	 /*  if (fromDir == DOWN && dynamic_cast<Koopa_Troopa*>(what))
         {
@@ -1467,6 +1511,22 @@ void Mario::exitPipe()
 	Sounds::instance()->play("pipe");
 }
 
+void Mario::powerDown()
+{
+	injured = true;
+	transformation_counter = 0;
+
+
+	if (raccoon)
+		raccoon = false;
+	else if (fire)
+		fire = false;
+	else if (big)
+		big = false;
+	else
+		die();
+}
+
 void Mario::startPipeTravel()
 {
 	entering_pipe = false;
@@ -1493,8 +1553,6 @@ void Mario::die()
 	dying = true;
 	Game::instance()->dying();
 
-	// stop level music
-	//Game::instance()->stopMusic();
 }
 
 // crouch
@@ -1506,7 +1564,13 @@ void Mario::setCrouch(bool active)
 
 void Mario::powerUp(spawnable_t _power) //todo da debuggare 
 {
-	Sounds::instance()->play("eat");
+	if(_power == MUSHROOM)
+		Sounds::instance()->play("eat");
+	else if(_power== FLOWER)
+		Sounds::instance()->play("eat");//TODO, METTERE suono fiore
+	else if(_power== LEAF)
+		Sounds::instance()->play("eat");//TODO, METTERE suono leaf	
+
 	transformation_counter = 0;
 
 	//only for debug
@@ -1606,22 +1670,21 @@ QPainterPath Mario::shape() const
 
 	if (!big)
 		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom() - 3);
-	else if (big && !raccoon)
+	else if ((big && !raccoon) || transformation_counter>0)
 		path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
 	else if (raccoon)
 	{
 		if (attack && attack_counter == 12)
 		{
 			if (dir == RIGHT)
-				path.addRect(0, boundingRect().top() + 3, boundingRect().width(), boundingRect().bottom() - 3);
+				path.addRect(0, boundingRect().top() + 3, boundingRect().width()-3, boundingRect().bottom() - 3);
 			else
-				path.addRect(0, boundingRect().top() + 3, boundingRect().width(), boundingRect().bottom() - 3);
+				path.addRect(3, boundingRect().top() + 3, boundingRect().width() -3, boundingRect().bottom() - 3);
 		}
 		else if (dir == RIGHT)
 			path.addRect(11, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
 		else if (dir == LEFT)
 			path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
 	}
-
 	return path;
 }

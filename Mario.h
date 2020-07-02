@@ -24,6 +24,7 @@ class Mario : public Entity
 		QPixmap texture_big_swimming[7];	// big swimming texture
 		QPixmap texture_entering_pipe[2];	// small/big enetering into pipe texture
 		QPixmap texture_dying;
+		QPixmap texture_transparent[2];
 		
 		std::string item_taken;
 
@@ -88,13 +89,12 @@ class Mario : public Entity
 
 		int falling_start_counter;
 
-		
 		int swim_counter;
 		int swim_start_counter;
 		int swim_rise_duration;
 		int swim_fall_duration;
-
 		int swim_speed;
+	
 		int dir_change_duration;
 		int attack_counter;
 	
@@ -110,6 +110,7 @@ class Mario : public Entity
 
 		bool bounce_block;
 		bool rebound;
+		bool injured;
 		// counters
 		int script_move_counter;
 
@@ -124,6 +125,7 @@ class Mario : public Entity
 		int moving_stop_counter;			// counts the number of frames since moving stopped
 		int dir_change_counter;				// counts the number of frames since direction changed
 		int transformation_counter;			// counts the number of frames since transformation started
+		int injured_counter;				// counts the number of frames since flashing for injured started
 		
 
 		virtual void endJumping();
@@ -155,6 +157,8 @@ class Mario : public Entity
 		// getters and setters
 		bool isBig() { return big; }
 		bool isRaccoon() { return raccoon; }
+		bool isInjured() { return injured; }
+		bool isDying() { return dying; }
 		bool isOnPipe(std::string level_name);
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
@@ -214,7 +218,9 @@ class Mario : public Entity
 		// crouch
 		void setCrouch(bool active);
 
-		void powerUp(spawnable_t _power);  //todo aggiungere spawnable_t
+		void powerUp(spawnable_t _power);  
+
+		void powerDown();
 	
 		void enterPipe(Direction fromDir);
 };

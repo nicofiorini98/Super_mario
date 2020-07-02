@@ -178,6 +178,8 @@ void Entity::advance()
 		
 		walkable_object = nullptr;
 		script_move = false;
+
+		std::cout << "not touching_direction\n";
 		
 		if (Game::instance()->getCurState() == "RUNNING")
 			falling = true;
@@ -261,6 +263,13 @@ void Entity::solveCollisions()
 
 			//todo ricontrollare
 			if (dynamic_cast<Enemy*>(this) && dynamic_cast<BlooberBaby*>(obj))
+				continue;
+
+			//ignore collision with enemy if mario is injured
+			if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isInjured() && dynamic_cast<Enemy*>(obj))
+				continue;
+			
+			if (dynamic_cast<Enemy*>(this) && dynamic_cast<Mario*>(obj) && dynamic_cast<Mario*>(obj)->isInjured())
 				continue;
 			
 

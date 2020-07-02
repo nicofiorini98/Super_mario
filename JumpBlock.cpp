@@ -7,13 +7,14 @@
 JumpBlock::JumpBlock(QPoint position)
 {
 	mario = Game::instance()->getMario();
-
 	down = false;
 	up = false;
 	pos_in = position;
 
 	hit_start_counter = -1;
 	hit_duration = 0;
+	animation_counter = 0;
+
 	// textures
 	texture_animation[0] = Sprites::instance()->get("jump-block-0");
 	texture_animation[1] = Sprites::instance()->get("jump-block-1");
@@ -22,6 +23,7 @@ JumpBlock::JumpBlock(QPoint position)
 	// make background color (224, 163, 216) transparent
 	for (int i = 0; i < 3; i++)
 		texture_animation[i].setMask(texture_animation[i].createMaskFromColor(QColor(224, 163, 216)));
+
 	setPixmap(texture_animation[0]);
 	setPos(position);
 	setZValue(2);
@@ -30,10 +32,7 @@ JumpBlock::JumpBlock(QPoint position)
 
 void JumpBlock::animate()
 {
-
-
-	setPixmap(texture_animation[(animation_counter++ / 8) % 3]);
-
+	setPixmap(texture_animation[(animation_counter++/ 8) % 3]);
 }
 
 void JumpBlock::advance()

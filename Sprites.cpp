@@ -125,7 +125,12 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(moveMarioBy(mario_small, 15, 0));
 	if (id == "mario-small-dying")
 		return mario.copy(moveMarioBy(mario_small, 17, 0));
+	if (id == "mario-small-transparent")
+		hud.copy(QRect(240, 3, 16, 16));
+	if (id == "mario-big-transparent")
+		hud.copy(QRect(240, 3, 19, 30));
 
+	
 	if (id == "mario-big-stand")
 		return mario.copy(mario_big);
 	if (id == "mario-big-walk-0")
@@ -596,6 +601,10 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "Splash-4")
 		return enemies.copy(moveBy(Splash, 4, 0, 16, 0, 0, 0));
 
+	
+	if (id == "green-plant-0")
+		return enemies.copy(plant);
+
 	if (id == "green-plant-1")
 		return enemies.copy(moveBy(plant, 1, 0, 16, 16, 0, 0));
 	if (id == "red-plant-0")
@@ -610,6 +619,9 @@ QPixmap Sprites::get(const std::string & id)
 		return enemies.copy(moveBy(plant_fire, 2, 0, 16, 16, 0, 0));
 	if (id == "plant-fire-up-1")
 		return enemies.copy(moveBy(plant_fire, 3, 0, 16, 16, 0, 0));
+
+
+	
 
 	if (id == "fire-ball-left-0")
 		return mario.copy(fire_ball);

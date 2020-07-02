@@ -7,7 +7,6 @@ class JumpBlock : public BouncingBlock
 {
 protected:
 	Mario* mario;
-
 	bool down;
 	bool up;
 
