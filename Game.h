@@ -19,7 +19,7 @@ class Game : public QGraphicsView
 	private:
 
 		static Game* uniqueInstance;     // Singleton design pattern
-		Game(QWidget* parent = 0);	     // Singleton design pattern
+		Game(QWidget* parent = nullptr);	     // Singleton design pattern
 
 	
 		QGraphicsScene* cur_scene;       // the scene used to render current game level (2D)
@@ -37,13 +37,18 @@ class Game : public QGraphicsView
 		QSound* fast_music1;             // faster version of music1 
 		QSound* fast_music2;             // faster version of music2
 		QSound* fast_music3;             // faster version of music3
+
+	//todo check it
+		int lives;
+		int score;
+	
 	
 		SpinningItem* spinning_item;
 
 		// flags
 		bool hurry_up;                   // is game time under 100 seconds?
 		bool key_up_pressed;             // is key up pressed?
-	
+		
 
 		int clear_level_counter;         // counts the number of frames since level has been cleared
 
@@ -80,6 +85,7 @@ class Game : public QGraphicsView
 	
 		// setters
 		void setSpinningItem(SpinningItem* _spinning_item) { spinning_item = _spinning_item; }
+		void dying();
 	
 	public slots:
 

@@ -15,8 +15,8 @@ FireBall::FireBall(QPoint position, Direction direction, bool _enemy, bool mario
 	death_duration = 15;
 	
 	enemy = _enemy;
-	up_mario = mario_up; // è da aggiustare questo mario_up che serve per la fireball della pianta
-						 // si può fare in un altra maniera con il puntatore della pianta penso
+	up_mario = mario_up; // ? da aggiustare questo mario_up che serve per la fireball della pianta
+						 // si pu? fare in un altra maniera con il puntatore della pianta penso
 
 	// textures
 	texture_rotate[0] = Sprites::instance()->get("fire-ball-left-0");
@@ -99,7 +99,7 @@ void FireBall::advance()
 	}
 	else
     {
-		//todo vedere un po' come posso fare altrimenti, è la pianta che deve gestire mario
+		//todo vedere un po' come posso fare altrimenti, ? la pianta che deve gestire mario
 		//da cambiare up_mario, credo serve per dire che mario sta in alto rispetto alla pianta
 		if (up_mario && dir == LEFT)
 		{

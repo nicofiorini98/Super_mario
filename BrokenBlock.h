@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Entity.h"
-#include <iostream> // da togliere 
+#include <iostream>
 class BrokenBlock : public Entity
 {
 protected:
+
 	bool dioporco;
 	int cristo;
 	QPixmap texture_broken[2];

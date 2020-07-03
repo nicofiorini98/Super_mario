@@ -3,16 +3,21 @@
 #include "Sounds.h"
 #include "Sprites.h"
 #include <iostream>
+#include "Iceberg.h"
 
 Mushroom::Mushroom(QPoint position, Direction _dir, bool _red) : Collectable(position)
 {
 	// set attributes
+	//slow = false;
 	red = _red;
 	dir = _dir;
 	if (red)
 		type = MUSHROOM;
 	else
 		type = LIFE;
+
+	fall_counter = 0;
+	moving_counter = 0;
 
 	// set texture and position
 	setPixmap(Sprites::instance()->get(red ? "mushroom-red" : "mushroom-green"));
@@ -33,13 +38,34 @@ void Mushroom::animate()
 
 void Mushroom::hit(Object* what, Direction fromDir)
 {
-	Object::hit(what, fromDir);
+	Object::hit(what, fromDir); 
 
+
+	if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "downhill")
+	{
+		falling = false;
+		script_move = true;
+		downhill = true;
+	}
+	else if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "uphill")
+	{
+		falling = false;
+		script_move = true;
+		downhill = false;
+	}
+	else
+		script_move = false;
+
+	
 	// if hit by Mario, Mario eats mushroom and mushroom dies
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
 	{
 		mario->powerUp(type);
+		if(type==LIFE)
+			mario->updateLives(1, pos().toPoint());
+		else 
+			mario->updateScore(1000,pos().toPoint());
 		die();
 		return;
 	}
@@ -61,36 +87,64 @@ void Mushroom::advance()
 	/*if (level_name == "World 6-9-2" && pos().y() > 15.8 * 16 && pos().y() < 16 * 16)
 		new Splash(pos());*/
 
-	if (dir == UP)
+	//todo controllare se l'entity advance da problemi alla fine, anche se non dovrebbe
+	//Entity::advance();
+	//
+	/*if (walkable_object)
 	{
+		falling_counter = 0;
+		moving = true;
+	}
+
+	if(falling)
+	{
+		falling_counter++;
+		if (falling_counter >= 80)
+		{
+			moving = false;
+		}
+
+	}*/
+	std::cout << "jump_counter" << falling_counter<<"\n";
+	
+	if (dir == UP) {
 		collidable = true;
-		setY(y() - moving_speed);
+		if(y()>= spawned_position.y() - pixmap().height())
+		{
+			setY(y() - moving_speed);
+		}
 		if (y() == spawned_position.y() - pixmap().height())
 		{
-			falling = true;
-			//slow = false; //todo vedere perchè ci stavano prima
+			if (type == LIFE) 
+			{
+				jumping = true;
+				jumping_duration = 60;
+			}
+			else
+			    falling = true;
+			
+			slow = false;
 			moving_speed = 1;
 			dir = RIGHT;
 		}
 	}
+	
 	if (dir == DOWN) {
-		//slow = false;
+		slow = false;
 		falling = true;
-		falling_speed = 2;
+		
 		if (y() >= spawned_position.y() + pixmap().height() + 16) {
 			collidable = true;
 			moving_speed = 1;
 		}
 		if (walkable_object) {
 			dir = RIGHT;
-
 		}
 	}
 
-
+	Entity::advance();
 
 }
-
 
 
 //#include "Mushroom.h"

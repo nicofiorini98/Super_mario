@@ -14,6 +14,7 @@ class LifeCounter : public NumericalPanel
 	public:
 
 		LifeCounter();
+		//int getLives() { return lives; }
 
 		virtual void reset();
 	

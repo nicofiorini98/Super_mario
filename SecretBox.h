@@ -10,7 +10,7 @@ class SecretBox : public BouncingBlock
 		QPixmap texture_active[4];
 		QPixmap texture_inactive;
 		Direction hit_from;
-
+		int spawn_counter;
 	public:
 
 		SecretBox(QPoint position, spawnable_t _spawnable);

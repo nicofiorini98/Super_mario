@@ -8,7 +8,10 @@
 
 BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
 {
+    //std::cout << "prima di prendere mario\n";
     mario = Game::instance()->getMario();
+
+    //std::cout << "dopo prendere mario\n";
 
     baby1 = nullptr;
     baby2 = nullptr;
@@ -361,7 +364,7 @@ QPoint BlooberNanny::posBaby(int id)
 
         return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
     }
-    else if (id == 2)
+    if (id == 2)
     {
         if (counter_pos - 20 >= 0)
             counter_pos1 = counter_pos - 20;
@@ -370,7 +373,7 @@ QPoint BlooberNanny::posBaby(int id)
 
         return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
     }
-    else  if (id == 3)
+    if (id == 3)
     {
         if (counter_pos - 30 >= 0)
             counter_pos1 = counter_pos - 30;
@@ -379,7 +382,7 @@ QPoint BlooberNanny::posBaby(int id)
 
         return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
     }
-    else  if (id == 4)
+    if (id == 4)
     {
         if (counter_pos - 40 >= 0)
             counter_pos1 = counter_pos - 40;

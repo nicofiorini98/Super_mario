@@ -1,11 +1,9 @@
 #pragma once
-
 #include <QGraphicsItemGroup>
 
 
 class HudSubPanel : public QGraphicsItemGroup
 {
-	
 	private:
 
 		// NVI idiom

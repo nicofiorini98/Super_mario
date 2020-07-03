@@ -12,6 +12,7 @@
 #include "SwitchBlock.h"
 #include "EndLevelText.h"
 #include "Card.h"
+#include <iostream>
 
 // Singleton design pattern
 Game* Game::uniqueInstance = nullptr;
@@ -31,6 +32,10 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	scene3 = nullptr;
 	black_scene = nullptr;
 	cur_scene = scene1;
+	//todo check it
+	
+	lives = 4;
+	score = 0;
 	
 	scale(3.0, 3.0);
 	centerOn(0, 0);
@@ -41,6 +46,7 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	
 	// setup game music
+	
 	music1      = new QSound(":/sounds/overworld.wav");
 	music2      = new QSound(":/sounds/underwater.wav");
 	music3      = new QSound(":/sounds/super-mario-rap.wav");
@@ -50,7 +56,8 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	music1->setLoops(QSound::Infinite);
 	music2->setLoops(QSound::Infinite);
 	music3->setLoops(QSound::Infinite);
-	fast_music1->setLoops(QSound::Infinite);
+	//fast_music1->setLoops(QSound::Infinite);
+	
 	fast_music2->setLoops(QSound::Infinite);
 	fast_music3->setLoops(QSound::Infinite);
 
@@ -131,13 +138,20 @@ void Game::gameover()
 	cur_state = GAME_OVER;
 	engine.stop();
 	game_time->stop();
+	//update attributes
+	lives = mario->getLives()-1;
+	score = mario->getScore();
+
+	//todo vedere che succede qui, il gioco deve finire
+	/*if (lives == 0)
+		reset();*/
 	
 	// set black background
-	cur_scene->setBackgroundBrush(QBrush(Qt::black));
+	//cur_scene->setBackgroundBrush(QBrush(Qt::black));
 
 	//  stop music and play game over sound
-	stopMusic();
-	Sounds::instance()->play("gameover");
+	/*stopMusic();
+	Sounds::instance()->play("gameover");*/
 }
 
 // start new game
@@ -145,7 +159,6 @@ void Game::start()
 {
 	if (cur_state == READY)
 	{
-
 		scene1->clear();
 		engine.start();
 		game_time->start();
@@ -156,6 +169,10 @@ void Game::start()
 		mario = LevelManager::load(cur_level_name,scene1);
 
 		Hud::instance()->start();
+		
+		//update attribbute
+		mario->updateLives(lives);
+		mario->updateScore(score);
 
 		// add debug grid                                                        
 		for (int i = 0; i <= 27; i++)
@@ -291,18 +308,24 @@ void Game::keyPressEvent(QKeyEvent* e)
 		{
 			cur_state = CHANGE_LEVEL;
 			mario->enterPipe(Direction::UP);
+
 		}
 		else
 			mario->setCrouch(true);
 	
 	// Mario's jump
 	if (e->key() == Qt::Key_Space)
+	{
 		if (mario->isInWater())
 			mario->swim();
-		else if (mario->isRaccoon() && mario->isSuperRunning()) //isRaccoon è momentaneo
+		else if (mario->isBouncing())
+			mario->setRebound(true);
+		else if (mario->isRaccoon() && mario->isSuperRunning())
 			mario->fly();
 		else
 			mario->jump();
+	}
+		
 	
 
 	// Mario's running
@@ -362,6 +385,19 @@ void Game::wheelEvent(QWheelEvent* e)
 		scale(1 / 1.1 ,1 / 1.1);
 }
 
+void Game::dying()
+{
+	//game_time->stop();
+	
+	// set black background
+	cur_scene->setBackgroundBrush(QBrush(Qt::black));
+
+	//  stop music and play game over sound
+	stopMusic();
+	
+	Sounds::instance()->play("gameover");
+}
+
 void Game::advance()
 {
 	// do nothing if game is not running
@@ -369,12 +405,13 @@ void Game::advance()
 		return;
 
 	if (mario->isEnteringPipe())
+	{
 		cur_state = CHANGE_LEVEL;
+	}
 
 	// if mario is dead, game over
 	if (mario->isDead() && cur_state != CHANGE_LEVEL)
 		gameover();
-	
 
 	// tell all game objects to animate and advance in the scene
 	for (auto& item : cur_scene->items())
@@ -397,8 +434,12 @@ void Game::advance()
 		}
 	}
 
-	if (cur_state != END_OF_LEVEL) //todo è giusto, tranne per mario attack, per mario attack lo shape cambia
-		centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()));  // center view on Mario
+	if (cur_state != END_OF_LEVEL) { //todo è giusto, tranne per mario attack, per mario attack lo shape cambia
+		if (!mario->isRaccoonAttack())// center view on shape of Mario
+			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()+mario->boundingRect().height()));
+		/*else
+			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()));*/
+	}
 	else
 	{
 			centerOn(QPointF(88 * 16, 337));  // center view on GoalRoulette
@@ -456,6 +497,7 @@ void Game::setFreezed(bool freezed)
 
 void Game::changeLevel(Direction pipe_travel_dir)
 {
+	
 	engine.stop();
 	stopMusic();
 
@@ -468,7 +510,7 @@ void Game::changeLevel(Direction pipe_travel_dir)
 	else
 		setScene(black_scene);
 
-	// DA RIFARE LA FUNZIONE HIDE NON ESISTE PIU 
+	// DA RIFARE LA FUNZIONE HIDE NON ESISTE PIU
 	Hud::instance()->hide();
 
 	// after 200 ms the screen has been obscured show it again
@@ -477,12 +519,12 @@ void Game::changeLevel(Direction pipe_travel_dir)
 	if (pipe_travel_dir == DOWN)
 		nextLevel();
 	else if (pipe_travel_dir == UP)
-		prevLevel();	
+		prevLevel();
+
 }
 
 void Game::nextLevel()
 {
-
 	cur_level_name = ((mario->getLevelName() == "World 6-9-1") ? "World 6-9-2" : "World 6-9-3");
 	
 	if (cur_level_name == "World 6-9-2")

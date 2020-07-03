@@ -10,13 +10,15 @@ BrickBlock::BrickBlock(QPoint position, std::string _type) : BouncingBlock()
 	animation_counter = 0;
 
 	// textures
-	if (_type == "") {
+	if (_type == "") 
+	{
 		texture_active[0] = Sprites::instance()->get("brick-block-0");
 		texture_active[1] = Sprites::instance()->get("brick-block-1");
 		texture_active[2] = Sprites::instance()->get("brick-block-2");
 		texture_active[3] = Sprites::instance()->get("brick-block-3");
 	}
-	else if (_type == "ice") {
+	else if (_type == "ice")
+	{
 		texture_active[0] = Sprites::instance()->get("ice-brick-block-0");
 		texture_active[1] = Sprites::instance()->get("ice-brick-block-1");
 		texture_active[2] = Sprites::instance()->get("ice-brick-block-2");
@@ -25,10 +27,10 @@ BrickBlock::BrickBlock(QPoint position, std::string _type) : BouncingBlock()
 	texture_inactive[0] = Sprites::instance()->get("empty-block");
 	texture_inactive[1] = Sprites::instance()->get("red-empty-block");
 
-
 	setPixmap(texture_active[0]);
 	setPos(position);
 	setZValue(3);
+
 }
 
 void BrickBlock::advance()
@@ -77,8 +79,9 @@ void BrickBlock::hit(Object* what, Direction fromDir)
 {
 	if (type == "")
 		BouncingBlock::hit(what, fromDir);
-	//farlo quando ho il koopa_troopa
-	/*else if (type == "ice" && (dynamic_cast<Koopa_Troopa*>(what) && dynamic_cast<Koopa_Troopa*>(what)->isShellMoving())) {
+
+	//todo mettere il shellmoving nel koopaTroopa
+	else if (type == "ice" && (dynamic_cast<KoopaTroopa*>(what) && dynamic_cast<KoopaTroopa*>(what)->isShellMoving())) {
 		collidable = false;
 		setVisible(false);
 		new BrokenBlock(pos(), LEFT, true);
@@ -86,5 +89,5 @@ void BrickBlock::hit(Object* what, Direction fromDir)
 		new BrokenBlock(pos() + QPointF(8, 0), RIGHT, true);
 		new BrokenBlock(pos() + QPointF(8, 9), RIGHT, false);
 
-	}*/
+	}
 }

@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Collectable.h"
+#include "Hud.h"
 
 
 class Mario : public Entity 
@@ -13,6 +14,7 @@ class Mario : public Entity
 		QPixmap texture_stand[2];			// small/big stand texture
 		QPixmap texture_walking[2][4];		// small/big walking animations
 		QPixmap texture_super_running[2][3];//small/big super running animations
+		QPixmap texture_super_jumping[2];
 		QPixmap texture_jumping[2];			// small/big jumping texture
 		QPixmap texture_falling[2];			// small/big falling texture
 		QPixmap texture_brake[2];			// small/big brake texture
@@ -20,7 +22,9 @@ class Mario : public Entity
 		QPixmap texture_small2big[12];		// transformation small-to-big
 		QPixmap texture_small_swimming[4];	// smallswimming texture
 		QPixmap texture_big_swimming[7];	// big swimming texture
-		QPixmap texture_entering_pipe[2];	// small/big enetering into pipe texture 
+		QPixmap texture_entering_pipe[2];	// small/big enetering into pipe texture
+		QPixmap texture_dying;
+		QPixmap texture_transparent[2];
 		
 		std::string item_taken;
 
@@ -28,6 +32,7 @@ class Mario : public Entity
 		QPixmap texture_fire_stand;
 		QPixmap texture_fire_walking[4];
 		QPixmap texture_fire_super_running[3];
+		QPixmap texture_fire_super_jumping;
 		QPixmap texture_fire_jumping;		    // small/big jumping texture
 		QPixmap texture_fire_falling;		    // small/big falling texture
 		QPixmap texture_fire_brake;			    // small/big brake texture
@@ -84,14 +89,12 @@ class Mario : public Entity
 
 		int falling_start_counter;
 
-		
-		
 		int swim_counter;
 		int swim_start_counter;
 		int swim_rise_duration;
 		int swim_fall_duration;
-
 		int swim_speed;
+	
 		int dir_change_duration;
 		int attack_counter;
 	
@@ -104,17 +107,34 @@ class Mario : public Entity
 		bool script_move_in_pipe;           // is Mario 
 		bool entering_pipe;                 // is Mario entering the pipe?
 		bool running_out_of_view;
+
+		bool bounce_block;
+		bool rebound;
+		bool injured;
 		// counters
 		int script_move_counter;
+
+		//attribute for hud
+		int power;
+		int prev_power;
+		int score;
+		int lives;
+		
 		int moving_start_counter;			// counts the number of frames since moving started
+
 		int moving_stop_counter;			// counts the number of frames since moving stopped
 		int dir_change_counter;				// counts the number of frames since direction changed
 		int transformation_counter;			// counts the number of frames since transformation started
+		int injured_counter;				// counts the number of frames since flashing for injured started
 		
+
+		virtual void endJumping();
+
 		//da riunificare
 		void startSwimming();
 		void endSwimming();
-
+		
+		
 		void startFlying();
 		void endFlying();
 	
@@ -133,25 +153,36 @@ class Mario : public Entity
 
 		Mario(QPoint position, std::string _level_name);
 
+
 		// getters and setters
 		bool isBig() { return big; }
 		bool isRaccoon() { return raccoon; }
+		bool isInjured() { return injured; }
+		bool isDying() { return dying; }
 		bool isOnPipe(std::string level_name);
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
+		bool isBouncing() { return bounce_block; }
 		Direction getDirection() { return dir;}
+		int getLives() { return lives; }
+		int getScore() { return score; }
+
+		//function for update attribute for hud
+		void updateScore(int score2add,QPoint pos = QPoint(0,0));
+		void updateLives(int lives2add,QPoint pos = QPoint(0, 0));
 		std::string ItemTaken() const { return item_taken; }
+		
 
 		bool isInWater() { return inWater; }
 		bool isRaccoonAttack() { return raccoon_attack; }
 		bool isSuperRunning() { return super_running; }
 	
-		//bool isRaccoon() { return raccoon; } //todo credo conviene fare una funzione che restituisce in che stato è mario
-
+		
+		void setRebound(bool _rebound) { rebound = _rebound; }
 		void setRunning(bool _running);
 		void setScriptMove(bool _script_move) { script_move = _script_move; }
 		
-		void setAttack(bool _attack) { attack = _attack; } //vedere nome
+		void setAttack(bool _attack) { attack = _attack; } 
 
 
 		// pure virtual methods that must be implemented
@@ -182,10 +213,14 @@ class Mario : public Entity
 		// bounce
 		void bounce();
 
+		void bounceBlock();
+
 		// crouch
 		void setCrouch(bool active);
 
-		void powerUp(spawnable_t _power);  //todo aggiungere spawnable_t
+		void powerUp(spawnable_t _power);  
+
+		void powerDown();
 	
 		void enterPipe(Direction fromDir);
 };

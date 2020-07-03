@@ -38,5 +38,7 @@
   <file>sounds/kick.wav</file>
   <file>sounds/power_meter.wav</file>
   <file>sounds/raccoon_transform.wav</file>
+  <file>sounds/tail.wav</file>
+  <file>sounds/shell.wav</file>
 </qresource>
 </RCC>
