@@ -212,7 +212,6 @@ void Entity::animate()
 	//increase death counter if dying
 	if(dying && !dead)
 	{
-		std::cout << "AOO\n";
 		death_counter++;
 		if (death_counter >= death_duration)
 			Entity::die();

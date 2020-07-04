@@ -4,9 +4,11 @@
 #include "Sounds.h"
 
 
+
 KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 {
 
+	mario = Game::instance()->getMario();
 	pos_in = position;
 	dir = direction;
 	slow = true;
@@ -16,6 +18,7 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 	shell_moving = false;
 	shell_counter = -1;
 	shell_duration = 400;
+	harmless = false;
 	// animation divisor
 	animation_div = 8;
 
@@ -34,7 +37,6 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 	// set texture and correct y-coordinate w.r.t. texture height
 
 	setPixmap(texture_walk[0]);
-
 	setPos(position - QPoint(0, pixmap().height()));
 
 	setZValue(2);
@@ -42,30 +44,33 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 
 void KoopaTroopa::advance()
 {
-	if (normal) {
-		Entity::advance();
+	
+	if (normal) 
+	{
 		moving = true;
 		slow = true;
 	}
-	else if (shell) {
+	else if (shell) 
 		moving = false;
-		shell_counter++;
-	}
-	else if (shell_moving) {
-		Entity::advance();
+	else if (shell_moving)
+	{
+		harmless = false;
 		moving_speed = 2;
 		moving = true;
 		slow = false;
 		shell_counter = -1;
 	}
+
+	Entity::advance();
 }
 
 void KoopaTroopa::animate()
 {
 	if (shell_counter >= 0) {
 		shell_counter++;
-		std::cout << shell_counter << std::endl;
+
 		if (shell_counter >= shell_duration) {
+			std::cout << shell_counter << std::endl;
 			shell = false;
 			normal = true;
 			shell_counter = -1;
@@ -100,40 +105,42 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 {
 
 	Object::hit(what, fromDir);
-
+	Mario* mario = dynamic_cast<Mario*>(what);
 	if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
 		&& (fromDir == LEFT || fromDir == RIGHT))
 		dir = inverse(dir);
-	if (dynamic_cast<Mario*>(what) && fromDir == UP && normal) {
+	else if (mario) {
+		if (mario->x() >= this->x() + (this->boundingRect().width() / 2))
+			dir = LEFT;
+		else
+			dir = RIGHT;
 
-		normal = false;
-		shell = true;
-		shell_counter++;
-	}
-	else if (dynamic_cast<Mario*>(what) && shell) {
-		shell = false;
-		shell_moving = true;
-	}
-	else if (dynamic_cast<Mario*>(what) && fromDir == UP && shell_moving) {
-
-
-		shell_moving = false;
-		shell = true;
-		shell_counter++;
+		if (fromDir == UP && normal) {
+			normal = false;
+			shell = true;
+			harmless = true;
+			shell_counter = 0;
+		}
+		else if (shell) {
+			std::cout << "sheeeeeeel\n";
+			shell = false;
+			shell_moving = true;
+		}
+		else if (fromDir == UP && shell_moving)
+		{
+			shell_moving = false;
+			shell = true;
+			shell_counter = 0;
+		}
 	}
 }
 
 void KoopaTroopa::hurt()
 {
-	Sounds::instance()->play("stomp");
+	Sounds::instance()->	play("stomp");
 	dying = true;
 	moving = false;
 }
-
-
-
-
-
 
 QPainterPath KoopaTroopa::shape() const
 {

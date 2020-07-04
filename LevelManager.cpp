@@ -80,12 +80,16 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		
 	   // new JumpBlock(QPoint(6 * 16, terrain_level - 48));
 	    new SecretBox(QPoint(8 * 16, terrain_level - 150),LIFE);
-		new Cheep(QPoint(5 * 16, terrain_level - 32));
-		new Cheep(QPoint(80* 16, terrain_level - 32));
-		new Plant(QPoint(5* 16, terrain_level - 32),DOWN,true,true);
+		//new Cheep(QPoint(5 * 16, terrain_level - 32));
+		//new Cheep(QPoint(80* 16, terrain_level - 32));
+		//new Plant(QPoint(5* 16, terrain_level - 32),DOWN,true,true);
+
+		//todo debug koopa troopa
+		new BrickBlock(QPoint(1 * 16, 25 * 16), "ice");
+		new KoopaTroopa(QPoint(4 * 16, terrain_level - 16), RIGHT);
 		
 		//new BrickBlock(QPoint(4 * 16, terrain_level-48),"ice");
-		new KoopaTroopa(QPoint(38 * 16, terrain_level-200));
+		//new KoopaTroopa(QPoint(38 * 16, terrain_level-200));
 		//new BrickBlock(QPoint(27 * 16, terrain_level-200),"ice");
 		//new JumpBlock(QPoint(4 * 16, terrain_level-48));
 

@@ -251,7 +251,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 // @override advance() for to add vertical/horizontal acceleration
 void Mario::advance()
 {
-	std::cout << "walkable_object : " << walkable_object << '\n';
+	//std::cout << "walkable_object : " << walkable_object << '\n';
 	
 	if (dying)
 	{
@@ -1147,7 +1147,6 @@ void Mario::animate()
 				setPixmap(texture_super_jumping[big]);
 			else if (fire)
 				setPixmap(texture_fire_super_jumping);
-			//raccoon not jump in super running, but start to fly
 		}
 
 		else if (falling && !super_running)
@@ -1421,22 +1420,48 @@ void Mario::hit(Object* what, Direction fromDir)
 		if(script_move)  
 			falling = true;
 	}
+	//bug collisioni dei nemici, da aggiornare
+	//if (dynamic_cast<Enemy*>(what))
+	//{
+	//	if (fromDir == DOWN)
+	//	{
+
+	//		if (dynamic_cast<KoopaTroopa*>(what))
+	//			bounce();
+	//		else
+	//		{
+	//			dynamic_cast<Enemy*>(what)->hurt();
+	//			Muncher* muncher_obj = dynamic_cast<Muncher*>(what);
+	//			if (!muncher_obj)
+	//				bounce();
+	//		}
+
+	//	}
+	//	else
+	//		powerDown();
+	//	/*else if (big)
+	//		big = false;
+	//	else
+	//		die();*/
+	//}
+
+	//bug hit di jacopo per il koopa troopa
 	if (dynamic_cast<Enemy*>(what))
 	{
-		if (fromDir == DOWN)
+		KoopaTroopa* koopa = dynamic_cast<KoopaTroopa*>(what);
+		if (koopa)
 		{
 
-			if (dynamic_cast<KoopaTroopa*>(what))
+			if (fromDir == DOWN)
 				bounce();
+			else if (koopa->isShell() /*&& fromDir ==RIGHT || fromDir==LEFT*/)
+				std::cout << "stocazzo \n";
 			else
-			{
-				dynamic_cast<Enemy*>(what)->hurt();
-				Muncher* muncher_obj = dynamic_cast<Muncher*>(what);
-				if (!muncher_obj)
-					bounce();
-			}
+				powerDown();
 
 		}
+		/*else if (k && k->isShell())
+			std::cout << "implementare tutta la faccenda\n";*/
 		else
 			powerDown();
 		/*else if (big)
@@ -1444,15 +1469,6 @@ void Mario::hit(Object* what, Direction fromDir)
 		else
 			die();*/
 	}
-	 /*  if (fromDir == DOWN && dynamic_cast<Koopa_Troopa*>(what))
-        {
-    
-            bounce();
-        }
-        else if(big)
-            big = false;
-        else
-            die();*/
 }
 
 // running = double moving speed
@@ -1651,9 +1667,9 @@ QPainterPath Mario::shape() const
 	QPainterPath path;
 
 	if (!big)
-		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom());
+		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom()-3);
 	else if ((big && !raccoon) || transformation_counter>0)
-		path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom());
+		path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom()-3);
 	else if (raccoon)
 	{
 		if (attack && attack_counter == 12)

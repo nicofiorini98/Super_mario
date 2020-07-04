@@ -158,6 +158,7 @@ void PlantFire::animate()
 
 
 }
+
 void PlantFire::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
@@ -165,7 +166,6 @@ void PlantFire::hit(Object* what, Direction fromDir)
 	if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
 		&& (fromDir == LEFT || fromDir == RIGHT))
 		dir = inverse(dir);
-
 }
 
 void PlantFire::hurt()
