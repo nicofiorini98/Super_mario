@@ -8,9 +8,9 @@
 #include "Muncher.h"
 #include "GoalRoulette.h"
 #include <iostream>
-#include "FireBall.h"
 #include "ScoreSpawnable.h"
 #include "KoopaTroopa.h"
+#include "FireBall.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
@@ -1319,7 +1319,7 @@ void Mario::animate()
 
 			if (attack_counter > 7)
 			{
-				new FireBall(pos().toPoint() + QPoint(((dir == RIGHT) ? 16 : -6), 12), dir, false, 0);
+				new FireBall(pos().toPoint() + QPoint(((dir == RIGHT) ? 16 : -6), 12), dir);
 				Sounds::instance()->play("fireball");
 				attack = false;
 				attack_counter = 0;

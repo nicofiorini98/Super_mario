@@ -6,7 +6,7 @@
 #include <iostream>
 JumpBlock::JumpBlock(QPoint position)
 {
-	mario = Game::instance()->getMario();
+	mario = nullptr;
 	down = false;
 	up = false;
 	pos_in = position;

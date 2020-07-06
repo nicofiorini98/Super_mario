@@ -21,8 +21,9 @@
 #include "JumpBlock.h"
 #include "Mushroom.h"
 #include "BlooberNanny.h"
-#include "Plant.h"
-#include "PlantFire.h"
+#include "Piranha.h"
+#include "PiranhaFire.h"
+#include "FireBallPiranha.h"
 //#include "Collectable.h"
 
 // load all items from the given level in the given scene
@@ -71,7 +72,14 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 		// pipe
 		new Pipe(QPoint(14*16, terrain_level+16), level_name, 4);
-		new Pipe(QPoint(52*16, terrain_level+16), level_name, 3);
+		new Pipe(QPoint(52 * 16, terrain_level + 16), level_name, 3);
+
+
+		//debug piranha fire
+		//new Pipe(QPoint(3 * 16, terrain_level + 16), level_name, 3);
+		new PiranhaFire(QPoint(3.5 * 16, terrain_level-4.5), UP);
+		
+
 
 		//new Firework(QPoint(0,1*16), "FLOWER");
 		//new GoalRoulette(QPoint(4*16,23*16));
@@ -86,7 +94,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 		//todo debug koopa troopa
 		new BrickBlock(QPoint(1 * 16, 25 * 16), "ice");
-		new KoopaTroopa(QPoint(4 * 16, terrain_level - 16), RIGHT);
+		//new KoopaTroopa(QPoint(4 * 16, terrain_level - 16), RIGHT);
 		
 		//new BrickBlock(QPoint(4 * 16, terrain_level-48),"ice");
 		//new KoopaTroopa(QPoint(38 * 16, terrain_level-200));
@@ -95,7 +103,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 		//new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
 		
-		//new JumpBlock(QPoint(2 * 16, terrain_level - 80), MUSHROOM);
+		//new JumpBlock(QPoint(2 * 16, terrain_level - 80));
+		
 		new Coin(QPoint(80 * 16, terrain_level-32));
 		
 		// Mario
@@ -242,8 +251,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   (new Pipe(QPoint(101*16,17*16), level_name, 5, "rotated"))->setRotation(180);
 
 		//plant
-	   new Plant(QPoint(35.5 * 16, 5 * 16), DOWN, false, true);
-	   new PlantFire(QPoint(108.5 * 16, 6.5 * 16),UP);
+	   new Piranha(QPoint(35.5 * 16, 5 * 16), DOWN, false, true);
+	   new PiranhaFire(QPoint(108.5 * 16, 6.5 * 16),UP);
 
 	   for (int i = 0; i <= 3; i++)
 		   new Muncher(QPoint((28+i)*16, 10*16));

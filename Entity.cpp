@@ -13,6 +13,7 @@
 #include "BlooberBaby.h"
 #include "BlooberNanny.h"
 #include "Leaf.h"
+#include "FireBallPiranha.h"
 
 Entity::Entity() : Object()
 {
@@ -255,10 +256,16 @@ void Entity::solveCollisions()
 				(dynamic_cast<Enemy*>(this) && dynamic_cast<Collectable*>(obj)))
 				continue;
 
-			//todo ricontrollare
-			if ((dynamic_cast<FireBall*>(this) && !dynamic_cast<FireBall*>(this)->get_enemy() && dynamic_cast<Mario*>(obj)) ||
-				(dynamic_cast<FireBall*>(obj) && !dynamic_cast<FireBall*>(obj)->get_enemy() && dynamic_cast<Mario*>(this)))
+			
+			if ((dynamic_cast<FireBallPiranha*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<FireBallPiranha*>(obj) && dynamic_cast<Inert*>(this)))
 				continue;
+
+			if ((dynamic_cast<FireBallPiranha*>(this) && dynamic_cast<Enemy*>(obj)) ||
+				(dynamic_cast<FireBallPiranha*>(obj) && dynamic_cast<Enemy*>(this)))
+				continue;
+
+			
 
 			//todo ricontrollare
 			if (dynamic_cast<Enemy*>(this) && dynamic_cast<BlooberBaby*>(obj))
