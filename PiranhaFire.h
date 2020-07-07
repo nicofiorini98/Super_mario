@@ -19,8 +19,9 @@ protected:
 	bool in;
 
 	// textures
-	QPixmap texture_crunch_down[2];		// brown/red walk animation
-	QPixmap texture_crunch_up[2];		// brown/red walk animation
+	QPixmap texture_crunch_down[2];		
+	QPixmap texture_crunch_up[2];		
+	QPixmap texture_dying[12];		
 
 	QPoint pos_in;
 	FireBallPiranha* fire;

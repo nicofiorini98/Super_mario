@@ -21,20 +21,29 @@ PiranhaFire::PiranhaFire(QPoint position, Direction direction) : Enemy()
 
 	pos_in = position;
 	dir = direction;
-	slow = true;  //boh po vedamo
+	slow = true;  
 	
-	// animation divisor
-	animation_div = 20;
-
-	// durations
-	death_duration = 100;
+	death_duration = 64;
 
 	// textures
-	texture_crunch_up[0] = Sprites::instance()->get("plant-fire-up-0");
-	texture_crunch_up[1] = Sprites::instance()->get("plant-fire-up-1");
-
+	texture_crunch_up[0]   = Sprites::instance()->get("plant-fire-up-0");
+	texture_crunch_up[1]   = Sprites::instance()->get("plant-fire-up-1");
 	texture_crunch_down[0] = Sprites::instance()->get("plant-fire-down-0");
 	texture_crunch_down[1] = Sprites::instance()->get("plant-fire-down-1");
+
+	
+	texture_dying[0]  = Sprites::instance()->get("piranha-dying-0");
+	texture_dying[1]  = Sprites::instance()->get("piranha-dying-1");
+	texture_dying[2]  = Sprites::instance()->get("piranha-dying-0");
+	texture_dying[3]  = Sprites::instance()->get("piranha-dying-1");
+	texture_dying[4]  = Sprites::instance()->get("piranha-dying-2");
+	texture_dying[5]  = Sprites::instance()->get("piranha-dying-3");
+	texture_dying[6]  = Sprites::instance()->get("piranha-dying-2");
+	texture_dying[7]  = Sprites::instance()->get("piranha-dying-3");
+	texture_dying[8]  = Sprites::instance()->get("piranha-dying-4");
+	texture_dying[9]  = Sprites::instance()->get("piranha-dying-5");
+	texture_dying[10] = Sprites::instance()->get("piranha-dying-4");
+	texture_dying[11] = Sprites::instance()->get("piranha-dying-5");
 
 
 	setPixmap(texture_crunch_up[0]);
@@ -46,6 +55,10 @@ PiranhaFire::PiranhaFire(QPoint position, Direction direction) : Enemy()
 
 void PiranhaFire::advance()
 {
+
+	if(dying)
+		return;
+	
 
 	if(mario !=nullptr)
 	{
@@ -136,6 +149,18 @@ void PiranhaFire::animate()
 	
 	Entity::animate();
 
+	if(dying)
+	{
+		static int i = 0;
+		std::cout << i++ << "\n";
+		std::cout << ((animation_counter / 3) % 12) << "\n";
+
+		
+		setPixmap(texture_dying[((animation_counter / 6) % 12)]);
+		return;
+	}
+
+	
 	if (animation_counter == 2)
 	{
 		std::cout << "marioptr: " << mario;

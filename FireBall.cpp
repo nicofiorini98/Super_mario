@@ -5,25 +5,26 @@
 
 FireBall::FireBall(QPoint position, Direction direction) {
 
+	//set default flags
 	script_move = false;
-	dir = direction;
- 	animation_div    = 10;
- 	moving_speed_div = 2;
- 	moving_speed=2;
 	moving = true;
-	// durations
+	
+	dir = direction;
+	moving_speed = 2;
+	
+	// set durations
 	death_duration = 15;
 	
 	// textures
-	texture_rotate[0] = Sprites::instance()->get("fire-ball-left-0");
-	texture_rotate[1] = Sprites::instance()->get("fire-ball-left-1");
-	texture_rotate[2] = Sprites::instance()->get("fire-ball-left-2");
-	texture_rotate[3] = Sprites::instance()->get("fire-ball-left-3");
-	texture_boom[0] = Sprites::instance()->get("boom-0");
-	texture_boom[1] = Sprites::instance()->get("boom-1");
-	texture_boom[2] = Sprites::instance()->get("boom-2");
+	texture[0] = Sprites::instance()->get("fire-ball-left-0");
+	texture[1] = Sprites::instance()->get("fire-ball-left-1");
+	texture[2] = Sprites::instance()->get("fire-ball-left-2");
+	texture[3] = Sprites::instance()->get("fire-ball-left-3");
+	texture_dying[0] = Sprites::instance()->get("boom-0");
+	texture_dying[1] = Sprites::instance()->get("boom-1");
+	texture_dying[2] = Sprites::instance()->get("boom-2");
 	
-	setPixmap(texture_rotate[0]);
+	setPixmap(texture[0]);
 	setPos(position - QPoint(0, pixmap().height()));
 	setZValue(2);
 	
@@ -36,13 +37,13 @@ void FireBall::animate()
 	if (!dying)
 	{
 		if (dir == LEFT)
-			setPixmap(texture_rotate[(animation_counter / animation_div) % 4]);
+			setPixmap(texture[(animation_counter / 10) % 4]);
 
 		else if (dir == RIGHT)
-			setPixmap(texture_rotate[(animation_counter / animation_div) % 4].transformed(QTransform().scale(-1, 1)));
+			setPixmap(texture[(animation_counter / 10) % 4].transformed(QTransform().scale(-1, 1)));
 	}
 	else 
-		setPixmap(texture_boom[(death_counter / 5) % 3]);
+		setPixmap(texture_dying[(death_counter / 5) % 3]);
 }
 
 
@@ -50,17 +51,20 @@ void FireBall::advance()
 {
 	//fire ball shoot by mario
 
-	//std::cout << script_move << "\n";
+	//don't advance when dying or freezed
 	if (freezed || dying)
 		return;
 
+	//start jumping when hit with walkable_object
 	if (walkable_object)
 	{
 		jumping = true;
 		walkable_object = nullptr;
 	}
 
-	if (script_move)
+	//different physic parameter between horizontal walkable_object
+	//and uphill or downhill walkable_object
+	if (script_move) 
 	{
 		jumping_duration = 80;
 		moving_speed = 2;
@@ -70,7 +74,8 @@ void FireBall::advance()
 		jumping_duration = 20;
 		moving_speed = 3;
 	}
-	//jumping accelleration
+	
+	//set the proper speed during the jumping
 	if (jumping)
 	{
 		if (jump_counter <= jumping_duration / 2)
@@ -80,9 +85,10 @@ void FireBall::advance()
 		else
 			jumping_speed = 1;
 	}
+	
+	//set the proper falling_speed during the falling
 	if (falling)
 	{
-		//falling accelleration
 		if (falling_counter < 2)
 			falling_speed = 1;
 		else if (falling_counter >= 2 && falling_counter < 6)

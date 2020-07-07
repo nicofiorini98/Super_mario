@@ -7,11 +7,11 @@ protected:
 	
 	QPixmap texture[4];
 
-	int angle_id; //angle from the x-axis
+	int angle_dir; //angle from the x-axis
 
 public:
 
-	FireBallPiranha(QPoint position, Direction direction, int _angle_id = 30);
+	FireBallPiranha(QPoint position, Direction direction, int _angle_dir = 30);
 	
 	// pure virtual methods that must be implemented
 	virtual std::string name() { return "FireBallPiranha"; }

@@ -539,8 +539,7 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "cheep-1")
 		return enemies.copy(moveBy(cheep,1,0,16,16,0,0));
 	
-	if (id == "green-plant-0")
-		return enemies.copy(plant);
+	
 
 	
 
@@ -604,7 +603,6 @@ QPixmap Sprites::get(const std::string & id)
 	
 	if (id == "green-plant-0")
 		return enemies.copy(plant);
-
 	if (id == "green-plant-1")
 		return enemies.copy(moveBy(plant, 1, 0, 16, 16, 0, 0));
 	if (id == "red-plant-0")
@@ -620,8 +618,18 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "plant-fire-up-1")
 		return enemies.copy(moveBy(plant_fire, 3, 0, 16, 16, 0, 0));
 
-
-	
+	if (id == "piranha-dying-0")
+		return enemies.copy(QRect(192, 0, 16, 16));
+	if (id == "piranha-dying-1")
+		return enemies.copy(QRect(192, 16, 16, 16));
+	if (id == "piranha-dying-2")
+		return enemies.copy(QRect(224, 0, 16, 16));
+	if (id == "piranha-dying-3")
+		return enemies.copy(QRect(224, 16, 16, 16));
+	if (id == "piranha-dying-4")
+		return enemies.copy(QRect(240, 0, 16, 16));
+	if (id == "piranha-dying-5")
+		return enemies.copy(QRect(240, 16, 16, 16));
 
 	if (id == "fire-ball-left-0")
 		return mario.copy(fire_ball);
@@ -631,6 +639,7 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(moveBy(fire_ball, 2, 0, 10, 10, 0, 0));
 	if (id == "fire-ball-left-3")
 		return mario.copy(moveBy(fire_ball, 3, 0, 10, 10, 0, 0));
+
 	if (id == "boom-0")
 		return enemies.copy(boom);
 	if (id == "boom-1")

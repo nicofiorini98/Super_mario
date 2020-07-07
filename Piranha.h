@@ -9,6 +9,7 @@ private:
 	//int moving_start_counter;
 	int out_counter;
 	int in_counter;
+	
 protected:
 	bool rotate; 
 	bool red;

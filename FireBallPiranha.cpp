@@ -4,15 +4,12 @@
 #include "Iceberg.h"
 #include "Game.h"
 
-FireBallPiranha::FireBallPiranha(QPoint position, Direction direction, int _angle_id) {
+FireBallPiranha::FireBallPiranha(QPoint position, Direction direction, int _angle_dir) {
 
-	
-	dir = direction;
-	angle_id = _angle_id;
-	
-	moving_speed_div = 2;
-	moving_speed = 2;
+	//initialization default parameter
 	moving = true;
+	dir = direction;
+	angle_dir = _angle_dir;
 	// durations
 	death_duration = 15;
 
@@ -42,13 +39,14 @@ void FireBallPiranha::animate()
 void FireBallPiranha::advance()
 {
 	//set the proper y-speed for manage the angle
-	if (angle_id == 30)
+	if (angle_dir == 30)
 		setY(y()-animation_counter%2); 
-	else if (angle_id == -30)
+	else if (angle_dir == -30)
 		setY(y() + (animation_counter % 2));
-	else if (angle_id == -45)
+	else if (angle_dir == -45)
 		setY(y() + 1);
-	
+
+	//moving in the x direction
 	if (dir == LEFT)
 		setX(x() - 1);
 	else

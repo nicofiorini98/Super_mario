@@ -1028,7 +1028,6 @@ void Mario::setDirection(Direction _dir)
 
 	if (_dir != dir && !moving)
 	{
-		
 		if (raccoon)
 			prev_dir = dir;
 
@@ -1227,20 +1226,6 @@ void Mario::animate()
 	{
 		if (!walkable_object)
 		{
-			/*if (transformation_counter >= 0)
-			{
-				if (raccoon)
-					setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
-				else
-					setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
-				transformation_counter++;
-				if (transformation_counter >= 12 * 5)
-				{
-					transformation_counter = -1;
-					Game::instance()->setFreezed(false);
-				}
-			}*/
-
 			//swimming and fall inWater animation of mario small
 			if (!big)
 			{
@@ -1272,7 +1257,6 @@ void Mario::animate()
 				else if (falling)
 					setPixmap(texture_raccoon_swimming[(animation_counter / animation_div) % 4]);
 			}
-
 		}
 		else
 		{
@@ -1299,7 +1283,6 @@ void Mario::animate()
 			//mirror texture istantly in the water   
 			if (dir_change_counter > 0)
 				setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
-
 		}
 	}
 	
