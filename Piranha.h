@@ -1,20 +1,12 @@
 #pragma once
 #include "Enemy.h"
+#include "Plant.h"
 
 
-
-class Piranha : public Enemy
+class Piranha : public Plant
 {
-private:
-	//int moving_start_counter;
-	int out_counter;
-	int in_counter;
-	
 protected:
 	bool rotate; 
-	bool red;
-	bool in;
-	//bool out;
 	// textures
 	QPixmap texture_crunch[2];		// brown/red walk animation
 

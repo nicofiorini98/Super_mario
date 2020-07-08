@@ -6,7 +6,7 @@
 #include "Game.h"
 #include <iostream>
 
-PiranhaFire::PiranhaFire(QPoint position, Direction direction) : Enemy()
+PiranhaFire::PiranhaFire(QPoint position, Direction direction) : Plant()
 {
 	in_counter = 0;
 	out_counter = 0;
@@ -14,36 +14,15 @@ PiranhaFire::PiranhaFire(QPoint position, Direction direction) : Enemy()
 	falling_counter = 0;
 	jump_counter = 0;
 	angle = 30;
-
-	// set attribute
-	//mario = Game::instance()->getMario();
 	mario = nullptr;
-
 	pos_in = position;
 	dir = direction;
-	slow = true;  
 	
-	death_duration = 64;
-
 	// textures
 	texture_crunch_up[0]   = Sprites::instance()->get("plant-fire-up-0");
 	texture_crunch_up[1]   = Sprites::instance()->get("plant-fire-up-1");
 	texture_crunch_down[0] = Sprites::instance()->get("plant-fire-down-0");
 	texture_crunch_down[1] = Sprites::instance()->get("plant-fire-down-1");
-
-	
-	texture_dying[0]  = Sprites::instance()->get("piranha-dying-0");
-	texture_dying[1]  = Sprites::instance()->get("piranha-dying-1");
-	texture_dying[2]  = Sprites::instance()->get("piranha-dying-0");
-	texture_dying[3]  = Sprites::instance()->get("piranha-dying-1");
-	texture_dying[4]  = Sprites::instance()->get("piranha-dying-2");
-	texture_dying[5]  = Sprites::instance()->get("piranha-dying-3");
-	texture_dying[6]  = Sprites::instance()->get("piranha-dying-2");
-	texture_dying[7]  = Sprites::instance()->get("piranha-dying-3");
-	texture_dying[8]  = Sprites::instance()->get("piranha-dying-4");
-	texture_dying[9]  = Sprites::instance()->get("piranha-dying-5");
-	texture_dying[10] = Sprites::instance()->get("piranha-dying-4");
-	texture_dying[11] = Sprites::instance()->get("piranha-dying-5");
 
 
 	setPixmap(texture_crunch_up[0]);
@@ -58,7 +37,8 @@ void PiranhaFire::advance()
 
 	if(dying)
 		return;
-	
+
+	Plant::advance();
 
 	if(mario !=nullptr)
 	{
@@ -83,63 +63,11 @@ void PiranhaFire::advance()
 		else
 			dir = LEFT;
 	}
-	
-;
-	
-	if (freezed)
-		return;
-	
-	if (in)
-	{
-		
-		if (falling_counter >= 0)
-			falling_counter++;
 
-		if (falling_counter <= 64)
-
-			falling_speed = (falling_counter) % 2;    //velocit� 0.5
-
-		else if (falling_counter >= 64) 
-		{
-			out_counter++;
-
-			if (out_counter >= 200)
-			{
-				in = false;
-				//f = new Fire_Ball(pos(), dir, 1, 0, mario_up);
-				out_counter = 0;
-				falling_counter = 0;
-			}
-		}
-		setY(y() + falling_speed);
-
-	}
-
-	//Game::instance()->changed_scene(level_change); ovviamente non se po fa 
-	//animation_pipe = false;
-	if (!in) 
-	{
-
-		if (jump_counter >= 0)
-			jump_counter++;
-		if (jump_counter <= 64)
-			jumping_speed = jump_counter % 2;
-		else if (jump_counter >= 64)
-		{
-			in_counter++;
-			if (in_counter == 66)
-				fire = new FireBallPiranha(pos().toPoint() + QPoint(0, 12), dir, angle); //todo mettere l'angle_id
-			if (in_counter == 133)
-				fire = new FireBallPiranha(pos().toPoint() + QPoint(0, 12), dir,angle);//todo mettere l'angle_id
-			if (in_counter >= 200)
-			{
-				in = true;
-				jump_counter = 0;
-				in_counter = 0;
-			}
-		}
-		setY(y() - jumping_speed);
-	}
+	if (in_counter == 66)
+		fire = new FireBallPiranha(pos().toPoint() + QPoint(0, 12), dir, angle);
+	if (in_counter == 133)
+		fire = new FireBallPiranha(pos().toPoint() + QPoint(0, 12), dir, angle);
 }
 
 
@@ -148,25 +76,16 @@ void PiranhaFire::animate()
 {
 	
 	Entity::animate();
-
 	if(dying)
 	{
-		static int i = 0;
-		std::cout << i++ << "\n";
-		std::cout << ((animation_counter / 3) % 12) << "\n";
 
-		
-		setPixmap(texture_dying[((animation_counter / 6) % 12)]);
+		Plant::animate();
 		return;
 	}
-
 	
-	if (animation_counter == 2)
-	{
-		std::cout << "marioptr: " << mario;
+	if (animation_counter == 1)
 		mario = Game::instance()->getMario();
-		std::cout << "marioptr2: " << mario;
-	}
+	
 
 	//set the proper texture
 	if(angle==30)

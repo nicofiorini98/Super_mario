@@ -7,6 +7,7 @@
 
 BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
 {
+    std::cout << "BigBertha\n";
     //mario mi serve per la morte, siccome il salo sarà a sinistra, in base a dove si troverà mario
     mario = Game::instance()->getMario();
     script_counter  = 0;
@@ -16,22 +17,18 @@ BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
     dir  = direction;
     slow = true;
     moving_start_counter = 0;
+    
 
-
-    // animation divisor
-    animation_div = 8;
-
-    // durations , da cambiare
+    // durations 
     death_duration = 300;
 
     // textures
-    texture_swim_close[0] = Sprites::instance()->get("Big-Bertha-3");
-    texture_swim_close[1] = Sprites::instance()->get("Big-Bertha-2");
-    texture_swim_open[0] = Sprites::instance()->get("Big-Bertha-1");
-    texture_swim_open[1] = Sprites::instance()->get("Big-Bertha-0");
-    texture_death = Sprites::instance()->get("Big-Bertha-0").transformed(QTransform().scale(1, -1));
+    texture_swim_close[0] = Sprites::instance()->get("big-bertha-3");
+    texture_swim_close[1] = Sprites::instance()->get("big-bertha-2");
+    texture_swim_open[0] = Sprites::instance()->get("big-bertha-1");
+    texture_swim_open[1] = Sprites::instance()->get("big-bertha-0");
+    texture_death = Sprites::instance()->get("big-bertha-0").transformed(QTransform().scale(1, -1));
 
-    // non so se così va bene
     baby = new BabyCheep(position, dir);
 
     // set texture and correct y-coordinate w.r.t. texture height
@@ -56,6 +53,8 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
     if(moving_start_counter >= 0)
          moving_start_counter++;
 
+
+	
     // utilizzo ancora lo script_counter sti cazzi, con uno script_duration che è uguale al death_duration che ho messo in hurt()
     if(dying)
     {
@@ -129,7 +128,6 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
         }
 
     }
-    //sta lanciando
     else
     {
         if(script_counter==0)
@@ -197,14 +195,13 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             script_counter+=moving_speed;
         }
     }
-    //avanzamento del movimento scriptato
-
+    
     if ( dir == RIGHT)
         setX(x() + moving_speed);
     else
         setX(x() - moving_speed);
 
-    //if not launch baby
+    
     if(!launch_baby)
     {
         baby->setZValue(1);
@@ -238,7 +235,6 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
 
 }
 
-
 void BigBertha::animate()
 {
     Entity::animate();
@@ -247,11 +243,11 @@ void BigBertha::animate()
     if (dying)
         setPixmap(texture_death);
     else if(!launch_baby)
-        setPixmap(texture_swim_close[(animation_counter / animation_div) % 2]);
+        setPixmap(texture_swim_close[(animation_counter / 8) % 2]);
     else if(launch_baby && script_counter>=55)
-        setPixmap(texture_swim_close[(animation_counter / animation_div) % 2]);
+        setPixmap(texture_swim_close[(animation_counter / 8) % 2]);
     else
-        setPixmap(texture_swim_open[(animation_counter/animation_div)%2]);
+        setPixmap(texture_swim_open[(animation_counter/8)%2]);
 
 
     if (dir == RIGHT)
@@ -262,9 +258,9 @@ void BigBertha::hit(Object* what, Direction fromDir)
 {
     Object::hit(what, fromDir);
 
-    if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
+   /* if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
         && (fromDir == LEFT || fromDir == RIGHT))
-        dir = inverse(dir);
+        dir = inverse(dir);*/
 }
 
 void BigBertha::hurt()
@@ -280,10 +276,11 @@ void BigBertha::hurt()
     else
         baby->setBaby_free(true);
 
-
+    
     //devo far fermare big bertha, fargli fare un saltino e poi deve affogare
 }
 
+//todo togliere
 void BigBertha::state()
 {
 

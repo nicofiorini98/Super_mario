@@ -540,9 +540,6 @@ QPixmap Sprites::get(const std::string & id)
 		return enemies.copy(moveBy(cheep,1,0,16,16,0,0));
 	
 	
-
-	
-
 	if (id == "big-bertha-0")
 		return enemies.copy(Big_Bertha);
 	if (id == "big-bertha-1")
@@ -551,20 +548,17 @@ QPixmap Sprites::get(const std::string & id)
 		return enemies.copy(moveBy(Big_Bertha, 2, 0, 24, 32, 0, 0));
 	if (id == "big-bertha-3")
 		return enemies.copy(moveBy(Big_Bertha, 3, 0, 24, 32, 0, 0));
-
 	if (id == "baby-cheep-0")
-		return enemies.copy(QRect(455, 66, 12, 12));
-	if (id == "baby-cheep-0")
+		return enemies.copy(QRect(450, 66, 12, 12));
+	if (id == "baby-cheep-1")
 		return enemies.copy(QRect(466, 66, 12, 12));
-
-	//meduse e medusine
+	
 	if (id == "Bloober-Nanny-0")
 		return enemies.copy(Bloober_Nanny);
 	if (id == "Bloober-Nanny-1")
 		return enemies.copy(moveBy(Bloober_Nanny, 1, 0, 16, 0, 0, 0));
 	if (id == "Bloober-Nanny-2") //bloober attack, yellow texture
 		return enemies.copy(QRect(482, 160, 16, 16));
-
 	if (id == "Bloober-Baby-0")
 		return enemies.copy(QRect(388, 163, 8, 10));
 	if (id == "Bloober-Baby-1")

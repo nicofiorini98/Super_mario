@@ -2,26 +2,21 @@
 #include "Enemy.h"
 #include "Mario.h"
 #include "FireBallPiranha.h"
+#include "Plant.h"
 
-class PiranhaFire : public Enemy
+class PiranhaFire : public Plant
 {
-private:
-	//int moving_start_counter;
-	int out_counter;
-	int in_counter;
-	
 protected:
 	
 	Mario* mario;
-	bool active;
 
 	int angle;  
-	bool in;
+	//bool in;
 
 	// textures
 	QPixmap texture_crunch_down[2];		
 	QPixmap texture_crunch_up[2];		
-	QPixmap texture_dying[12];		
+	//QPixmap texture_dying[12];		
 
 	QPoint pos_in;
 	FireBallPiranha* fire;

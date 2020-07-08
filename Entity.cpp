@@ -265,8 +265,6 @@ void Entity::solveCollisions()
 				(dynamic_cast<FireBallPiranha*>(obj) && dynamic_cast<Enemy*>(this)))
 				continue;
 
-			
-
 			//todo ricontrollare
 			if (dynamic_cast<Enemy*>(this) && dynamic_cast<BlooberBaby*>(obj))
 				continue;

@@ -24,6 +24,7 @@
 #include "Piranha.h"
 #include "PiranhaFire.h"
 #include "FireBallPiranha.h"
+#include "BigBertha.h"
 //#include "Collectable.h"
 
 // load all items from the given level in the given scene
@@ -77,10 +78,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 		//debug piranha fire
 		//new Pipe(QPoint(3 * 16, terrain_level + 16), level_name, 3);
-		new PiranhaFire(QPoint(3.5 * 16, terrain_level-4.5), UP);
+		//new PiranhaFire(QPoint(3.5 * 16, terrain_level-4.5), UP);
 		
-
-
 		//new Firework(QPoint(0,1*16), "FLOWER");
 		//new GoalRoulette(QPoint(4*16,23*16));
 		new GoalRoulette(QPoint(88*16, 337));
@@ -88,7 +87,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		
 	   // new JumpBlock(QPoint(6 * 16, terrain_level - 48));
 	    new SecretBox(QPoint(8 * 16, terrain_level - 150),LIFE);
-		//new Cheep(QPoint(5 * 16, terrain_level - 32));
+		new Cheep(QPoint(5 * 16, terrain_level - 32));
 		//new Cheep(QPoint(80* 16, terrain_level - 32));
 		//new Plant(QPoint(5* 16, terrain_level - 32),DOWN,true,true);
 
@@ -291,9 +290,17 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   new JumpBlock(QPoint(47 * 16, 7 * 16));
 	   new JumpBlock(QPoint(95 * 16, 9 * 16));
 
-	   // enemies
-	   // first cheep
-	   new Cheep(QPoint(14*16, 22*16), RIGHT);
+	   // enemies inWater sorted by the cordinate x
+	   new Cheep(QPoint(13*16, 22*16), RIGHT);
+	   new BlooberNanny(QPoint(33 * 16, 20 * 16));
+	   new BigBertha(QPoint(36 * 16, 22 * 16));
+
+	   new Cheep(QPoint(68 * 16, 20 * 16));
+	   new BlooberNanny(QPoint(78 * 16, 20 * 16));
+	   new BigBertha(QPoint(108 * 16, 21 * 16));
+		
+	   
+	   //new BigBertha(QPoint(14*16, 22*16), RIGHT);
 	  // new BlooberNanny(QPoint(20 * 16, 23 * 16));
 	}
 	else if(level_name == "World 6-9-3")

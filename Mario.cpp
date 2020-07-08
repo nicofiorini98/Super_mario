@@ -530,7 +530,7 @@ void Mario::advance()
 			if (rebound)
 				jumping_duration = 4 * 16 + 24;
 			else if (!rebound)
-				jumping_duration = 20 * 16 + 24;
+				jumping_duration =  16 + 24;
 
 			if (jump_counter < 12)
 				jumping_speed = -1;
@@ -855,8 +855,7 @@ void Mario::swim()
 
 void Mario::endJumping()
 {
-	std::cout << "porcodio perchè entri qua\n";
-
+	
 	jumping_duration = 4 * 16;
     bounce_block = false;
     Entity::endJumping();
@@ -969,14 +968,10 @@ void Mario::bounce()
 
 void Mario::bounceBlock()
 {
-	jumping_duration = 1 * 16 + 24;
+	jumping_duration = 16 + 24;
 	bounce_block = true;
 	falling_counter = 0;
 
-	//jumping_speed =1;
-	
-	//if (jump_counter >= 12)
-		//jumping_speed = 3;
 	jumping = true;
 
 }
@@ -1023,7 +1018,6 @@ void Mario::setDirection(Direction _dir)
 		
 		//start the direction counter
 		dir_change_counter = 0;
-		
 	}
 
 	if (_dir != dir && !moving)

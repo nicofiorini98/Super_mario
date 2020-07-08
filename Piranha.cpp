@@ -3,9 +3,9 @@
 #include "Sprites.h"
 
 #include "Sounds.h"
-Piranha::Piranha(QPoint position, Direction direction, bool _red, bool _rotate) : Enemy()
+Piranha::Piranha(QPoint position, Direction direction, bool _red, bool _rotate) :Plant()
 {
-
+	
 	in_counter = 0;
 	out_counter = 0;
 	in = true;
@@ -18,10 +18,6 @@ Piranha::Piranha(QPoint position, Direction direction, bool _red, bool _rotate) 
 	pos_in = position;
 	dir = direction;
 	slow = true;  
-	animation_div = 20;
-
-	// durations
-	death_duration = 100;
 
 	// textures
 	if (!red && !rotate)
@@ -56,55 +52,15 @@ Piranha::Piranha(QPoint position, Direction direction, bool _red, bool _rotate) 
 
 void Piranha::advance() {
 
-	if (freezed)
+	if (dying)
 		return;
-
-	if (in) {
-
-		if (falling_counter >= 0)
-			falling_counter++;
-
-		if (falling_counter <= 48)
-			falling_speed = (falling_counter) % 2;    //0.5 speed
-
-		else if (falling_counter >= 48) 
-		{
-			out_counter++;
-			if (out_counter >= 200) 
-			{
-				in = false;
-				out_counter = 0;
-				falling_counter = 0;
-			}
-		}
-		setY(y() + falling_speed);
-
-	}
-
-	if (!in) 
-	{
-		if (jump_counter >= 0)
-			jump_counter++;
-		if (jump_counter <= 48)
-			jumping_speed = jump_counter % 2;
-		else if (jump_counter >= 48) 
-		{
-			in_counter++;
-			if (in_counter >= 200) 
-			{
-				in = true;
-				jump_counter = 0;
-				in_counter = 0;
-			}
-		}
-		setY(y() - jumping_speed);
-	}
-
+	
+	Plant::advance();
+	
 }
 
 void Piranha::animate()
 {
-
 	Entity::animate();
 
 	// save current texture height (for later correction)

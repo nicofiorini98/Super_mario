@@ -25,9 +25,9 @@ BabyCheep::BabyCheep(QPoint position,Direction direction) : Enemy()
     death_duration = 300;
 
     // textures
-    texture_swim[0] = Sprites::instance()->get("Baby-Cheep-0");
-    texture_swim[1] = Sprites::instance()->get("Baby-Cheep-1");
-    texture_death   = Sprites::instance()->get("Baby-Cheep-0").transformed(QTransform().scale(1, -1));
+    texture_swim[0] = Sprites::instance()->get("baby-cheep-0");
+    texture_swim[1] = Sprites::instance()->get("baby-cheep-1");
+    texture_death   = Sprites::instance()->get("baby-cheep-0").transformed(QTransform().scale(1, -1));
 
 
     // set texture and correct y-coordinate w.r.t. texture height
