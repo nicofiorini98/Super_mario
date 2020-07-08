@@ -246,8 +246,6 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	setZValue(1);
 }
 
-
-// @override advance() for to add vertical/horizontal acceleration
 void Mario::advance()
 {
 	//std::cout << "walkable_object : " << walkable_object << '\n';
@@ -1055,6 +1053,7 @@ void Mario::animate()
 	else if (injured && transformation_counter < 0 && animation_counter % 6==0)
 	{
 		injured_counter++;
+		
 		if (big)
 			setPixmap(texture_transparent[1]);
 		else
@@ -1073,10 +1072,7 @@ void Mario::animate()
 		if(!injured)
 		{ 
 			if (raccoon || fire || inWater)
-			{
-				setPixmap(texture_transparent[1]);
-				//setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
-			}
+				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
 			else
 				setPixmap(texture_small2big[(transformation_counter / 5) % 12]);
 			

@@ -51,6 +51,7 @@ static QRect jump_block(1038, 103, 16, 16);
 // (ambiguity due to object's textures location in different files within sprites)
 static QRect switch_block(1174, 171, 16, 16); 
 static QRect p_switch(151, 380, 16, 16);
+static QRect transparent(151, 380, 19, 30);
 static QRect points(82, 64, 11, 8);
 static QRect roulette_item(258, 350, 16, 16);
 static QRect spinning_item(258, 374, 16, 16);
@@ -79,7 +80,6 @@ Sprites* Sprites::instance()
 Sprites::Sprites()
 {
 	hud           = loadTexture(":/graphics/sprites/hud.png", Qt::magenta);
-	transparency = loadTextureTransparent(":/graphics/sprites/mario.png", QColor(68, 145, 190));
 	mario         = loadTexture(":/graphics/sprites/mario.png", QColor(68, 145, 190));
 	enemies       = loadTexture(":/graphics/sprites/enemies.png", QColor(68, 145, 190));
 	stage_tiles   = loadTexture(":/graphics/sprites/stage_tiles.png");
@@ -129,15 +129,9 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(moveMarioBy(mario_small, 17, 0));
 	if (id == "transparent1")
 		return mario.copy(moveMarioBy(mario_small, 18, 0));
-	
-	/*if (id == "transparent1"
-	{
-		std::cout << "la piglio la texture\n";
-		mario.copy(QRect(341, 16, 16, 16));
-	}*/
 	if (id == "transparent2")
-		mario.copy(QRect(344,16, 19, 30));
-
+		return  miscs.copy(moveBy(transparent, 11, 0));
+	
 	
 	if (id == "mario-big-stand")
 		return mario.copy(mario_big);
