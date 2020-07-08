@@ -174,7 +174,7 @@ void Entity::advance()
     }
 	//if the entity is not touching its walkable object anymore
 	//we have to start falling
-	if ( walkable_object && !touchingDirection(walkable_object))
+	if ( walkable_object && !touchingDirection(walkable_object) /*&& !dynamic_cast<Mario*>(this)->isInjured()*/)
 	{
 		
 		walkable_object = nullptr;

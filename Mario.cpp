@@ -137,8 +137,8 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_small2big[10] = Sprites::instance()->get("mario-half");
 	texture_small2big[11] = texture_stand[1];
 	texture_dying= Sprites::instance()->get("mario-small-dying");
-	texture_transparent[0]= Sprites::instance()->get("mario-small-transparent");
-	texture_transparent[1]= Sprites::instance()->get("mario-big-transparent");
+	texture_transparent[0]= Sprites::instance()->get("transparent1");
+	texture_transparent[1]= Sprites::instance()->get("transparent2");
 
 	//texture transformation fire and raccoon
 	texture_transformation[0] = Sprites::instance()->get("mario-transformation-0");
@@ -147,7 +147,6 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_transformation[3] = Sprites::instance()->get("mario-transformation-3");
 	texture_transformation[4] = Sprites::instance()->get("mario-transformation-4");
 	texture_transformation[5] = Sprites::instance()->get("mario-transformation-5");
-
 
 	//mario small texture InWater
 	texture_small_swimming[0] = Sprites::instance()->get("mario-small-swim-0");
@@ -1057,9 +1056,10 @@ void Mario::animate()
 	{
 		injured_counter++;
 		if (big)
-			setPixmap(texture_transparent[0]);
-		else
 			setPixmap(texture_transparent[1]);
+		else
+			setPixmap(texture_transparent[0]);
+		
 		if (injured_counter >= 30)
 		{
 			injured_counter = 0;
@@ -1074,7 +1074,8 @@ void Mario::animate()
 		{ 
 			if (raccoon || fire || inWater)
 			{
-				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
+				setPixmap(texture_transparent[1]);
+				//setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
 			}
 			else
 				setPixmap(texture_small2big[(transformation_counter / 5) % 12]);

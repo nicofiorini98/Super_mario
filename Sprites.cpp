@@ -1,6 +1,7 @@
 #include "Sprites.h"
 #include "utils.h"
 #include <QBitmap>
+#include <iostream>
 
 // utility function
 QRect moveBy(QRect rect, int x, int y, int dx = 16, int dy = 16, int border_x = 1, int border_y = 1)
@@ -78,6 +79,7 @@ Sprites* Sprites::instance()
 Sprites::Sprites()
 {
 	hud           = loadTexture(":/graphics/sprites/hud.png", Qt::magenta);
+	transparency = loadTextureTransparent(":/graphics/sprites/mario.png", QColor(68, 145, 190));
 	mario         = loadTexture(":/graphics/sprites/mario.png", QColor(68, 145, 190));
 	enemies       = loadTexture(":/graphics/sprites/enemies.png", QColor(68, 145, 190));
 	stage_tiles   = loadTexture(":/graphics/sprites/stage_tiles.png");
@@ -125,10 +127,16 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(moveMarioBy(mario_small, 15, 0));
 	if (id == "mario-small-dying")
 		return mario.copy(moveMarioBy(mario_small, 17, 0));
-	if (id == "mario-small-transparent")
-		hud.copy(QRect(240, 3, 16, 16));
-	if (id == "mario-big-transparent")
-		hud.copy(QRect(240, 3, 19, 30));
+	if (id == "transparent1")
+		return mario.copy(moveMarioBy(mario_small, 18, 0));
+	
+	/*if (id == "transparent1"
+	{
+		std::cout << "la piglio la texture\n";
+		mario.copy(QRect(341, 16, 16, 16));
+	}*/
+	if (id == "transparent2")
+		mario.copy(QRect(344,16, 19, 30));
 
 	
 	if (id == "mario-big-stand")

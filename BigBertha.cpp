@@ -59,7 +59,6 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
 			launch_baby = rand() % 2;
         
     }
-
 	//increase the counter
     if(moving_start_counter >= 0)
          moving_start_counter++;

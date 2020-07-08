@@ -11,6 +11,7 @@ class Sprites
 		QPixmap hud;
 		QPixmap enemies;
 		QPixmap mario;
+		QPixmap transparency;
 		QPixmap stage_tiles;
 		QPixmap title_screen;
 		QPixmap miscs;

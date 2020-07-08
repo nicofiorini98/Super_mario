@@ -3,7 +3,7 @@
 #include "Iceberg.h"
 #include <iostream>
 
-Object::Object() : QGraphicsPixmapItem(0)
+Object::Object() : QGraphicsPixmapItem(nullptr)
 {
 	collidable = true;
 	collider_visible = false;
@@ -29,15 +29,10 @@ Direction Object::touchingDirection(Object* item)
     if (dynamic_cast<Entity*>(this) && dynamic_cast<Entity*>(this)->isScriptMove())
     {
         if (!curr_rect.intersects(item_rect))
-        {
-            std::cout << "sono sulla salita????\n";
             return UNKNOWN;
-        }
-        else
-        {
-            std::cout << "down?\n";
-            return DOWN;
-        }
+        
+        return DOWN;
+        
     }
 
     // calculate intersection rectangle (IR)

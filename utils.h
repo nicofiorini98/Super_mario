@@ -48,7 +48,6 @@ static bool strends (std::string const &str, std::string const &end)
 // load texture with transparency using the given color as mask
 static QPixmap loadTextureTransparent(const std::string & file, QColor mask_color = Qt::magenta)
 {
-	
 	QPixmap pixmap(file.c_str());
 	pixmap.setMask(pixmap.createMaskFromColor(mask_color));
 	return pixmap;
