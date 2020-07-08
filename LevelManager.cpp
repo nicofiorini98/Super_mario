@@ -92,7 +92,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		//new Plant(QPoint(5* 16, terrain_level - 32),DOWN,true,true);
 
 		//todo debug koopa troopa
-		new BrickBlock(QPoint(1 * 16, 25 * 16), "ice");
+		//new BrickBlock(QPoint(1 * 16, 25 * 16), "ice");
 		//new KoopaTroopa(QPoint(4 * 16, terrain_level - 16), RIGHT);
 		
 		//new BrickBlock(QPoint(4 * 16, terrain_level-48),"ice");
@@ -286,18 +286,19 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   //new BrickBlock(QPoint(82*16, 5*16));
 	   
 	   new HiddenBlock(QPoint(80 * 16, 7 * 16));
-		//todo controllare se le posizioni sono giuste
 	   new JumpBlock(QPoint(47 * 16, 7 * 16));
 	   new JumpBlock(QPoint(95 * 16, 9 * 16));
 
 	   // enemies inWater sorted by the cordinate x
-	   new Cheep(QPoint(13*16, 22*16), RIGHT);
-	   new BlooberNanny(QPoint(33 * 16, 20 * 16));
-	   new BigBertha(QPoint(36 * 16, 22 * 16));
+		//cordinate giuste
+	   //new Cheep(QPoint(13*16, 22*16), RIGHT);
+	   /*new BlooberNanny(QPoint(23 * 16, 20 * 16)); //cordinata giusta
+	   new Pipe(QPoint(10 * 16, 26*16),level_name,3);*/
+	   new BigBertha(QPoint(37.5 * 16, 22 * 16));
 
 	   new Cheep(QPoint(68 * 16, 20 * 16));
-	   new BlooberNanny(QPoint(78 * 16, 20 * 16));
-	   new BigBertha(QPoint(108 * 16, 21 * 16));
+	   //new BlooberNanny(QPoint(78 * 16, 20 * 16));
+	   new BigBertha(QPoint(110 * 16, 19 * 16)); //todo, va spostato, perchè va dentro l'iceberg
 		
 	   
 	   //new BigBertha(QPoint(14*16, 22*16), RIGHT);

@@ -1,3 +1,5 @@
+#include <iostream>
+#include <stdlib.h>
 #include "BigBertha.h"
 #include "Game.h"
 #include <iostream>
@@ -7,18 +9,15 @@
 
 BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
 {
-    std::cout << "BigBertha\n";
-    //mario mi serve per la morte, siccome il salo sarà a sinistra, in base a dove si troverà mario
+    //todo togliere il puntatore a mario se non miglioro la morte
     mario = Game::instance()->getMario();
     script_counter  = 0;
     blocked_counter = 0;
-    script_duration = 128;    //equivale alla lunghezza del raggio d'azione per adesso 128
+    script_duration = 116;    
     launch_baby = false;
     dir  = direction;
     slow = true;
     moving_start_counter = 0;
-    
-
     // durations 
     death_duration = 300;
 
@@ -33,45 +32,48 @@ BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
 
     // set texture and correct y-coordinate w.r.t. texture height
     setPixmap(texture_swim_close[0]);
-    setPos(position - QPoint(0, pixmap().height()));
-    setZValue(2);
+    setPos(position);
+    setZValue(3);
 
 }
 
 void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
 {
 
-   // if(dying)
-
-    if (script_counter > script_duration) //  se finisce lo script vedi in che stato sono e riazzera i counter
+    if (script_counter > script_duration) 
     {
+    	//reset counter when the script finished
         script_counter=0;
         moving_start_counter = 0;
-        state();
+
+    	//choose whether to throw the baby in the following script
+        launch_baby = rand() % 2;
+
+    	//todo vedere se serve
+       /* if (!launch_baby)
+            blocked_counter = 0;*/
     }
 
+	//increase the counter
     if(moving_start_counter >= 0)
          moving_start_counter++;
 
-
-	
-    // utilizzo ancora lo script_counter sti cazzi, con uno script_duration che è uguale al death_duration che ho messo in hurt()
+	//bounce and fall in the depths when dying
     if(dying)
     {
-        //todo, il salto deve essere fatto anche lateralmente, dipende da dove mario colpisce big_bertha
-
-        // è il salto e l'affogamento
-        if(script_counter < 10)
+    	
+        if(death_counter < 10)
         {
             moving_speed = moving_start_counter % 2;
             setY(y()-moving_speed);
         }
-        else if(script_counter >=8 && script_counter<24) // ho messo che il salto prima de affoga è 16, forse è più lungo, 32 mi sembra eccessivo
+        else if(death_counter >=8 && death_counter <24) // ho messo che il salto prima de affoga è 16, forse è più lungo, 32 mi sembra eccessivo
         {
             moving_speed = 1;
+        	
             setY(y()-moving_speed);
         }
-        else if(script_counter >=24 && script_counter<40)
+        else if(death_counter >=24 && death_counter <40)
         {
             moving_speed = moving_start_counter % 2;
             setY(y()+moving_speed);
@@ -81,15 +83,15 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             moving_speed = 1;
             setY(y()+moving_speed);
         }
+        death_counter += moving_speed;
 
-
-        script_counter += moving_speed;
-
-        return; // serve per non entrare negli altri if, se sto morendo non devo fare nessun altro advance oltre a questo
+        return; 
     }
 
-    if(!launch_baby)  // accellerazioni senza lancio dello figlio
+	//script moving when don't launch the baby
+    if(!launch_baby)
     {
+    	//manage the moving_speed during the script
         if (script_counter < 16)
         {
             moving_speed = moving_start_counter % 4 != 0;  //0.75 speed
@@ -110,14 +112,9 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             moving_speed = moving_start_counter % 4 !=0;
             script_counter += moving_speed;
         }
-
-        else if (script_counter >= 104 && script_counter < 112) //0.5 speed
+        else if (script_counter == 104)
         {
-            moving_speed = moving_start_counter % 2 == 0;
-            script_counter += moving_speed;
-        }
-        else if (script_counter == 112)
-        {
+        	//change direction when the edges is reached
             dir = inverse(dir);
             script_counter++;
         }
@@ -126,30 +123,30 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             moving_speed = moving_start_counter % 2; // 0.5 speed
             script_counter += moving_speed;
         }
-
     }
+	//script move when needs to throw the baby
     else
     {
+    	//manage the moving_speed during the script
         if(script_counter==0)
         {
             moving_speed=0;
             if(blocked_counter==0)
             {
+            	//make the baby visible and stop big bertha
                 baby->setZValue(3);
                 baby->setScript_Move(true,dir);
                 blocked_counter++;
             }
+        	//increase blocked counter
             else if(blocked_counter>0 && blocked_counter<48)
-            {
-               // std::cout<<"sto fermo\n";
                 blocked_counter++;
-            }
+        	//restart to moving big bertha
             else if(blocked_counter==48)
             {
                 script_counter++;
-                blocked_counter=0;  //mesa è fatto nello state()
+                blocked_counter=0;
             }
-
         }
         else if(script_counter>0 && script_counter < 16 ) // 0.5 speed
         {
@@ -167,25 +164,20 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             moving_speed = 1;
             script_counter += moving_speed;
         }
-         else if (script_counter >= 48 && script_counter < 96) //1.33 speed
-         {
-             moving_speed = (moving_start_counter % 3 ==0) +1;
-             script_counter += moving_speed;
-         }
-
+        else if (script_counter >= 48 && script_counter < 96) //1.33 speed
+        {
+            moving_speed = (moving_start_counter % 3 == 0) + 1;
+            script_counter += moving_speed;
+        }
         else if (script_counter >= 96 && script_counter < 104)//0.75 speed
         {
             moving_speed = moving_start_counter % 4 !=0 ;
             script_counter += moving_speed;
         }
-
-        else if (script_counter >= 104 && script_counter < 112) //0.5 speed
+        else if (script_counter == 104)
         {
-            moving_speed = moving_start_counter % 2;
-            script_counter += moving_speed;
-        }
-        else if (script_counter == 112)
-        {
+        	//change direction when edges is reached
+            setX(x() - 1);
             dir = inverse(dir);
             script_counter++;
         }
@@ -195,28 +187,28 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             script_counter+=moving_speed;
         }
     }
-    
+
+	//
     if ( dir == RIGHT)
         setX(x() + moving_speed);
     else
         setX(x() - moving_speed);
 
-    
+
+	//make baby in the mouth of big bertha
     if(!launch_baby)
     {
         baby->setZValue(1);
         baby->setPos(pos() + QPoint(5, 11));
     }
-
     else if(launch_baby && script_counter>=41)
     {
         baby->setZValue(1);
         baby->setPos(pos() + QPoint(5, 11));
     }
 
-
-    if(moving_start_counter % 128 == 1 ) // non posso usare lo script_counter, questo perchè altrimenti se non incrementa,
-        //mi incrementa il tutto più di una volta
+    //floating up and down during the time 
+    if(moving_start_counter % 128 == 1 )
         setY(y()+1);
     if(moving_start_counter % 128 == 16 )
         setY(y()+1);
@@ -232,7 +224,6 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
         setY(y()+1);
     if(moving_start_counter % 128 == 112 )
         setY(y()+1);
-
 }
 
 void BigBertha::animate()
@@ -258,9 +249,6 @@ void BigBertha::hit(Object* what, Direction fromDir)
 {
     Object::hit(what, fromDir);
 
-   /* if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
-        && (fromDir == LEFT || fromDir == RIGHT))
-        dir = inverse(dir);*/
 }
 
 void BigBertha::hurt()
@@ -269,15 +257,13 @@ void BigBertha::hurt()
     dying = true;
     script_counter=0;
     moving_start_counter = 0;
-    script_duration = death_duration; // faccio una sorta di movimento scriptato
+    script_duration = death_duration;
 
-    if(!baby->getScript_Move()) // se baby sta dentro la bocca, e big viene ferita allora baby deve morire istantaneamente
-        baby->die();            // l'istantaneamente lo gestisco nel die() di baby_cheep
+    if(!baby->getScript_Move())
+        baby->die();            
     else
         baby->setBaby_free(true);
 
-    
-    //devo far fermare big bertha, fargli fare un saltino e poi deve affogare
 }
 
 //todo togliere
@@ -287,14 +273,14 @@ void BigBertha::state()
     //avro' due stati, uno in cui Big Bertha va solo annanzi, e uno in cui BigBertha lascia il pesce, va annanzi e se lo remagna
     //per adesso posso fare che se Mario salta, allora si setta lo script che sputa chello schifo
 
-
-    //per adesso uso una funzione random solo per provare
-    count_script++;
-    if(count_script % 2 == 0)
-    {
-        launch_baby = true;
-        blocked_counter = 0;
-    }
-    else
-        launch_baby = false;
+    
+    ////per adesso uso una funzione random solo per provare
+    //count_script++;
+    //if(count_script % 2 == 0)
+    //{
+    //    launch_baby = true;
+    //    blocked_counter = 0;
+    //}
+    //else
+    //    launch_baby = false;
 }

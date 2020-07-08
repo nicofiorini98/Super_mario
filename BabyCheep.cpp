@@ -47,16 +47,27 @@ void BabyCheep::setScript_Move(bool _script_move, Direction _dir)
 
 void BabyCheep::advance()
 {
+	//baby cheep is based with two fondamental movements
+	//when script_move, baby is launched from big bertha
+	//and when is inside of the mouth, and the position is the same of big bertha
+
+	//bounce and fall when dying
+    if (dying)
+    {
+        if (death_counter >= 0 && death_counter <= 20)
+            setY(y() - (animation_counter % 2));
+        else
+            setY(y() + 1);
+        return;
+    }
+
+	//stop to move with the script when the script_duration is reached 
     if (script_move && script_counter >script_duration)
     {
         moving_start_counter =0;
-        script_move          = false;
+        script_move = false;
     }
 
-
-    //il movimento scriptato del pesce va avanti per 48 pixel e poi torna indietro per 7 pixel, sembra fedele all'originale
-
-    //baby_free è per quando muore Big_Bertha e
     if(baby_free)
     {
         script_move  = false;
@@ -71,7 +82,7 @@ void BabyCheep::advance()
         return;
     }
 
-
+    
     if (script_move)
     {
         if(moving_start_counter>=0)
