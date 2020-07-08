@@ -6,14 +6,12 @@
 BabyCheep::BabyCheep(QPoint position,Direction direction) : Enemy()
 {
     // set attribute
-    pos_in = position;
     dir = direction;
     slow        = true;
     falling     = false;
     script_move = false;
     baby_free   =false;
     script_duration = 55;
-
 
     // animation divisor
     animation_div = 8 ;
@@ -32,7 +30,7 @@ BabyCheep::BabyCheep(QPoint position,Direction direction) : Enemy()
 
     // set texture and correct y-coordinate w.r.t. texture height
     setPixmap(texture_swim[0]);
-    setPos   (position - QPoint(0, pixmap().height()));
+    setPos   (position);
     setZValue(3);
 
 }
@@ -51,6 +49,12 @@ void BabyCheep::advance()
 	//when script_move, baby is launched from big bertha
 	//and when is inside of the mouth, and the position is the same of big bertha
 
+	//dying when go out the scene
+    if (pos().x() >= 150 * 16 || pos().x() <= 0)
+    {
+        dying = true;
+    }
+	
 	//bounce and fall when dying
     if (dying)
     {
@@ -68,6 +72,7 @@ void BabyCheep::advance()
         script_move = false;
     }
 
+	//baby go away when the mother is death 
     if(baby_free)
     {
         script_move  = false;
@@ -79,10 +84,11 @@ void BabyCheep::advance()
             setX(x()-moving_speed);
 
         moving_start_counter++;
+
         return;
     }
 
-    
+    //manage the moving_speed when is launched from the big bertha's mouth
     if (script_move)
     {
         if(moving_start_counter>=0)
@@ -128,8 +134,7 @@ void BabyCheep::advance()
 
 
     }
-    else
-        return;
+    
 }
 
 
@@ -146,12 +151,6 @@ void BabyCheep::animate()
     else if (moving)
         setPixmap(texture_swim[(animation_counter / animation_div) % 2]);
 
-    //era dello goomba perch� da morto cambiava altezza
-    // correct y position if texture height changed
-    int cur_h = boundingRect().height();
-    if (prev_h != cur_h)
-        setY(y() - (cur_h - prev_h));
-
     if (dir == RIGHT)
         setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 }
@@ -159,31 +158,23 @@ void BabyCheep::animate()
 void BabyCheep::hit(Object* what, Direction fromDir)
 {
     Object::hit(what, fromDir);
-
-    if ((dynamic_cast<Inert*>(what) /*|| dynamic_cast<Enemy*>(what)*/)
-        && (fromDir == LEFT || fromDir == RIGHT))
-        dir = inverse(dir);
 }
 
 void BabyCheep::hurt()
 {
     Sounds::instance()->play("stomp");
-    if(script_move || baby_free) // in questo modo ho una durata di morte istantanea se muore baby insieme alla mamma
+    if(script_move || baby_free)
         death_duration=100;
     else
         death_duration=1;
     dying = true;
+	
     moving_start_counter =-1;
 }
 
-void BabyCheep::setBaby_free(bool _baby_free)
+void BabyCheep::setBabyFree(bool _baby_free)
 {
-    moving_start_counter = 0; // potrei anche non metterlo
-    script_move=false;
+    moving_start_counter = 0;
+    script_move = false;
     baby_free = _baby_free;
 }
-
-//void Baby_Cheep::set_actual_pos() {
-//	if (lim)
-//		actual_pos = pos();
-//}

@@ -87,7 +87,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		
 	   // new JumpBlock(QPoint(6 * 16, terrain_level - 48));
 	    new SecretBox(QPoint(8 * 16, terrain_level - 150),LIFE);
-		new Cheep(QPoint(5 * 16, terrain_level - 32));
+		//new Cheep(QPoint(5 * 16, terrain_level - 32));
+		new BigBertha(QPoint(10 * 16, terrain_level - 32));
 		//new Cheep(QPoint(80* 16, terrain_level - 32));
 		//new Plant(QPoint(5* 16, terrain_level - 32),DOWN,true,true);
 
@@ -294,7 +295,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   //new Cheep(QPoint(13*16, 22*16), RIGHT);
 	   /*new BlooberNanny(QPoint(23 * 16, 20 * 16)); //cordinata giusta
 	   new Pipe(QPoint(10 * 16, 26*16),level_name,3);*/
-	   new BigBertha(QPoint(37.5 * 16, 22 * 16));
+	   new BigBertha(QPoint(38 * 16, 22 * 16));
 
 	   new Cheep(QPoint(68 * 16, 20 * 16));
 	   //new BlooberNanny(QPoint(78 * 16, 20 * 16));

@@ -269,13 +269,11 @@ void Entity::solveCollisions()
 			if (dynamic_cast<Enemy*>(this) && dynamic_cast<BlooberBaby*>(obj))
 				continue;
 
-			//ignore collision with enemy if mario is injured
+			//ignore collision with enemy when mario is injured
 			if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isInjured() && dynamic_cast<Enemy*>(obj))
 				continue;
-			
 			if (dynamic_cast<Enemy*>(this) && dynamic_cast<Mario*>(obj) && dynamic_cast<Mario*>(obj)->isInjured())
 				continue;
-			
 
 			//ignore collision of a dying entity with anoter entity
 			Entity* entity_obj = dynamic_cast<Entity*>(obj);
@@ -344,7 +342,6 @@ void Entity::solveCollisions()
 		Muncher* muncher_obj = dynamic_cast<Muncher*>(obj);
 		if (coll_dir == DOWN && falling && ((inert_obj && inert_obj->isWalkable()) || muncher_obj ))
 		{
-			
 			falling = false;
 			falling_counter = 0;
 			if (inert_obj)
@@ -374,18 +371,13 @@ void Entity::solveCollisions()
 					endJumping();  
 		}
 
-		//todo va tolto
-		////special case 4
-		//if (dynamic_cast<Iceberg*>(obj) && dynamic_cast<Iceberg*>(obj)->type() == "downhill" && coll_dir==UP  )
-		//	continue;
-
 		
 		//the two objects hit each other
 		obj->hit(this, inverse(coll_dir));
 		this->hit(obj, coll_dir);
 
 		//special case 4 : collision when mario is making an attack in raccoon mode
-		//i---->gnore collision 
+		//---->ignore collision 
 		if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isRaccoonAttack())
 			continue;
 
@@ -397,7 +389,6 @@ void Entity::solveCollisions()
 
 		if (dynamic_cast<BlooberNanny*>(this))
 		{
-
 			//if(coll_dir == UNDETERMINED)
 			 //       setPos(prevPos);
 			if (coll_dir == UP || coll_dir == DOWN)

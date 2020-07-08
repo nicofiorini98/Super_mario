@@ -6,27 +6,26 @@
 class BigBertha : public Enemy
 {
 private:
-    bool launch_baby;          //quando è attivo, si attiva lo script e mi deve lanciare la creatura
-    int moving_start_counter;  //moving start counter forse meglio metterlo in enemy visto che serve a tutti i nemici
-    int script_counter;
-    int blocked_counter;
-    int script_duration;
-    int count_script = 0;  // è momentaneo
-    Mario* mario;
-    void state();
+    bool launch_baby;                //is big bertha launch the baby during the script?
+	
+    int moving_start_counter;        //counts the number of frames since the script is started
+    int stopped_start_counter;       //counts the number of frames since big bertha is stopped
+    int script_counter;              //counts the number of pixel moved since the script is started
+    int script_duration;             //limit on the number of pixels to move
 
 protected:
     // textures
     QPixmap texture_swim_open[2];
     QPixmap texture_swim_close[2];
-    QPixmap texture_death;		// brown/red smashed texture
+    QPixmap texture_death;		
     BabyCheep* baby;
 
 public:
 
     BigBertha(QPoint position, Direction direction = LEFT);
+	
     // pure virtual methods that must be implemented
-    virtual std::string name() { return "Big_Bertha"; }
+    virtual std::string name() { return "BigBertha"; }
     virtual void animate();
     virtual void hit(Object* what, Direction fromDir);
     virtual void hurt();
