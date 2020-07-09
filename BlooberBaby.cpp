@@ -6,13 +6,13 @@
 
 BlooberBaby::BlooberBaby(QPoint position, int _move_id) : Enemy()
 {
-	collidable = false;
+	collidable = true;
 	pos_in = position;
 	move_id = _move_id;
 	moving = false;
 	script = false;
 	script_counter = 0;
-	script_duration = 200;
+	script_duration = 1;
 	// durations
 	//death_duration=100;
 	jumping_duration = 10;
@@ -335,6 +335,7 @@ void BlooberBaby::advance()
 			die();
 		}
 	}
+	solveCollisions();
 }
 
 
@@ -350,10 +351,16 @@ void BlooberBaby::animate()
 	else if (falling)
 		setPixmap(texture_swim[0]);
 
-	if (script_counter > script_duration / 25 + 152 && script_counter < script_duration) {
+	if (script_counter > script_duration / 25 + 152 && script_counter < script_duration)
+	{
 		if (animation_counter % 3 == 0)
 			setPixmap(texture_nothing);
 	}
+}
+
+void BlooberBaby::hit(Object* what, Direction fromDir)
+{
+	Object::hit(what, fromDir);
 }
 
 

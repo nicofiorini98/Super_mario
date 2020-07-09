@@ -11,14 +11,14 @@ BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
     //std::cout << "prima di prendere mario\n";
     mario = Game::instance()->getMario();
 
-    //std::cout << "dopo prendere mario\n";
+	first = false;
 
     baby1 = nullptr;
     baby2 = nullptr;
     baby3 = nullptr;
     baby4 = nullptr;
 
-    counter_pos = 0;
+    previous_pos = 0;
 	
     // set attribute
     over_head    = false;
@@ -57,8 +57,8 @@ BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
     falling_speed=1;
 	
     // durations
-    death_duration = 100;
-    jumping_duration = 32; // tanto il movimento laterale e' sempre di 32 pixel
+    death_duration = 400;
+    jumping_duration = 32; 
     moving_start_counter = -1;
     // textures
     texture_swim[0] = Sprites::instance()->get("Bloober-Nanny-0");
@@ -67,7 +67,7 @@ BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
 	texture_launch[0]= Sprites::instance()->get("Bloober-Nanny-1");
     texture_launch[1] = Sprites::instance()->get("Bloober-Nanny-2");
 	
-    texture_death = Sprites::instance()->get("Bloober-Nanny-0").transformed(QTransform().scale(-1, 1));
+    texture_death = Sprites::instance()->get("Bloober-Nanny-0").transformed(QTransform().scale(1, -1));
 
     // set texture and correct y-coordinate w.r.t. texture height
     setPixmap(texture_swim[0]);
@@ -79,16 +79,92 @@ BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
 
 void BlooberNanny::advance()
 {
+    //when mario goes out of sight of the bloober, then bloober is freezed
+    if ((mario->pos().x() >= pos().x() + 16 * 16 || mario->pos().x() <= pos().x() - 16 * 16)
+        || (mario->pos().y() >= pos().y() + 10 * 16 || mario->pos().x() <= pos().x() - 12 * 16))
+        freezed = true;
+    else
+        freezed = false;
+
+    if (freezed)
+        return;
 	
+    if (previous_pos >= 0)
+    {
+        if (previous_pos == 40)
+            previous_pos = 0;
+
+        nframe_prev_pos[previous_pos] = pos().toPoint();
+        previous_pos++;
+    }
+
+    //when bloober nanny has the babies, and the babies isn't free to move
+    //set position of the baby for each frame
+    if (baby1 && !baby1->getScript_Move())
+        baby1->setPos(posBaby(1));
+    if (baby2 && !baby2->getScript_Move())
+        baby2->setPos(posBaby(2));
+    if (baby3 && !baby3->getScript_Move())
+        baby3->setPos(posBaby(3));
+    if (baby4 && !baby4->getScript_Move())
+        baby4->setPos(posBaby(4));
+    
+
+	
+    //bounce and fall in the depth when dying
+    if (dying)
+    {
+        prevPos = pos();
+
+    	//bounce and fall in the depth
+        if (death_counter >= 0 && death_counter <= 20)
+            setY(y() - (animation_counter % 2));
+        else
+            setY(y() + 1);
+
+    	//horizontal moving in dying
+        if (animation_counter % 16 == 0)
+            setX(x() + 1);
+        else if (animation_counter % 16 == 4)
+            setX(x() + 1);
+        else if (animation_counter % 16 == 8)
+            setX(x() - 1);
+    	 else if (animation_counter % 16 == 12)
+            setX(x() - 1);
+
+    	//before die(), kill the babies and forget it
+    	if(death_counter>=350)
+    	{
+            if (baby1)
+            {
+                baby1->die();
+                baby1 = nullptr;
+            }
+    		if (baby2)
+            {
+                baby2->die();
+                baby2 = nullptr;
+            }
+    		if (baby3)
+            {
+                baby3->die();
+                baby3 = nullptr;
+            }
+    		if (baby4)
+            {
+                baby4->die();
+                baby4 = nullptr;
+            }
+    	}
+    	
+        return;
+    }
+
+	//get the flag for choose which script to do,
+	//bloober want to stay on the mario's head
     if (!moving || (script_counter == script_duration && !over_head) || (moving && over_head))
     {
-    	
-       /* if ((mario->pos().y() - pos().y()) >= 16 * 8 && (mario->pos().x() - pos().x()) >= 16 * 10)
-        {
-            moving = false;                 
-            return;					
-        }*/
-
+    
         if (pos().y() < mario->pos().y() - 18) //bloober is over mario's head
         {
             if (over_head)
@@ -130,17 +206,9 @@ void BlooberNanny::advance()
         //script move to do is taken, then start to move
         moving = true;
     }
-    
-    if (counter_pos >= 0)
-    {
-        if (counter_pos == 40)
-            counter_pos = 0;
-    	
-        nframe_prev_pos[counter_pos] = pos().toPoint();
-        counter_pos++;
-    }
+   
 	
-    //spawn baby modes
+    //when bloober doesn't have all the babies,it creates other
     if (spawn_baby)
     {
         spawn_counter++;
@@ -161,7 +229,8 @@ void BlooberNanny::advance()
             launch_counter = 0;
         }
     }
-    //launch baby modes
+
+	//when bloober has all the baby, attack mario with all the babies
 	if(launch_baby)
 	{
         launch_counter++;
@@ -184,9 +253,10 @@ void BlooberNanny::advance()
             spawn_counter = 0;
         }
 	}
+	//if bloober know the script to do, then do it
     if(moving)
     {
-    	
+    	//manage the movement to do when is under the head of mario
         if(!over_head)
         {
         	//lateral move for 32 frames then start falling
@@ -205,27 +275,36 @@ void BlooberNanny::advance()
                 blocked_side= false;
             }
         }
-        else  // is overhead, i can only fall
+        else  // when is overhead, bloober can only fall
         {
             jumping      = false;
             falling      = true;
+        	
         	//reset flag collision detection
             blocked_up   = false;
             blocked_side = false;
         }
 
-    	//todo riniziare a commentare bene da qui
+    	//manage physic parameters when jumping
         if (jumping)
         {
+        	//wen bloober is in the surface of water, then is blocked and create a splash
             if (pos().y() <= 16 * 16)
             {
                 blocked_up = true;
-                splash = true;
+                if (!splash)
+                {
+                    splash = true;
+                    new Splash(pos().toPoint());
+                }
             }
+            else
+                splash = false;
         	
             prevPos = pos();
 
-            if (script_counter <= 8)                                //0.5 speed
+        	//jumping accelleration during the script
+        	if (script_counter <= 8)                                //0.5 speed
                 jumping_speed = moving_start_counter % 2;
             else if (script_counter > 8 && script_counter <= 12)
                 jumping_speed = 1;                                  //1 speed
@@ -240,13 +319,11 @@ void BlooberNanny::advance()
             if (wait_counter < 0 && script_counter == 31)
                 wait_counter = 0;
             
-        	
             if (wait_counter >= 0 && wait_counter < 8)
             {
                 wait_counter++;
                 jumping_speed = 0;
             }
-
             else if (wait_counter >= 8)
             {
                 wait_counter = -1;
@@ -265,7 +342,8 @@ void BlooberNanny::advance()
         	
             solveCollisions(); 
         }
-        
+
+    	//manage physic parameters when falling
         if (falling && !over_head )
         {
             prevPos = pos();	
@@ -298,25 +376,17 @@ void BlooberNanny::advance()
             solveCollisions();
         }
     }
-	
-	//when bloober nanny has the babies, and the babies isn't free to move
-	//set position of the baby for each frame
-    if(baby1 && !baby1->getScript_Move())
-		baby1->setPos(posBaby(1));
-	if(baby2 && !baby2->getScript_Move())
-		baby2->setPos(posBaby(2));
-	if(baby3 && !baby3->getScript_Move())
-		baby3->setPos(posBaby(3));
-	if(baby4 && !baby4->getScript_Move())
-		baby4->setPos(posBaby(4));
 }
 
 
 void BlooberNanny::animate()
 {
+	//spawn baby the first time
     if (animation_counter == 333)
         spawn_baby = true;
-	
+
+
+    //set the proper texture
     if (falling)
         setPixmap(texture_swim[1]);
     else if (jumping && script_counter > 3)
@@ -327,8 +397,7 @@ void BlooberNanny::animate()
 
     if(dying)
         setPixmap(texture_death);
-
-    //lo richiamo perchè mi serve per far morire la medusa
+	
     Entity::animate();
 	
 }
@@ -347,52 +416,53 @@ void BlooberNanny::hurt()
 {
     Sounds::instance()->play("stomp");
     dying = true;
-    moving = false;  // todo da togliere quando faccio la morte 
+    moving = false;  
 } 
-
-
 
 QPoint BlooberNanny::posBaby(int id)
 {
-    //counter_pos, è la posizione corrente della medusa
+
+    int aux;
+    //memorize the previous of the bloober for give to the babies
     if (id == 1)
     {
-        if (counter_pos - 10 >= 0)
-            counter_pos1 = counter_pos - 10;
+        if (previous_pos - 10 >= 0)
+            aux = previous_pos - 10;
         else
-            counter_pos1 = 40 + (counter_pos - 10);
+            aux = 40 + (previous_pos - 10);
 
-        return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
+        return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
     if (id == 2)
     {
-        if (counter_pos - 20 >= 0)
-            counter_pos1 = counter_pos - 20;
+        if (previous_pos - 20 >= 0)
+            aux = previous_pos - 20;
         else
-            counter_pos1 = 40 + (counter_pos - 20);
+            aux = 40 + (previous_pos - 20);
 
-        return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
+        return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
     if (id == 3)
     {
-        if (counter_pos - 30 >= 0)
-            counter_pos1 = counter_pos - 30;
-        else
-            counter_pos1 = 40 + (counter_pos - 30);
+        if (previous_pos - 30 >= 0)
 
-        return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
+            aux = previous_pos - 30;
+        else
+
+            aux = 40 + (previous_pos - 30);
+
+        return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
     if (id == 4)
     {
-        if (counter_pos - 40 >= 0)
-            counter_pos1 = counter_pos - 40;
+        if (previous_pos - 40 >= 0)
+            aux = previous_pos - 40;
         else
-            counter_pos1 = 40 + (counter_pos - 40);
+            aux = 40 + (previous_pos - 40);
 
-        return (nframe_prev_pos[counter_pos1] + QPoint(4, 0));
+        return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
 }
-
 
 QPainterPath BlooberNanny::shape() const
 {

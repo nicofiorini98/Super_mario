@@ -10,7 +10,8 @@
 BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
 {
     dir = direction;
-    //set default flags
+	
+    //flags
     slow = true;
     launch_baby = false;
 
@@ -30,31 +31,35 @@ BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
     texture_swim_open[1] = Sprites::instance()->get("big-bertha-0");
     texture_death = Sprites::instance()->get("big-bertha-0").transformed(QTransform().scale(1, -1));
 
-    baby = new BabyCheep(position, dir);
+	//create a baby inside the mouth
+    baby = new BabyCheep((pos() + QPoint(7, 13)).toPoint(), dir);
 
-    // set texture and correct y-coordinate w.r.t. texture height
+    // set texture and position
     setPixmap(texture_swim_close[0]);
     setPos(position);
     setZValue(3);
 
 }
 
-void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
+void BigBertha::advance() 
 {
 
+	//when the baby dies, forget it
 	if(baby && baby->isDying())
-	{
         baby = nullptr;
-	}
+	
     if (script_counter > script_duration) 
     {
     	//reset counter when the script finished
         script_counter=0;
         moving_start_counter = 0;
 
-    	//choose whether to throw the baby in the following script
+
+    	//when the previous child died, give birth to another
     	if(!baby)
             baby = new BabyCheep((pos() + QPoint(7, 13)).toPoint(), dir);
+
+        //choose whether to throw the baby in the following script
     	if(baby)
 			launch_baby = rand() % 2;
         
@@ -63,7 +68,7 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
     if(moving_start_counter >= 0)
          moving_start_counter++;
 
-	//bounce and fall in the depths when dying
+	//bounce and fall in the depths when big bertha dying
     if(dying)
     {
         if(script_counter < 10)
@@ -207,7 +212,6 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
 	//make baby in the mouth of big bertha
 	if(baby)
 	{
-        std::cout << "prima\n";
         if (!launch_baby)
         {
             baby->setZValue(1);
@@ -218,7 +222,6 @@ void BigBertha::advance()  //vedere un po' come devo pensare big Bertha
             baby->setZValue(1);
             baby->setPos(pos() + QPoint(7, 13));
         }
-        std::cout << "dopo\n";
 	}
     
 
@@ -255,7 +258,7 @@ void BigBertha::animate()
     else
         setPixmap(texture_swim_open[(animation_counter/8)%2]);
 
-
+    //mirror texture when dir is right
     if (dir == RIGHT)
         setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 }
@@ -274,8 +277,10 @@ void BigBertha::hurt()
     moving_start_counter = 0;
     script_duration = death_duration;
 
+	//when BigBertha die and the baby is inside the mouth,then baby die
     if(baby && !baby->isScript_Move())
         baby->die();
+	//when the baby is outside the mouth, baby go away alone
     else
         baby->setBabyFree(true);
 

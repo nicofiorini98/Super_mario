@@ -25,13 +25,10 @@ public:
     // pure virtual methods that must be implemented
     virtual std::string name() { return "Baby_Cheep";}
     virtual void animate();
-    virtual void hit(Object* what, Direction fromDir){}
+    virtual void hit(Object* what, Direction fromDir);
     virtual void hurt(){}
     virtual void advance();
-    //bool get_lim() { return lim; }
-    //void set_lim(bool a) { lim = a; }
-    //bool get_same_pos() { return same_pos; }
-    //void set_same_pos(bool a) { same_pos = a; }
+    
 
     void setScript_Move(bool _script) { script = _script; }
 

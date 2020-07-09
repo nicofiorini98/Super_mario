@@ -11,57 +11,52 @@ class Mario : public Entity
 	protected:
 
 		// textures
-		QPixmap texture_stand[2];			// small/big stand texture
-		QPixmap texture_walking[2][4];		// small/big walking animations
-		QPixmap texture_super_running[2][3];//small/big super running animations
-		QPixmap texture_super_jumping[2];
-		QPixmap texture_jumping[2];			// small/big jumping texture
-		QPixmap texture_falling[2];			// small/big falling texture
-		QPixmap texture_brake[2];			// small/big brake texture
-		QPixmap texture_crouch;				// big crouch texture
-		QPixmap texture_small2big[12];		// transformation small-to-big
-		QPixmap texture_small_swimming[4];	// smallswimming texture
-		QPixmap texture_big_swimming[7];	// big swimming texture
-		QPixmap texture_entering_pipe[2];	// small/big enetering into pipe texture
-		QPixmap texture_dying;
-		QPixmap texture_transparent[2];
+		QPixmap texture_stand[2];					//small/big stand texture
+		QPixmap texture_walking[2][4];				//small/big walking animations
+		QPixmap texture_super_running[2][3];		//small/big super running animations
+		QPixmap texture_super_jumping[2];			//small/big super jumping texture
+		QPixmap texture_jumping[2];					//small/big jumping texture
+		QPixmap texture_falling[2];					//small/big falling texture
+		QPixmap texture_brake[2];					// small/big brake texture
+		QPixmap texture_crouch;						// big crouch texture
+		QPixmap texture_small2big[12];				// transformation small-to-big
+		QPixmap texture_small_swimming[4];			// smallswimming texture
+		QPixmap texture_big_swimming[7];			// big swimming texture
+		QPixmap texture_entering_pipe[2];			// small/big entering into pipe texture
+		QPixmap texture_dying;						//dying texture
+		QPixmap texture_transparent[2];				//injured texture
 		
-		std::string item_taken;
-
-		//mario fire texture
-		QPixmap texture_fire_stand;
-		QPixmap texture_fire_walking[4];
-		QPixmap texture_fire_super_running[3];
-		QPixmap texture_fire_super_jumping;
-		QPixmap texture_fire_jumping;		    // small/big jumping texture
-		QPixmap texture_fire_falling;		    // small/big falling texture
-		QPixmap texture_fire_brake;			    // small/big brake texture
-		QPixmap texture_fire_crouch;		    //fire crouch texture
-		QPixmap texture_fire_shoot[2];		    //fire attack texture
-		QPixmap texture_fire_swimming[7];       //fire swimming texture
-		QPixmap texture_fire_falling_inWater[4];//fire falling in water
-		QPixmap texture_fire_entering_pipe;     //fire entering into pipe texture
+		QPixmap texture_fire_stand;					//fire stand texture
+		QPixmap texture_fire_walking[4];			//fire walking texture
+		QPixmap texture_fire_super_running[3];		//fire super runnin texture
+		QPixmap texture_fire_super_jumping;			//fire super jumping texture
+		QPixmap texture_fire_jumping;				//fire jumping texture
+		QPixmap texture_fire_falling;				//fire falling texture
+		QPixmap texture_fire_brake;					//fire brake texture
+		QPixmap texture_fire_crouch;				//fire crouch texture
+		QPixmap texture_fire_shoot[2];				//fire attack texture
+		QPixmap texture_fire_swimming[7];			//fire swimming texture
+		QPixmap texture_fire_falling_inWater[4];	//fire falling in water
+		QPixmap texture_fire_entering_pipe;			//fire entering into pipe texture
 
 		//mario raccoon texture
-		QPixmap texture_raccoon_stand;          
-		QPixmap texture_raccoon_walking[4];
-		QPixmap texture_raccoon_super_running[3];
-		QPixmap texture_raccoon_flying[3];
-		QPixmap texture_raccoon_jumping;
-		QPixmap texture_raccoon_falling[3];
-		QPixmap texture_raccoon_brake;
-		QPixmap texture_raccoon_crouch;
-		QPixmap texture_raccoon_swimming[7];
+		QPixmap texture_raccoon_stand;				//raccoon stand texture
+		QPixmap texture_raccoon_walking[4];			//raccoon walking texture
+		QPixmap texture_raccoon_super_running[3];	//raccoon super running texture
+		QPixmap texture_raccoon_flying[3];			//raccoon flying texture
+		QPixmap texture_raccoon_jumping;			//raccoon jumping texture
+		QPixmap texture_raccoon_falling[3];			//raccoon fallin texture
+		QPixmap texture_raccoon_brake;				//raccoon brake texture
+		QPixmap texture_raccoon_crouch;				//raccoon crouch texture
+		QPixmap texture_raccoon_swimming[7];		//raccoon swimming texture
+		QPixmap texture_raccoon_tail_attack[5];		//raccoon tail attck texture
+		QPixmap texture_raccoon_entering_pipe;		//raccoon entering into pipe texture
+		QPixmap texture_transformation[6];			//transformation texture
 	
-		//todo vedere se manca raccoon falling in water
-		QPixmap texture_raccoon_tail_attack[5]; //raccoon tail attck texture
-		QPixmap texture_raccoon_entering_pipe;  //raccoon entering into pipe texture
+		std::string item_taken;
 
-		QPixmap texture_transformation[6];
-	
 		int animation_div;
 		int script_move_speed;
-
 	//flag da riunificare
 		Direction prev_dir;
 		bool super_running;
@@ -158,12 +153,13 @@ class Mario : public Entity
 		bool isBig() { return big; }
 		bool isRaccoon() { return raccoon; }
 		bool isInjured() { return injured; }
-		bool isDying() { return dying; }
+		//bool isDying() { return dying; }
 		bool isOnPipe(std::string level_name);
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
 		bool isBouncing() { return bounce_block; }
 		Direction getDirection() { return dir;}
+		int getPower() { return power; }
 		int getLives() { return lives; }
 		int getScore() { return score; }
 
@@ -176,8 +172,6 @@ class Mario : public Entity
 		bool isInWater() { return inWater; }
 		bool isRaccoonAttack() { return raccoon_attack; }
 		bool isSuperRunning() { return super_running; }
-	
-		
 		void setRebound(bool _rebound) { rebound = _rebound; }
 		void setRunning(bool _running);
 		void setScriptMove(bool _script_move) { script_move = _script_move; }

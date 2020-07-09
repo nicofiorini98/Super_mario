@@ -77,8 +77,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 
 		//debug piranha fire
-		//new Pipe(QPoint(3 * 16, terrain_level + 16), level_name, 3);
-		//new PiranhaFire(QPoint(3.5 * 16, terrain_level-4.5), UP);
+		/*new Pipe(QPoint(3 * 16, terrain_level + 16), level_name, 3);
+		new PiranhaFire(QPoint(3.5 * 16, terrain_level-4.5), UP);*/
 		
 		//new Firework(QPoint(0,1*16), "FLOWER");
 		//new GoalRoulette(QPoint(4*16,23*16));
@@ -293,13 +293,13 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   // enemies inWater sorted by the cordinate x
 		//cordinate giuste
 	   //new Cheep(QPoint(13*16, 22*16), RIGHT);
-	   /*new BlooberNanny(QPoint(23 * 16, 20 * 16)); //cordinata giusta
-	   new Pipe(QPoint(10 * 16, 26*16),level_name,3);*/
-	   new BigBertha(QPoint(38 * 16, 22 * 16));
+	   new BlooberNanny(QPoint(23 * 16, 20 * 16)); //cordinata giusta
+	   new Pipe(QPoint(10 * 16, 26*16),level_name,3);
+	   //new BigBertha(QPoint(38 * 16, 22 * 16));
 
-	   new Cheep(QPoint(68 * 16, 20 * 16));
+//	   new Cheep(QPoint(68 * 16, 20 * 16));
 	   //new BlooberNanny(QPoint(78 * 16, 20 * 16));
-	   new BigBertha(QPoint(110 * 16, 19 * 16)); //todo, va spostato, perchè va dentro l'iceberg
+	//   new BigBertha(QPoint(110 * 16, 19 * 16)); //todo, va spostato, perchè va dentro l'iceberg
 		
 	   
 	   //new BigBertha(QPoint(14*16, 22*16), RIGHT);

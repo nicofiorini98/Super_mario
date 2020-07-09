@@ -14,6 +14,9 @@
 #include "BlooberNanny.h"
 #include "Leaf.h"
 #include "FireBallPiranha.h"
+#include "BigBertha.h"
+#include "Cheep.h"
+#include "Plant.h"
 
 Entity::Entity() : Object()
 {
@@ -80,8 +83,7 @@ void Entity::advance()
 	//this is the only way to check if movement does break the impenetrability hypothesis
 	//if it does, we need to revert to previous position
 
-	//moving
-	//moving
+	
 	if (moving)
 	{
 		prevPos = pos();
@@ -136,23 +138,6 @@ void Entity::advance()
 		solveCollisions();
 	}
 
-	////jumping
-	//if (jumping)
-	//{
-	//	prevPos = pos();
-
-	//	//move upwards
-	//	setY(y() - jumping_speed);
-
-	//	//increase jump frame count
-	//	jump_counter += jumping_speed;
-	//	
-	//	//end jumping when frame count reaches the defined limit
-	//	if (jump_counter > jumping_duration)
-	//		endJumping();
-	//	
-	//	solveCollisions();
-	//}
 	if (jumping)
     {
         prevPos = pos();
@@ -172,19 +157,24 @@ void Entity::advance()
 
         solveCollisions();
     }
+
+	bool aux = false;
+	//todo, is può migliorare
+	if (level_name == "World 6-9-2" && dynamic_cast<Mario*>(this)->getPower() >= 2 && pos().x() >= 49 * 16 && pos().x()<=54*16)
+	{
+		std::cout << "aux: " << true << "\n";
+		aux = true;
+	}
 	//if the entity is not touching its walkable object anymore
 	//we have to start falling
-	if ( walkable_object && !touchingDirection(walkable_object) /*&& !dynamic_cast<Mario*>(this)->isInjured()*/)
+	if ( walkable_object && !touchingDirection(walkable_object) && !aux)
 	{
 		
 		walkable_object = nullptr;
 		script_move = false;
 
-		std::cout << "not touching_direction\n";
-		
 		if (Game::instance()->getCurState() == "RUNNING")
 			falling = true;
-		
 	}
 
 	//falling
@@ -256,18 +246,35 @@ void Entity::solveCollisions()
 				(dynamic_cast<Enemy*>(this) && dynamic_cast<Collectable*>(obj)))
 				continue;
 
+			//ignore collision between FireBallPiranha and Inert
+			if ((dynamic_cast<Plant*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<Plant*>(obj) && dynamic_cast<Inert*>(this)))
+				continue;
 			
-			if ((dynamic_cast<FireBallPiranha*>(this) && dynamic_cast<Inert*>(obj)) ||
-				(dynamic_cast<FireBallPiranha*>(obj) && dynamic_cast<Inert*>(this)))
+			if ((dynamic_cast<BigBertha*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<BigBertha*>(obj) && dynamic_cast<Inert*>(this)))
 				continue;
 
-			if ((dynamic_cast<FireBallPiranha*>(this) && dynamic_cast<Enemy*>(obj)) ||
-				(dynamic_cast<FireBallPiranha*>(obj) && dynamic_cast<Enemy*>(this)))
+			//ignore collision with BabyCheep and Inert
+			if ((dynamic_cast<BabyCheep*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<BabyCheep*>(obj) && dynamic_cast<Inert*>(this)))
 				continue;
 
-			//todo ricontrollare
-			if (dynamic_cast<Enemy*>(this) && dynamic_cast<BlooberBaby*>(obj))
+			//ignore collision with Cheep and Inert
+			if ((dynamic_cast<Cheep*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<Cheep*>(obj) && dynamic_cast<Inert*>(this)))
 				continue;
+			
+			//ignore collision with Bloober baby and Inert
+			if ((dynamic_cast<BlooberBaby*>(this) && dynamic_cast<Inert*>(obj)) ||
+				(dynamic_cast<BlooberBaby*>(obj) && dynamic_cast<Inert*>(this)))
+				continue;
+
+			
+			//ignore collision between Enemy and Enemy
+			if ((dynamic_cast<Enemy*>(this) && dynamic_cast<Enemy*>(obj)))
+				continue;
+
 
 			//ignore collision with enemy when mario is injured
 			if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isInjured() && dynamic_cast<Enemy*>(obj))
@@ -316,7 +323,6 @@ void Entity::solveCollisions()
 			 * l'acqua non è fastidioso se non prendo il walkable_object
 			 * l'importante è che non crasha , po vedamo nsomma
 			 */
-
 		}
 		// bug fix collision per la medusa
 		else if (dynamic_cast<BlooberNanny*>(this) && coll_dir == UNDETERMINED)
@@ -402,9 +408,8 @@ void Entity::solveCollisions()
 	}
 
 	//revert to previous position if needed
-	if (revert)
+	if (revert && !dynamic_cast<BlooberNanny*>(this))
 		setPos(prevPos);
-	
 	
 	//touchdown correction
 	//entity is on a walkable object but is not touching it!
@@ -421,6 +426,7 @@ void Entity::solveCollisions()
 			}
 	}
 }
+
 
 void Entity::die()
 {

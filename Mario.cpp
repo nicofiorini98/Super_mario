@@ -14,7 +14,7 @@
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
-	power = 0;
+	power = 0;			
 	prev_power = -1;
 	score = 0;
 	lives = 0;
@@ -76,10 +76,10 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	moving_start_counter = -1;
 	moving_stop_counter = -1;
 	dir_change_counter = -1;
-	dir_change_duration = 30;  //todo controllare, per il cambio direzione, uso 30 di default
+	dir_change_duration = 30;  
 	transformation_counter = -1;
 	injured_counter = 0;
-	death_duration = 100; //todo prima era 64
+	death_duration = 100; 
 	//livel_ended_counter = 0;
 
 	item_taken = "";
@@ -224,7 +224,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	texture_raccoon_tail_attack[2] = Sprites::instance()->get("mario-raccoon-tail-attack-2");// .transformed(QTransform().scale(-1, 1));
 	texture_raccoon_tail_attack[3] = Sprites::instance()->get("mario-raccoon-tail-attack-3");
 	texture_raccoon_tail_attack[4] = Sprites::instance()->get("mario-raccoon-tail-attack-4");
-
+	
 	//mario raccon texture InWater
 	texture_raccoon_swimming[0] = Sprites::instance()->get("mario-raccoon-swim-0");
 	texture_raccoon_swimming[1] = Sprites::instance()->get("mario-raccoon-swim-1");
@@ -237,18 +237,23 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	//sono le texture per l'animazione della pipe
 	texture_entering_pipe[0] = Sprites::instance()->get("mario-small-pipe");
 	texture_entering_pipe[1] = Sprites::instance()->get("mario-big-pipe");
+	//texture_raccoon_entering_pipe = Sprites::instance()->get("mario-raccoon-tail-attack-1");
+
 	
 	// set texture and correct y-coordinate w.r.t. texture height
 	setPixmap(texture_stand[big]);
 	setPos(position - QPoint(0, pixmap().height()));
 
 	// Mario is at a higher layer than other objects
-	setZValue(1);
+	setZValue(5);
 }
 
 void Mario::advance()
 {
 	//std::cout << "walkable_object : " << walkable_object << '\n';
+	//if (prev_power != power)
+		//Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
+	//std::cout << "collidable:" << collidable << "\n";
 	
 	if (dying)
 	{
@@ -287,17 +292,14 @@ void Mario::advance()
 	{
 			moving_speed = ((animation_counter / 2) % 2) + 1;
 			if (pos().x() >= 96*16)
-			{
 				moving = false;
-			}
+			
 	}
 	if (raccoon)
 	{
 		//manage asymmetry texture of mario raccoon
 		if (prev_dir != dir)
 		{
-			//if(!attack)
-			
 			setX(x() + (dir == LEFT ? 8 : -8));
 			
 			prev_dir = dir;
@@ -310,9 +312,14 @@ void Mario::advance()
 		if ((!big && ((dir == DOWN && script_move_counter == 97) || (dir == UP && script_move_counter == 128)))
 			|| (big && ((dir == DOWN && script_move_counter == 128) || (dir == UP && script_move_counter == 180))))
 			exitPipe();
+
 		
 		if (script_move_counter >= 0)
 			script_move_counter++;
+
+		if (script_move_counter == 0 && raccoon && dir == LEFT)
+			setX(x() + 3);
+			
 
 		script_move_speed = script_move_counter % 2 == 1;    // speed 0.5
 
@@ -518,9 +525,6 @@ void Mario::advance()
 		}
 
 		// slow down jumping speed during last iterations
-		//questo pezzo va nell'advance di mario
-		//
-		//bug bounce block
 		if (bounce_block)
 		{
 			falling = false;
@@ -605,13 +609,7 @@ void Mario::advance()
 				power = 6;
 				moving_speed = 3;                                   // 3 speed
 				animation_div = 2;
-			}
-			//if (moving_start_counter > 115 && moving_start_counter <= 130 && running)
-			//{
-			//	power = 6;
-			//	moving_speed = moving_start_counter % 2 + 3;         // 3.5 speed
-			//	animation_div = 2;
-			//}
+			}			
 			if (moving_start_counter > 130 && running)
 			{
 				power = 7;
@@ -719,6 +717,7 @@ void Mario::advance()
 		//change direction instantly
 		if(dir_change_counter>0)
 		{
+			//prev_dir = dir; //todo check this
 			setDirection(inverse(dir));
 		}
 		
@@ -993,31 +992,24 @@ void Mario::setMoving(bool _moving)
 // @override setDirection() to avoid instant direction change
 void Mario::setDirection(Direction _dir)
 {
-	// bug fix start
-	//exception for script_move, in teoria se sono in script_move
-	// bug fix end
-
-
-	if(script_move)
+	//bug here, check, maybe i solved it
+	if(script_move && _dir!=prev_dir)
 	{
 		//change direction instantly in script_move
+		prev_dir = dir;
 		dir = inverse(dir);
 		dir_change_counter = -1;
 	}
-
-	
-	if (_dir != dir && moving)
+	else if (_dir != dir && moving)
 	{
 		// reset acceleration/deceleration counters
-
 		moving_start_counter = 0;
 		moving_stop_counter = -1;
 		
 		//start the direction counter
 		dir_change_counter = 0;
 	}
-
-	if (_dir != dir && !moving)
+	else if (_dir != dir && !moving)
 	{
 		if (raccoon)
 			prev_dir = dir;
@@ -1045,7 +1037,7 @@ void Mario::animate()
 		else if (fire)
 			setPixmap(texture_fire_entering_pipe); 
 		else if (raccoon)
-			setPixmap(texture_raccoon_entering_pipe);
+			setPixmap(texture_raccoon_tail_attack[1]);
 		else
 			setPixmap(texture_entering_pipe[0]);
 	}
@@ -1347,7 +1339,7 @@ void Mario::hit(Object* what, Direction fromDir)
 	if (fromDir == DOWN && swimming && dynamic_cast<Inert*>(what))  // se sto nuotando e tocco verso il basso devo riprendere il walkable object
 		walkable_object = dynamic_cast<Inert*>(what);
 
-	//stop swimming if
+	
 	if (swimming && (fromDir == DOWN || fromDir == UP))
 		endSwimming();
 
@@ -1428,9 +1420,8 @@ void Mario::hit(Object* what, Direction fromDir)
 
 			if (fromDir == DOWN)
 				bounce();
-			else if (koopa->isShell() /*&& fromDir ==RIGHT || fromDir==LEFT*/)
-				std::cout << "stocazzo \n";
-			else
+			//else if (koopa->isShell() )
+			else if(!koopa->isShell())
 				powerDown();
 
 		}
@@ -1507,6 +1498,8 @@ void Mario::startPipeTravel()
 	entering_pipe = false;
 	script_move_in_pipe = true;
 	setZValue(2);
+
+	std::cout << "startPipeTravel()\n";
 	collidable = false;
 
 	Game::instance()->setFreezed(true);
@@ -1516,6 +1509,7 @@ void Mario::endPipeTravel()
 {
 	script_move_in_pipe = false;
 	script_move_counter = 0;
+	std::cout << "endPipeTravel()\n";
 	collidable = true;
 
 	Game::instance()->setFreezed(false);
@@ -1598,10 +1592,14 @@ void Mario::powerUp(spawnable_t _power) //todo da debuggare
 
 bool Mario::isOnPipe(std::string level_name)
 {
-	if (  ((level_name == "World 6-9-1" && pos().x() >= 14*16 +4 && (pos().x() + 16) <= 16*16 -4)  
-	    || (level_name == "World 6-9-2" && pos().x() >= 54*16 +4 && (pos().x() + 16) <= 56*16 -4)) && !falling && !jumping)
-	    return true;
-	else return false;
+	if(true)
+	{
+		if (((level_name == "World 6-9-1" && pos().x() >= 14 * 16 + 4 && (pos().x() + 16) <= 16 * 16 - 4)
+			|| (level_name == "World 6-9-2" && pos().x() >= 54 * 16 + 4 && (pos().x() + 16) <= 56 * 16 - 4)) && !falling && !jumping)
+			return true;
+		else return false;
+	}
+	
 }
 
 bool Mario::isUnderPipe(std::string level_name)

@@ -12,17 +12,17 @@ protected:
 
     Mario* mario;
 
+	//pointer to own babies
     BlooberBaby* baby1;
     BlooberBaby* baby2;
     BlooberBaby* baby3;
     BlooberBaby* baby4;
     
-	//vector of 20 previous pos
-    int counter_pos;
-    int counter_pos1;
-    
+    //memorize 40 previous positions
+    int previous_pos;          
     std::array<QPoint,40> nframe_prev_pos;
-	//stati movimento medusa 
+	
+	//flag for identified the script to do
     bool over_head;
     bool near_head;
     bool under_head;
@@ -33,6 +33,7 @@ protected:
     bool blocked_down;
 
     bool splash;
+    bool first;
 
     bool spawn_baby; //mi serve per gestire il lancio degli uttri, non dovrebbe servire più, faccio una cosa analoga di Big_Bertha
     int spawn_counter;

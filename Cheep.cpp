@@ -9,12 +9,11 @@ Cheep::Cheep(QPoint position, Direction direction) : Enemy()
 	// set attribute
 	pos_in = position;
 	dir = direction;
+	
+	//flag 
 	slow = true;
 	falling = false;
-	moving_start_counter = 0;
-	// animation divisor
-	animation_div = 8;
-
+	
 	// durations
 	death_duration = 250;
 
@@ -26,13 +25,13 @@ Cheep::Cheep(QPoint position, Direction direction) : Enemy()
 
 	// set texture and correct y-coordinate w.r.t. texture height
 	setPixmap(texture_swim[0]);
-	setPos(position - QPoint(0, pixmap().height()));
+	setPos(position);
 	setZValue(2);
 }
 
 void Cheep::advance()
 {
-	//advance when dying
+	//bounce and fall in the depth when dying
 	if(dying)
 	{
 		if (death_counter >= 0 && death_counter <= 20)
@@ -52,7 +51,7 @@ void Cheep::advance()
 	if (x() <= pos_in.x() - 3 * 16 && dir == LEFT)
 		dir = inverse(dir);
 
-	//moving in the y-axis
+	//floating during the time
 	if (animation_counter % 64 == 0)
 		setY(y() + 1);
 	if (animation_counter % 64 == 4)
@@ -106,7 +105,7 @@ void Cheep::animate()
 		setPixmap(texture_death);
 	}
 	else if (moving)
-		setPixmap(texture_swim[(animation_counter / animation_div) % 2]);
+		setPixmap(texture_swim[(animation_counter / 8) % 2]);
 
 	//mirror texture when dir==RIGHT
 	if (dir == RIGHT)
@@ -116,10 +115,6 @@ void Cheep::animate()
 void Cheep::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
-
-	//if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
-	//	&& (fromDir == LEFT || fromDir == RIGHT))
-	//	dir = inverse(dir);
 }
 
 void Cheep::hurt()

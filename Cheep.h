@@ -3,12 +3,7 @@
 
 class Cheep : public Enemy
 {
-private:
-	int moving_start_counter; // probabilmente meglio metterlo in Enemy, per� non mi serve pi� uso animation counter
 protected:
-
-	// attributes
-	bool red;
 
 	// textures
 	QPixmap texture_swim[2];		
