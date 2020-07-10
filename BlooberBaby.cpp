@@ -14,7 +14,7 @@ BlooberBaby::BlooberBaby(QPoint position, int _move_id) : Enemy()
 	script_counter = 0;
 	script_duration = 1;
 	// durations
-	//death_duration=100;
+	
 	jumping_duration = 10;
 	falling_duration = 10;
 	// textures

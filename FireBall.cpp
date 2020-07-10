@@ -102,7 +102,8 @@ void FireBall::advance()
 void FireBall::hit(Object* what, Direction fromDir)
 {
 	//when hit from right or left, then die
-	if ((dynamic_cast<Inert*>(what) && (fromDir!=DOWN && fromDir != UNDETERMINED && fromDir != UP)) || dynamic_cast<Enemy*>(what))
+	if ((dynamic_cast<Inert*>(what) && (fromDir!=DOWN && fromDir != UNDETERMINED && fromDir != UP)) || dynamic_cast<Enemy*>(what)
+		/*|| dynamic_cast<Iceberg*>(what)->type() == "downhill2"*/)
 		dying = true;
 
 	//when hit with downhill or uphill, paramenters will change

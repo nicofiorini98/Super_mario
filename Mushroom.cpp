@@ -61,7 +61,9 @@ void Mushroom::hit(Object* what, Direction fromDir)
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
 	{
-		mario->powerUp(type);
+		if(red)
+			mario->powerUp(type);
+		
 		if(type==LIFE)
 			mario->updateLives(1, pos().toPoint());
 		else 

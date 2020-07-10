@@ -80,10 +80,13 @@ void BrickBlock::hit(Object* what, Direction fromDir)
 	if (type == "")
 		BouncingBlock::hit(what, fromDir);
 
-	//todo mettere il shellmoving nel koopaTroopa
-	else if (type == "ice" && (dynamic_cast<KoopaTroopa*>(what) && dynamic_cast<KoopaTroopa*>(what)->isShellMoving())) {
+	
+	else if (type == "ice" && (dynamic_cast<KoopaTroopa*>(what) && dynamic_cast<KoopaTroopa*>(what)->isShellMoving()))  
+ {
 		collidable = false;
 		setVisible(false);
+
+		//the block is broken in four pieces
 		new BrokenBlock(pos(), LEFT, true);
 		new BrokenBlock(pos() + QPointF(0, 9), LEFT, false);
 		new BrokenBlock(pos() + QPointF(8, 0), RIGHT, true);

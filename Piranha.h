@@ -6,7 +6,8 @@
 class Piranha : public Plant
 {
 protected:
-	bool rotate; 
+	bool rotate;
+	bool red;
 	// textures
 	QPixmap texture_crunch[2];		// brown/red walk animation
 

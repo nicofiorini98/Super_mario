@@ -4,11 +4,11 @@
 #include "Mushroom.h"
 #include "Flower.h"
 #include <iostream>
+#include "Leaf.h"
+
 JumpBlock::JumpBlock(QPoint position)
 {
 	mario = nullptr;
-	down = false;
-	up = false;
 	pos_in = position;
 
 	hit_start_counter = -1;
@@ -37,21 +37,7 @@ void JumpBlock::animate()
 
 void JumpBlock::advance()
 {
-	/*if (pos().y() == pos_in.y() && up) {
-		moving = false;
-		up = false;
-	}
-
-	if (pos().y() == pos_in.y() + 12) {
-		down = false;
-		up = true;
-		mario->bounceBlock();
-	}*/
-
-	//if()
-
-	//std::cout << stop << std::endl;
-
+	
 	if (hit_counter >= 0)
 	{
 		if (hit_counter == 0 && dir == DOWN)
@@ -82,40 +68,24 @@ void JumpBlock::advance()
 		else
 		{
 			moving_speed = 1;
-			//dir = UP;
+			
 			hit_counter = -1;
 			hit_start_counter = -1;
 			moving = false;
+			//different content depending by mario's mode
 			if (active && !mario->isBig())
 				new Mushroom(pos_in, UP, true);
 			else if (active && mario->isBig())
-				new Flower(pos_in, UP);
+				new Flower(pos_in,inverse(dir));
 			active = false;
 		}
 		BouncingBlock::advance();
 
 	}
-	/*else {
-
-		if (down && !up) {
-			moving = true;
-			dir = DOWN;
-		}
-		else if (!down && up) {
-			moving = true;
-			dir = UP;
-		}
-
-		BouncingBlock::advance();
-
-	}*/
 
 }
 void JumpBlock::hit(Object* what, Direction fromDir) {
-	/*if (fromDir == UP)
-		std::cout << "sta toccando da sopra\n";
-	if (fromDir == DOWN)
-		std::cout << "sta toccando da sotto\n";*/
+	
 	mario = dynamic_cast<Mario*>(what);
 	if (mario && fromDir == DOWN && hit_counter == -1)
 	{
@@ -135,11 +105,12 @@ void JumpBlock::hit(Object* what, Direction fromDir) {
 	}
 	if (mario && fromDir == UP && hit_counter == -1)
 	{
+        //different content depending by mario's mode
 		if (active && !mario->isBig())
 			new Mushroom(pos_in, DOWN, true);
 		else if (active && mario->isBig())
 			new Flower(pos_in, DOWN);
-
+		//hit by mario from UP and starting its rebounding phase
 		mario->setRebound(false);
 		active = false;
 		dir = DOWN;
@@ -149,12 +120,8 @@ void JumpBlock::hit(Object* what, Direction fromDir) {
 		moving = true;
 
 		// play box hit sound
-		//boh se ci va chesto
 		Sounds::instance()->play("bump");
 
 	}
-	/*if (mario && fromDir == UP && up) {
-		mario->setY(mario->y() - 1);
-		std::cout << "razzecca\n";
-	}*/
+	
 }

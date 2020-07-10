@@ -23,7 +23,7 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 	animation_div = 8;
 
 	// durations
-	death_duration = 100;
+	death_duration = 300;
 
 	// textures
 	texture_walk[0] = Sprites::instance()->get("Koopa_Troopa-0");
@@ -33,7 +33,7 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 	texture_shell_moving[1] = Sprites::instance()->get("Shell-moving-1");
 	texture_shell_moving[2] = Sprites::instance()->get("Shell-moving-2");
 	texture_shell_moving[3] = Sprites::instance()->get("Shell-moving-3");
-	texture_death = Sprites::instance()->get("Blocked-Shell").transformed(QTransform().scale(-1, 1));
+	texture_death = Sprites::instance()->get("Blocked-Shell").transformed(QTransform().scale(1, -1));
 	// set texture and correct y-coordinate w.r.t. texture height
 
 	setPixmap(texture_walk[0]);
@@ -44,14 +44,28 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 
 void KoopaTroopa::advance()
 {
+
+	//bounce and fall in the depth when dying
+	if (dying)
+	{
+		if (death_counter >= 0 && death_counter <= 20)
+			setY(y());
+		else
+			setY(y() + 1);
+		
+		return;
+	}
 	
+	//normal walking mode 
 	if (normal) 
 	{
 		moving = true;
 		slow = true;
 	}
+	//shell mode 
 	else if (shell) 
 		moving = false;
+	//shell and moving mode
 	else if (shell_moving)
 	{
 		harmless = false;
@@ -66,6 +80,17 @@ void KoopaTroopa::advance()
 
 void KoopaTroopa::animate()
 {
+
+
+	Entity::animate();
+	
+	if(dying)
+	{
+		setPixmap(texture_death);
+		return;
+	}
+	
+
 	if (shell_counter >= 0) {
 		shell_counter++;
 
@@ -79,8 +104,6 @@ void KoopaTroopa::animate()
 	}
 
 
-	Entity::animate();
-
 	// save current texture height (for later correction)
 	int prev_h = boundingRect().height();
 
@@ -93,7 +116,8 @@ void KoopaTroopa::animate()
 		setPixmap(texture_shell);
 	else if (shell_moving && moving)
 		setPixmap(texture_shell_moving[(animation_counter / animation_div) % 4]);
-	//questo serve per quando diventa guscio
+	
+	//correction height from normal to shell mode
 	int cur_h = boundingRect().height();
 	if (prev_h != cur_h)
 		setY(y() - (cur_h - prev_h));
@@ -106,26 +130,32 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 
 	Object::hit(what, fromDir);
 	Mario* mario = dynamic_cast<Mario*>(what);
+	//change direction if hits inert
 	if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
 		&& (fromDir == LEFT || fromDir == RIGHT))
 		dir = inverse(dir);
+	
 	else if (mario) {
+		//change direction if hit by mario
 		if (mario->x() >= this->x() + (this->boundingRect().width() / 2))
 			dir = LEFT;
 		else
 			dir = RIGHT;
-
-		if (fromDir == UP && normal) {
+		//going to shell mode when is normal and hit by mario from UP
+		if (fromDir == UP && normal) 
+		{
 			normal = false;
 			shell = true;
 			harmless = true;
 			shell_counter = 0;
 		}
-		else if (shell) {
-			std::cout << "sheeeeeeel\n";
+		//going to shell moving mode when is shell and hit by mario
+		else if (shell) 
+		{
 			shell = false;
 			shell_moving = true;
 		}
+		//going to shell mode when is shell moving and hit by mario from UP
 		else if (fromDir == UP && shell_moving)
 		{
 			shell_moving = false;
@@ -137,7 +167,7 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 
 void KoopaTroopa::hurt()
 {
-	Sounds::instance()->	play("stomp");
+	Sounds::instance()->play("stomp");
 	dying = true;
 	moving = false;
 }
@@ -145,9 +175,10 @@ void KoopaTroopa::hurt()
 QPainterPath KoopaTroopa::shape() const
 {
 	QPainterPath path;
-	////path.addRect(0, boundingRect().top() , boundingRect().width(), boundingRect().bottom() );
+	
 	if (normal)
 		path.addRect(0, boundingRect().top() + 11, boundingRect().width(), boundingRect().bottom() - 11);
-	else path.addRect(0, boundingRect().top(), boundingRect().width(), boundingRect().bottom());
+	else 
+        path.addRect(0, boundingRect().top(), boundingRect().width(), boundingRect().bottom());
 	return path;
 }

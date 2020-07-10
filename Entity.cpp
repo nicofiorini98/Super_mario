@@ -17,6 +17,7 @@
 #include "BigBertha.h"
 #include "Cheep.h"
 #include "Plant.h"
+#include "JumpBlock.h"
 
 Entity::Entity() : Object()
 {
@@ -189,10 +190,10 @@ void Entity::advance()
 		solveCollisions();
 	}
 	
-	//if we fall beyond the scene bottom limit
-	//we have to die (if not dead already)
-	//if (y() > Game::instance()->getCurrScene()->sceneRect().height() && !dead)
-	//	die();	
+	//if we fall beyond the second scene bottom limit
+	//we have to die (if not dying already)
+	if ( level_name=="World 6-9-2" && y()>=28*16 && !dying)
+		die();	
 }
 
 void Entity::animate()
@@ -298,7 +299,8 @@ void Entity::solveCollisions()
 
 		// BUG FIX MIO, manage corner-corner collision
 	    //manage corner-corner collision in outOfWater
-		if (dynamic_cast<Mario*>(this) && !dynamic_cast<Mario*>(this)->isInWater() && coll_dir == UNDETERMINED)//bug fix mio
+		if (dynamic_cast<Mario*>(this) && !dynamic_cast<Mario*>(this)->isInWater() && coll_dir == UNDETERMINED
+			&& !dynamic_cast<JumpBlock*>(obj))//bug fix mio
 		{
 			if (falling)
 			{
@@ -308,6 +310,7 @@ void Entity::solveCollisions()
 			else if (!jumping && !falling)  // mi serve per forza
 			{
 				coll_dir = dir;
+				setX(x() + (dir == RIGHT ? -2 : 2));
 				falling = true;
 			}
 			else if (jumping && moving)
@@ -337,8 +340,8 @@ void Entity::solveCollisions()
 		}
 
 		//todo da vedere questa if
-		if (coll_dir == RIGHT || coll_dir == LEFT || coll_dir == UP)
-			touching_correction = false;
+		/*if (coll_dir == RIGHT || coll_dir == LEFT || coll_dir == UP)
+			touching_correction = false;*/
 
 		//FINE BUG FIX MIO
 
@@ -385,7 +388,9 @@ void Entity::solveCollisions()
 		//special case 4 : collision when mario is making an attack in raccoon mode
 		//---->ignore collision 
 		if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isRaccoonAttack())
+		{
 			continue;
+		}
 
 		
 		//if we ended up here, it means we have to revert
@@ -393,6 +398,7 @@ void Entity::solveCollisions()
 		if(dynamic_cast<Coin*>(obj))
 			continue;
 
+		//manage collision of bloober nanny for each object
 		if (dynamic_cast<BlooberNanny*>(this))
 		{
 			//if(coll_dir == UNDETERMINED)
@@ -401,7 +407,6 @@ void Entity::solveCollisions()
 				setY(prevPos.y());
 			else
 				setX(prevPos.x());
-
 		}
 		
 		revert = true;
@@ -418,12 +423,19 @@ void Entity::solveCollisions()
 	if (!script_move && touching_correction && revert && walkable_object && !collisionDirection(walkable_object))
 	{
 			// just moving down until entity touches the walkable
-			while (touchingDirection(walkable_object) != DOWN)
+		int i = 0;
+			while (touchingDirection(walkable_object) != DOWN && i<4)
 			{
+				i++;
 				static int correct_counter = 0;
 				printf("[%d] %s is correcting touchdown (y = %.3f, dir = %d)\n", correct_counter++, this->name().c_str(), y(), touchingDirection(walkable_object));
 				setY(y() + 1);
 			}
+		if(i==4)
+		{
+			std::cout << "i = 4 \n";
+			setX(x() + (dir == RIGHT ? -2 : 2));
+		}
 	}
 }
 

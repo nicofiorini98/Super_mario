@@ -53,30 +53,37 @@ class Mario : public Entity
 		QPixmap texture_raccoon_entering_pipe;		//raccoon entering into pipe texture
 		QPixmap texture_transformation[6];			//transformation texture
 	
-		std::string item_taken;
+		std::string item_taken;						//card taken 
 
-		int animation_div;
-		int script_move_speed;
-	//flag da riunificare
-		Direction prev_dir;
-		bool super_running;
+		int animation_div;							//animation divisor
+		int script_move_speed;						//speed in pipe
+		//flag da riunificare
+		Direction prev_dir;							//previous frame direction
 	
-		bool small_swim;
+		bool super_running;							//is mario in super running?
+		bool touch_pipe;							//is mario touch pipe?
+		bool raccoon_attack;						//is mario raccoon attack?
+
+		//flag for swim type
+		bool small_swim;							
 		bool brake_swim;
-	
+
+		//flag for fly in raccoon mode 
 		bool flying;
 		bool fly_float;
-		bool touch_pipe;
+
+		//flag for raccoon mode 
 		bool fire;
 		bool raccoon;
 		bool attack;
-		bool raccoon_attack;
-
+	
+		
+		//flag for manage physic parameters in the world
 		bool outOfWater;
 		bool inWater;
-		bool inWater_surface;                   // is in Water surface
+		bool inWater_surface;           
 
-	//counter da riunificare
+		//physic parameters for raccoon fly
 		int fly_counter;
 		int fly_start_counter;
 		int fly_duration;
@@ -84,48 +91,50 @@ class Mario : public Entity
 
 		int falling_start_counter;
 
+		//physic parameters for the swim
 		int swim_counter;
 		int swim_start_counter;
 		int swim_rise_duration;
 		int swim_fall_duration;
 		int swim_speed;
-	
-		int dir_change_duration;
+
+		//physic parameters for directon change
+		int dir_change_counter;				
+		int dir_change_duration;			
+
 		int attack_counter;
 	
-	
-		// flags
+		// flags for manage the behaviour
 		bool running;						// is Mario running?
 		bool big;							// is Mario big?
 		bool crouch;						// is Mario crouched?
 		bool swimming;                      // is Mario swimming?
-		bool script_move_in_pipe;           // is Mario 
+		bool script_move_in_pipe;           // is Mario moving into the pipe?
 		bool entering_pipe;                 // is Mario entering the pipe?
-		bool running_out_of_view;
-
-		bool bounce_block;
-		bool rebound;
-		bool injured;
-		// counters
-		int script_move_counter;
+		bool running_out_of_view;			// is Mario running out of view?
+		bool bounce_block;					// is Mario bounce on the jump block?
+		bool rebound;						// is Mario rebound on the jump block?
+		bool injured;						// is Mario injured?
+					
 
 		//attribute for hud
-		int power;
+		int power;							
 		int prev_power;
 		int score;
 		int lives;
 		
 		int moving_start_counter;			// counts the number of frames since moving started
-
 		int moving_stop_counter;			// counts the number of frames since moving stopped
-		int dir_change_counter;				// counts the number of frames since direction changed
+	
 		int transformation_counter;			// counts the number of frames since transformation started
 		int injured_counter;				// counts the number of frames since flashing for injured started
-		
+		int script_move_counter;
 
+		
+		//override end jumping
 		virtual void endJumping();
 
-		//da riunificare
+		
 		void startSwimming();
 		void endSwimming();
 		

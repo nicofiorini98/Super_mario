@@ -304,6 +304,7 @@ void Game::keyPressEvent(QKeyEvent* e)
 		key_up_pressed = true;
 	
 	if (e->key() == Qt::Key_Down)
+	{
 		if (mario->isOnPipe(cur_level_name))
 		{
 			cur_state = CHANGE_LEVEL;
@@ -312,6 +313,8 @@ void Game::keyPressEvent(QKeyEvent* e)
 		}
 		else
 			mario->setCrouch(true);
+	}
+		
 	
 	// Mario's jump
 	if (e->key() == Qt::Key_Space)

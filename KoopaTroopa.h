@@ -9,12 +9,14 @@ protected:
 	Mario* mario;
 
 	// attributes
-	bool normal;
-	bool shell;
-	bool shell_moving;
-	bool harmless;
-	//int wait;
-	int shell_counter;
+	bool normal;                 //is koopatroopa normally walking?
+	bool shell;                  //is koopatroopa in shell and not moving ?
+	bool shell_moving;           //is koopatroopa in shell moving?
+	bool harmless;               //is koopatroopa harmless?
+            
+
+	//physics parameters for koopatroopa's shell state
+	int shell_counter;           
 	int shell_duration;
 
 

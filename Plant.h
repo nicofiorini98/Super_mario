@@ -4,17 +4,12 @@
 
 class Plant : public Enemy
 {
-private:
-	
-
 protected:
 
-	//int moving_start_counter;
+	//parameters
 	int out_counter;
 	int in_counter;
-	bool rotate;
-	bool red;
-	bool in;
+	bool in;		//is in inside the pipe?
 	
 	// dying is in common for all plants
 	QPixmap texture_dying[12];

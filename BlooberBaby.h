@@ -3,19 +3,23 @@
 #include <iostream>
 class BlooberBaby : public Enemy
 {
-    int move_id; // serve per capire quale medusa è delle 4
-    bool script;
-    int script_counter;
-    int script_duration;
+    int move_id; // each son is enumerated
+    bool script;   //is blooberbaby freed?
+
+    //counts the number of frame during moving phase
+    int script_counter;  
     int moving_start_counter;
+    
+    //physical parameter when is freed
+    int script_duration;
     int falling_duration;
 	
 protected:
 
     // textures
     QPixmap texture_nothing;
-    QPixmap texture_swim[3];		// brown/red walk animation
-    QPixmap texture_death;		// brown/red smashed texture
+    QPixmap texture_swim[3];		
+    QPixmap texture_death;		
     QPoint pos_in;
 	
 public:

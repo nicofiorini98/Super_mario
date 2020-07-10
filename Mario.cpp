@@ -79,7 +79,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	dir_change_duration = 30;  
 	transformation_counter = -1;
 	injured_counter = 0;
-	death_duration = 100; 
+	death_duration = 200; 
 	//livel_ended_counter = 0;
 
 	item_taken = "";
@@ -253,7 +253,7 @@ void Mario::advance()
 	//std::cout << "walkable_object : " << walkable_object << '\n';
 	//if (prev_power != power)
 		//Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
-	//std::cout << "collidable:" << collidable << "\n";
+	std::cout << "collidable:" << collidable << "\n";
 	
 	if (dying)
 	{
@@ -298,7 +298,7 @@ void Mario::advance()
 	if (raccoon)
 	{
 		//manage asymmetry texture of mario raccoon
-		if (prev_dir != dir)
+		if (prev_dir != dir && (outOfWater || walkable_object))
 		{
 			setX(x() + (dir == LEFT ? 8 : -8));
 			
@@ -311,15 +311,21 @@ void Mario::advance()
 	{
 		if ((!big && ((dir == DOWN && script_move_counter == 97) || (dir == UP && script_move_counter == 128)))
 			|| (big && ((dir == DOWN && script_move_counter == 128) || (dir == UP && script_move_counter == 180))))
+		{
 			exitPipe();
+			/*if (raccoon)
+				setMoving(true);*/
+			
+			
+			
+		}
 
 		
 		if (script_move_counter >= 0)
 			script_move_counter++;
 
 		if (script_move_counter == 0 && raccoon && dir == LEFT)
-			setX(x() + 3);
-			
+			setX(x() + 6);
 
 		script_move_speed = script_move_counter % 2 == 1;    // speed 0.5
 
@@ -339,7 +345,23 @@ void Mario::advance()
 				Game::instance()->changeLevel(dir);
 		}		
 	}
+	// slow down jumping speed during last iterations
+	if (bounce_block)
+	{
+		falling = false;
+		if (rebound)
+			jumping_duration = 4 * 16 + 24;
+		else if (!rebound)
+			jumping_duration = 25 + 24;
 
+		if (jump_counter < 12)
+			jumping_speed = -1;
+		else if (jump_counter >= 12 && jump_counter < 24)
+			jumping_speed = 1;
+
+		else if (jump_counter >= 24)
+			jumping_speed = 3;
+	}
 	if(swimming)
 	{
 		prevPos = pos();
@@ -524,34 +546,42 @@ void Mario::advance()
 			dir_change_counter = -1;
 		}
 
-		// slow down jumping speed during last iterations
-		if (bounce_block)
-		{
-			falling = false;
-			if (rebound)
-				jumping_duration = 4 * 16 + 24;
-			else if (!rebound)
-				jumping_duration =  16 + 24;
+		//// slow down jumping speed during last iterations
+		//if (bounce_block)
+		//{
+		//	falling = false;
+		//	if (rebound)
+		//		jumping_duration = 4 * 16 + 24;
+		//	else if (!rebound)
+		//		jumping_duration =  25 + 24;
 
-			if (jump_counter < 12)
-				jumping_speed = -1;
-			else if (jump_counter >= 12 && jump_counter < 24)
-				jumping_speed = 1;
+		//	if (jump_counter < 12)
+		//		jumping_speed = -1;
+		//	else if (jump_counter >= 12 && jump_counter < 24)
+		//		jumping_speed = 1;
 
-			else if (jump_counter >= 24)
-				jumping_speed = 3;
-		}
-		else
+		//	else if (jump_counter >= 24)
+		//		jumping_speed = 3;
+		//}
+		if(!bounce_block)
 		{
-			if (jump_counter >= jumping_duration - 16)
+			if (jump_counter >= jumping_duration - 8)
+				jumping_speed = 1 + (animation_counter % 2);
+
+			else if (jump_counter >= jumping_duration - 16)
 				jumping_speed = 2;
+			else if (jump_counter >= jumping_duration - 24)
+				jumping_speed = 2 + animation_counter % 2;
+			else jumping_speed = 3;
 
-			// slow down falling speed during first iterations
-			if (falling_counter < 16)
-				falling_speed = 2;
-			else
-				falling_speed = 3;
 		}
+
+
+		// slow down falling speed during first iterations
+		if (falling_counter < 16)
+			falling_speed = 2;
+		else
+			falling_speed = 3;
 		
 		//memorize power and then update
 		prev_power = power;
@@ -684,7 +714,10 @@ void Mario::advance()
 
 		//l'accellerazione iniziale fa parte della nuotata
 
-		falling_speed = 1;
+		if (falling_counter <= 6)
+			falling_speed = animation_counter % 2;
+		else
+			falling_speed = 1;
 
 
 	}
@@ -1021,7 +1054,6 @@ void Mario::setDirection(Direction _dir)
 void Mario::animate()
 {
 	Entity::animate();
-
 	// save current texture height (for later correction)
 	int prev_h = boundingRect().height();
 
@@ -1086,8 +1118,6 @@ void Mario::animate()
 
 			if (transformation_counter >= 12 * 5)
 			{
-				if (raccoon && dir == RIGHT) //correction asymmetry of raccoon transformation
-					setX(x() - 8);
 				transformation_counter = -1;
 				Game::instance()->setFreezed(false);
 			}
@@ -1263,10 +1293,11 @@ void Mario::animate()
 					setPixmap(texture_raccoon_stand);
 			}
 
-			//mirror texture istantly in the water   
-			if (dir_change_counter > 0)
-				setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 		}
+
+		//mirror texture istantly in the water   
+		if (dir_change_counter > 0)
+			setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 	}
 	
 
@@ -1477,21 +1508,6 @@ void Mario::exitPipe()
 	Sounds::instance()->play("pipe");
 }
 
-void Mario::powerDown()
-{
-	injured = true;
-	transformation_counter = 0;
-
-
-	if (raccoon)
-		raccoon = false;
-	else if (fire)
-		fire = false;
-	else if (big)
-		big = false;
-	else
-		die();
-}
 
 void Mario::startPipeTravel()
 {
@@ -1499,7 +1515,6 @@ void Mario::startPipeTravel()
 	script_move_in_pipe = true;
 	setZValue(2);
 
-	std::cout << "startPipeTravel()\n";
 	collidable = false;
 
 	Game::instance()->setFreezed(true);
@@ -1509,7 +1524,6 @@ void Mario::endPipeTravel()
 {
 	script_move_in_pipe = false;
 	script_move_counter = 0;
-	std::cout << "endPipeTravel()\n";
 	collidable = true;
 
 	Game::instance()->setFreezed(false);
@@ -1531,14 +1545,14 @@ void Mario::setCrouch(bool active)
 		crouch = active;
 }
 
-void Mario::powerUp(spawnable_t _power) //todo da debuggare 
+void Mario::powerUp(spawnable_t _power) 
 {
 	if(_power == MUSHROOM)
 		Sounds::instance()->play("eat");
 	else if(_power== FLOWER)
-		Sounds::instance()->play("eat");//TODO, METTERE suono fiore
+		Sounds::instance()->play("eat");
 	else if(_power== LEAF)
-		Sounds::instance()->play("eat");//TODO, METTERE suono leaf	
+		Sounds::instance()->play("leaf");	
 
 	transformation_counter = 0;
 
@@ -1563,9 +1577,8 @@ void Mario::powerUp(spawnable_t _power) //todo da debuggare
 	}
 
 	if (_power == MUSHROOM) //power up with mushroom
-	{
 		big = true;
-	}
+	
 	else if (_power == FLOWER) //power up with flower
 	{
 		if (big)
@@ -1590,6 +1603,24 @@ void Mario::powerUp(spawnable_t _power) //todo da debuggare
 	Game::instance()->setFreezed(true);
 }
 
+
+void Mario::powerDown()
+{
+	injured = true;
+	transformation_counter = 0;
+
+	if (raccoon)
+		raccoon = false;
+	else if (fire)
+		fire = false;
+	else if (big)
+		big = false;
+	else
+		die();
+
+	Sounds::instance()->play("leaf");
+}
+
 bool Mario::isOnPipe(std::string level_name)
 {
 	if(true)
@@ -1597,13 +1628,14 @@ bool Mario::isOnPipe(std::string level_name)
 		if (((level_name == "World 6-9-1" && pos().x() >= 14 * 16 + 4 && (pos().x() + 16) <= 16 * 16 - 4)
 			|| (level_name == "World 6-9-2" && pos().x() >= 54 * 16 + 4 && (pos().x() + 16) <= 56 * 16 - 4)) && !falling && !jumping)
 			return true;
-		else return false;
+		else 
+			return false;
 	}
-	
 }
 
 bool Mario::isUnderPipe(std::string level_name)
 {
+	std::cout << "aooo\n";
 	if  ((level_name == "World 6-9-3" && pos().x() >= 13*16 +4  && (pos().x() + 16) <= 15*16 -4)
 	   ||(level_name == "World 6-9-2" && pos().x() >= 107*16  && (pos().x() + 16) <= 109*16 ))  // rivedere questa riga
 		return true;
@@ -1627,7 +1659,6 @@ void Mario::updateScore(int score2add,QPoint pos)
 
 void Mario::updateLives(int lives2add, QPoint pos)
 {
-	
 	lives += lives2add;
 	
 	new ScoreSpawnable(pos, "1up");
