@@ -304,7 +304,6 @@ void Mario::advance()
 	{
 		outOfWater = true;
 		inWater = false;
-		splash = true;
 	}
 	if(splash)
 		new Splash(pos());

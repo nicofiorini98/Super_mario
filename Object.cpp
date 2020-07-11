@@ -126,8 +126,8 @@ Direction Object::collisionDirection(Object* item)
 
 void Object::hit(Object* what, Direction fromDir)
 {
-	static int hit_count = 0;
-	printf("[%d] %s hit by %s from %s\n", hit_count++, this->name().c_str(), what->name().c_str(), dir2str(fromDir).c_str());
+	/*static int hit_count = 0;
+	printf("[%d] %s hit by %s from %s\n", hit_count++, this->name().c_str(), what->name().c_str(), dir2str(fromDir).c_str());*/
 }
 
 // show / hide collider
