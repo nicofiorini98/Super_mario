@@ -107,7 +107,7 @@ void Mushroom::advance()
 		}
 
 	}*/
-	std::cout << "jump_counter" << falling_counter<<"\n";
+	
 	
 	if (dir == UP) {
 		collidable = true;

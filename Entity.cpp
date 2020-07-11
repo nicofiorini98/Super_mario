@@ -160,10 +160,9 @@ void Entity::advance()
     }
 
 	bool aux = false;
-	//todo, is può migliorare
+	
 	if (level_name == "World 6-9-2" && dynamic_cast<Mario*>(this)->getPower() >= 2 && pos().x() >= 49 * 16 && pos().x()<=54*16)
 	{
-		std::cout << "aux: " << true << "\n";
 		aux = true;
 	}
 	//if the entity is not touching its walkable object anymore
@@ -436,13 +435,12 @@ void Entity::solveCollisions()
 			while (touchingDirection(walkable_object) != DOWN && i<4)
 			{
 				i++;
-				static int correct_counter = 0;
-				printf("[%d] %s is correcting touchdown (y = %.3f, dir = %d)\n", correct_counter++, this->name().c_str(), y(), touchingDirection(walkable_object));
+				//static int correct_counter = 0;
+				//printf("[%d] %s is correcting touchdown (y = %.3f, dir = %d)\n", correct_counter++, this->name().c_str(), y(), touchingDirection(walkable_object));
 				setY(y() + 1);
 			}
 		if(i==4)
 		{
-			std::cout << "i = 4 \n";
 			setX(x() + (dir == RIGHT ? -2 : 2));
 		}
 	}

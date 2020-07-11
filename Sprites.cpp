@@ -410,6 +410,10 @@ QPixmap Sprites::get(const std::string & id)
 
 	if (id == "downhill")
 		return hud.copy(downhill);
+	if (id == "downhill2")
+		return hud.copy(downhill);
+	if (id == "uphill")
+		return hud.copy(downhill);
 
 	if (id == "main-screen")
 		return title_screen.copy(QRect(516, 226, 16*16, 15*16));

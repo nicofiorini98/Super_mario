@@ -298,9 +298,7 @@ void Mario::advance()
 		outOfWater = false;
 		if (moving)
 			moving_start_counter = 0;
-	}
-	
-	else if(level_name=="World 6-9-3")
+	}	else if(level_name=="World 6-9-3")
 	{
 		outOfWater = true;
 		inWater = false;
@@ -308,14 +306,11 @@ void Mario::advance()
 	if(splash)
 		new Splash(pos());
 	
-	
-	
 	if (running_out_of_view)
 	{
 			moving_speed = ((animation_counter / 2) % 2) + 1;
 			if (pos().x() >= 96*16)
 				moving = false;
-			
 	}
 	if (raccoon)
 	{
@@ -335,11 +330,6 @@ void Mario::advance()
 			|| (big && ((dir == DOWN && script_move_counter == 128) || (dir == UP && script_move_counter == 180))))
 		{
 			exitPipe();
-			/*if (raccoon)
-				setMoving(true);*/
-			
-			
-			
 		}
 
 		
@@ -1655,7 +1645,7 @@ bool Mario::isOnPipe(std::string level_name)
 
 bool Mario::isUnderPipe(std::string level_name)
 {
-	std::cout << "aooo\n";
+	
 	if  ((level_name == "World 6-9-3" && pos().x() >= 13*16 +4  && (pos().x() + 16) <= 15*16 -4)
 	   ||(level_name == "World 6-9-2" && pos().x() >= 107*16  && (pos().x() + 16) <= 109*16 ))  // rivedere questa riga
 		return true;

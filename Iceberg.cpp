@@ -44,7 +44,7 @@ Iceberg::Iceberg(QRect rect, std::string _level_name,std::string type, std::stri
 		for (int y = 16; y <= rect.height() - 16; y += 16)
 			painter.drawPixmap(0, y, Sprites::instance()->get(pos_rel_to_water_lvl + name() + "-W"));
 	}
-	else if (_type == "horiz-top-edge1" )
+	else if (_type == "horiz-top-edge1")
 	{
 		painter.drawPixmap(0, 0, Sprites::instance()->get(pos_rel_to_water_lvl  + name() + "-NW"));
 		for (int x = 16; x <= rect.width() - 16; x += 16)

@@ -95,7 +95,7 @@ void KoopaTroopa::animate()
 		shell_counter++;
 
 		if (shell_counter >= shell_duration) {
-			std::cout << shell_counter << std::endl;
+			
 			shell = false;
 			normal = true;
 			shell_counter = -1;

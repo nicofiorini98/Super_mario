@@ -294,7 +294,7 @@ void Game::keyPressEvent(QKeyEvent* e)
 		engine.setInterval(engine.interval() * 5);
 
 	// horizontal Mario's movements
-	if (e->key() == Qt::Key_Right || e->key() == Qt::Key_Left )
+	if (e->key() == Qt::Key_Right || e->key() == Qt::Key_Left)
 	{
 		mario->setDirection(e->key() == Qt::Key_Right ? Direction::RIGHT : Direction::LEFT);
 		mario->setMoving(true);
@@ -309,7 +309,6 @@ void Game::keyPressEvent(QKeyEvent* e)
 		{
 			cur_state = CHANGE_LEVEL;
 			mario->enterPipe(Direction::UP);
-
 		}
 		else
 			mario->setCrouch(true);
