@@ -416,7 +416,8 @@ void BlooberNanny::hurt()
 {
     Sounds::instance()->play("stomp");
     dying = true;
-    moving = false;  
+    moving = false;
+    mario->updateScore(100, pos().toPoint());
 } 
 
 QPoint BlooberNanny::posBaby(int id)

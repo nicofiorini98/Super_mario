@@ -11,6 +11,7 @@
 #include "ScoreSpawnable.h"
 #include "KoopaTroopa.h"
 #include "FireBall.h"
+#include "Splash.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
@@ -253,7 +254,7 @@ void Mario::advance()
 	//std::cout << "walkable_object : " << walkable_object << '\n';
 	//if (prev_power != power)
 		//Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
-	std::cout << "collidable:" << collidable << "\n";
+	//std::cout << "collidable:" << collidable << "\n";
 	
 	if (dying)
 	{
@@ -268,7 +269,8 @@ void Mario::advance()
 		Entity::advance();
 		return;
 	}
-	
+
+	bool splash = false;
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
 	{
@@ -276,17 +278,38 @@ void Mario::advance()
 		falling_counter = 0;
 		inWater = true;
 		outOfWater = false;
-
+		splash=true;
 		if (moving)
 			moving_start_counter = 0;
 		else
 			moving_speed = 0;
 	}
+	else if(level_name == "World 6-9-2" && script_move && inWater && pos().y()<=16*16-8)
+	{
+		inWater = false;
+		outOfWater = true;
+		if (moving)
+			moving_start_counter = 0;
+		
+	}
+	else if(level_name == "World 6-9-2" && script_move && outOfWater && pos().y()>16*16-8)
+	{
+		inWater = true;
+		outOfWater = false;
+		if (moving)
+			moving_start_counter = 0;
+	}
+	
 	else if(level_name=="World 6-9-3")
 	{
 		outOfWater = true;
 		inWater = false;
+		splash = true;
 	}
+	if(splash)
+		new Splash(pos());
+	
+	
 	
 	if (running_out_of_view)
 	{
@@ -719,7 +742,6 @@ void Mario::advance()
 		else
 			falling_speed = 1;
 
-
 	}
 	
 
@@ -840,6 +862,7 @@ void Mario::swim()
 				inWater = false;
 				falling = false;
 				jump();
+				new Splash(pos());
 				return;
 			}
 			else
@@ -1300,8 +1323,6 @@ void Mario::animate()
 			setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 	}
 	
-
-
 	if (attack)
 	{
 		//attack with fire is shoot a fireBall

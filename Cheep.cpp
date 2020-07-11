@@ -3,6 +3,7 @@
 #include "Sprites.h"
 #include "Sounds.h"
 #include <iostream>
+#include "Game.h"
 
 Cheep::Cheep(QPoint position, Direction direction) : Enemy()
 {
@@ -101,7 +102,6 @@ void Cheep::animate()
 	// set the proper texture
 	if (dying)
 	{
-		std::cout << "morete\n";
 		setPixmap(texture_death);
 	}
 	else if (moving)
@@ -119,6 +119,8 @@ void Cheep::hit(Object* what, Direction fromDir)
 
 void Cheep::hurt()
 {
+	Mario* mario = Game::instance()->getMario();
+	mario->updateScore(100, pos().toPoint());
 	Sounds::instance()->play("stomp");
 	dying = true;
 	moving = false;

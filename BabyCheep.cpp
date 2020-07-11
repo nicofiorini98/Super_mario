@@ -2,6 +2,8 @@
 
 #include "Sprites.h"
 #include "Sounds.h"
+#include "Mario.h"
+#include "Game.h"
 
 BabyCheep::BabyCheep(QPoint position,Direction direction) : Enemy()
 {
@@ -162,9 +164,13 @@ void BabyCheep::hit(Object* what, Direction fromDir)
 
 void BabyCheep::hurt()
 {
+    Mario* mario = Game::instance()->getMario();
     Sounds::instance()->play("stomp");
     if(script_move || baby_free)
-        death_duration=100;
+    {
+        mario->updateScore(100, pos().toPoint());
+        death_duration = 100;
+    }
     else
         death_duration=1;
     dying = true;

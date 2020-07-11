@@ -6,8 +6,7 @@ class BrokenBlock : public Entity
 {
 protected:
 
-	bool dioporco;
-	int cristo;
+	bool big_jump;
 	QPixmap texture_broken[2];
 	int counter;
 	int duration;

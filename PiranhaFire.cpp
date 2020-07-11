@@ -71,14 +71,12 @@ void PiranhaFire::advance()
 }
 
 
-
 void PiranhaFire::animate()
 {
 	
 	Entity::animate();
 	if(dying)
 	{
-
 		Plant::animate();
 		return;
 	}
@@ -111,8 +109,9 @@ void PiranhaFire::hit(Object* what, Direction fromDir)
 
 void PiranhaFire::hurt()
 {
-	Sounds::instance()->play("stomp");//todo check the sound
-
+	Sounds::instance()->play("stomp");
+	//update score of mario and begins to die
+	mario->updateScore(100, pos().toPoint());
 	dying = true;
 	moving = false;
 }

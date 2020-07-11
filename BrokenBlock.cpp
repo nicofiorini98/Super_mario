@@ -1,11 +1,11 @@
 #include "BrokenBlock.h"
 #include "Sprites.h"
 #include <iostream>
-BrokenBlock::BrokenBlock(QPointF _pos, Direction _dir, bool diocane) : Entity() {
+BrokenBlock::BrokenBlock(QPointF _pos, Direction _dir, bool _big_jump) : Entity() {
 	setPos(_pos);
 	dir = _dir;
 	setZValue(3);
-	dioporco = diocane;
+	big_jump = _big_jump;
 	falling = false;
 	moving_speed_div = 3;
 	duration = 28;
@@ -32,36 +32,30 @@ void BrokenBlock::advance() {
 
 		setY(y() - moving_speed);
 		if (animation_counter < duration / 4) {
-			if (!dioporco)
+			if (!big_jump)
 				moving_speed = 3;
 			else
 				moving_speed = 9;
 		}
 		if (animation_counter > duration / 4 && animation_counter < 2 * duration / 4) {
-			if (!dioporco)
+			if (!big_jump)
 				moving_speed = 2;
 			else
 				moving_speed = 6;
 		}
 		if (animation_counter > 2 * duration / 4 && animation_counter < 3 * duration / 4) {
-			if (!dioporco)
+			if (!big_jump)
 				moving_speed = 1;
 			else
 				moving_speed = 3;
 		}
 		if (animation_counter > 3 * duration / 4 && animation_counter < 4 * duration / 4) {
-			if (!dioporco)
+			if (!big_jump)
 				moving_speed_div = 2;
 			else
 				moving_speed_div = 4;
 			moving_speed = animation_counter % moving_speed_div == 0;
 		}
-		/*if (animation_counter > 4 * duration / 5 && animation_counter <  duration) {
-			moving_speed_div = 3;
-			moving_speed = animation_counter % moving_speed_div == 0;
-		}*/
-		/*if (animation_counter == duration)
-			moving_speed = 0;*/
 	}
 
 	else if (animation_counter > duration) {
@@ -79,9 +73,6 @@ void BrokenBlock::advance() {
 		if (animation_counter > duration + 3 * duration / 4 && animation_counter < duration + 4 * duration / 4) {
 			moving_speed = 3;
 		}
-		/*if (animation_counter > duration + 4 * duration / 4 && animation_counter < duration) {
-			moving_speed = 3;
-		}*/
 	}
 
 }

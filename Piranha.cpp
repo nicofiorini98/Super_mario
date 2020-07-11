@@ -3,6 +3,8 @@
 #include "Sprites.h"
 
 #include "Sounds.h"
+#include "Game.h"
+
 Piranha::Piranha(QPoint position, Direction direction, bool _red, bool _rotate) :Plant()
 {
 	
@@ -62,30 +64,30 @@ void Piranha::advance() {
 void Piranha::animate()
 {
 	Entity::animate();
-
-	// save current texture height (for later correction)
-	int prev_h = boundingRect().height();
-
+	
+	if (dying)
+	{
+		Plant::animate();
+		return;
+	}
 
 	setPixmap(texture_crunch[(animation_counter / animation_div) % 2]);
 
-	//// correct y position if texture height changed
-	//todo vedere se serve per la morte, credo si può togliere
-	int cur_h = boundingRect().height();
-	if (prev_h != cur_h)
-		setY(y() - (cur_h - prev_h));
 
 }
+
 void Piranha::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
-
 }
 
 void Piranha::hurt()
 {
 	Sounds::instance()->play("stomp");
-
+	
+	//update score of mario and begins to die
+	Mario* mario = Game::instance()->getMario();
+	mario->updateScore(100, pos().toPoint());
 	dying = true;
 	moving = false;
 }

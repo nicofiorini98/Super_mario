@@ -2,6 +2,7 @@
 #include "Sprites.h"
 #include <iostream>
 #include "Iceberg.h"
+#include "BlooberBaby.h"
 
 FireBall::FireBall(QPoint position, Direction direction) {
 
@@ -101,9 +102,20 @@ void FireBall::advance()
 
 void FireBall::hit(Object* what, Direction fromDir)
 {
+	
+	/*if (dynamic_cast<BlooberBaby*>(what))
+		return;*/
+	//hurt enemy if hittedd and dying
+	Enemy* enemy = dynamic_cast<Enemy*>(what);
+	if (dynamic_cast<Enemy*>(what) )
+	{
+		dying = true;
+		enemy->hurt();
+		return;
+	}
+
 	//when hit from right or left, then die
-	if ((dynamic_cast<Inert*>(what) && (fromDir!=DOWN && fromDir != UNDETERMINED && fromDir != UP)) || dynamic_cast<Enemy*>(what)
-		/*|| dynamic_cast<Iceberg*>(what)->type() == "downhill2"*/)
+	if ((dynamic_cast<Inert*>(what) && (fromDir != DOWN && fromDir != UNDETERMINED && fromDir != UP)) || dynamic_cast<Enemy*>(what))
 		dying = true;
 
 	//when hit with downhill or uphill, paramenters will change
@@ -112,11 +124,4 @@ void FireBall::hit(Object* what, Direction fromDir)
 	else
 		script_move = false;
 
-	//hurt enemy if hittedd and dying
-	Enemy* enemy = dynamic_cast<Enemy*>(what);
-	if (dynamic_cast<Enemy*>(what))
-	{
-		dying = true;
-		enemy->hurt();
-	}
 }

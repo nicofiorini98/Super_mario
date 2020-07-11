@@ -271,6 +271,7 @@ void BigBertha::hit(Object* what, Direction fromDir)
 
 void BigBertha::hurt()
 {
+    Mario* mario = Game::instance()->getMario();
     Sounds::instance()->play("stomp");
     dying = true;
     script_counter=0;
@@ -279,9 +280,15 @@ void BigBertha::hurt()
 
 	//when BigBertha die and the baby is inside the mouth,then baby die
     if(baby && !baby->isScript_Move())
+    {
+        mario->updateScore(100, pos().toPoint());
         baby->die();
+    }
 	//when the baby is outside the mouth, baby go away alone
     else
+    {
+	    
         baby->setBabyFree(true);
+    }
 
 }

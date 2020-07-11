@@ -148,7 +148,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		(new Iceberg(QRect(28  , 19 * 16, 163, 1),     level_name, "downhill"))->setRotation(45);
 		(new Iceberg(QRect(8*16, 14 * 16, 112, 1),     level_name, "downhill2"))->setRotation(45);    //todo settare lunghezza giusta, forse un poco più corta
 		(new Iceberg(QRect(60*16,19 * 16 + 1, 159, 1), level_name, "downhill"))->setRotation(45);
-		(new Iceberg(QRect(120*16, 12 * 16 + 1, 159, 1),level_name, "uphill"))->setRotation(135);//todo settare la lunghezza giusta
+		(new Iceberg(QRect(120*16, 12 * 16 + 1, 324, 1),level_name, "uphill"))->setRotation(135);
 		new Iceberg(QRect( 1*16,   0  ,  1*16, 19*16), level_name, "vert-right-edge");
 		new Iceberg(QRect(19*16,  2*16,  1*16, 16*16), level_name, "vert-right-edge");
 		new Iceberg(QRect( 8*16,   0  ,  1*16, 14*16), level_name, "vert-left-edge" );
@@ -163,6 +163,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new Iceberg(QRect(30*16, 20*16,  1*16,  1*16), level_name, "horiz-bottom-edge1","underwater");
 		new Iceberg(QRect(33*16, 20*16,  1*16,  1*16), level_name, "horiz-bottom-edge2","underwater");
 		new Iceberg(QRect(31*16, 20*16,  2*16,  1*16), level_name, "horiz-bottom-edge" ,"underwater");
+		new Iceberg(QRect(36*16, 26*16,  4*16,  1*16), level_name, "horiz-top-edge1" ,"underwater");
 		new Iceberg(QRect(53*16,  1*16,  7*16,  1*16), level_name, "horiz-bottom-edge");
 		new Iceberg(QRect(60*16,  2*16,  1*16, 11*16), level_name, "vert-left-edge");
 		new Iceberg(QRect(42*16, 19*16, 18*16,  1*16), level_name, "horiz-top-edge1",   "underwater");
@@ -294,20 +295,18 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   new JumpBlock(QPoint(47 * 16, 7 * 16));
 	   new JumpBlock(QPoint(95 * 16, 9 * 16));
 
-	   // enemies inWater sorted by the cordinate x
-		//cordinate giuste
-	   //new Cheep(QPoint(13*16, 22*16), RIGHT);
-	   new BlooberNanny(QPoint(23 * 16, 20 * 16)); //cordinata giusta
-	   new Pipe(QPoint(10 * 16, 26*16),level_name,3);
+		//todo
+		//new Pipe(QPoint(10 * 16, 26*16),level_name,3);
+
+	   // enemies inWater sorted by the x cordinates
+	   new Cheep(QPoint(13*16, 22*16), RIGHT);
+	   new BlooberNanny(QPoint(23 * 16, 20 * 16));
 	   new BigBertha(QPoint(38 * 16, 22 * 16));
 
 	   new Cheep(QPoint(68 * 16, 20 * 16));
 	   new BlooberNanny(QPoint(78 * 16, 20 * 16));
-	   new BigBertha(QPoint(110 * 16, 19 * 16)); //todo, va spostato, perchè va dentro l'iceberg
+	   new BigBertha(QPoint(109.5 * 16, 19 * 16)); 
 		
-	   
-	   new BigBertha(QPoint(14*16, 22*16), RIGHT);
-	   new BlooberNanny(QPoint(20 * 16, 23 * 16));
 	}
 	else if(level_name == "World 6-9-3")
     {
