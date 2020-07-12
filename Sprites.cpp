@@ -181,11 +181,13 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "mario-small-pipe")
 		return mario.copy(QRect(127, 16, 16, 16));
 	if (id == "mario-big-pipe")
-		return mario.copy(QRect(213, 92, 16, 27));
+		return mario.copy(QRect(213, 91, 16, 28));
 	if (id == "mario-fire-pipe")
-		return mario.copy(QRect(213, 265, 16, 27));
+		return mario.copy(QRect(213, 264, 16, 28));
 	if (id == "mario-raccoon-pipe")
 		return mario.copy(QRect(357, 350, 16, 28));
+	/*if (id == "mario-raccoon-pipe")
+		return mario.copy(QRect(465, 350, 19, 28));*/
 
 	//mario trasformation
 	if (id == "mario-half")

@@ -256,7 +256,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		//plant
 	   new Piranha(QPoint(35.5 * 16, 5 * 16), DOWN, false, true);
 	   new Piranha(QPoint(51.5 * 16, 9 * 16), DOWN, true, true);
-	   new PiranhaFire(QPoint(108.5 * 16, 8.5 * 16),UP);
+	   //new PiranhaFire(QPoint(108.5 * 16, 8.5 * 16),UP);
 
 	   for (int i = 0; i <= 3; i++)
 		   new Muncher(QPoint((28+i)*16, 10*16));

@@ -291,6 +291,11 @@ void Entity::solveCollisions()
 			if (dynamic_cast<Enemy*>(this) && dynamic_cast<Mario*>(obj) && dynamic_cast<Mario*>(obj)->isInjured())
 				continue;
 
+			//ignore collision with Fireball and mario
+			if ((dynamic_cast<Mario*>(this) && dynamic_cast<FireBall*>(obj)) ||
+				(dynamic_cast<Mario*>(obj) && dynamic_cast<FireBall*>(this)))
+				continue;
+
 			//ignore collision of a dying entity with anoter entity
 			Entity* entity_obj = dynamic_cast<Entity*>(obj);
 			if (entity_obj && (dying || entity_obj->isDying()))

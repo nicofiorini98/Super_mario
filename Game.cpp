@@ -512,7 +512,7 @@ void Game::changeLevel(Direction pipe_travel_dir)
 	else
 		setScene(black_scene);
 
-	// DA RIFARE LA FUNZIONE HIDE NON ESISTE PIU
+	///da rifare la funzione hide non esiste più
 	Hud::instance()->hide();
 
 	// after 200 ms the screen has been obscured show it again
@@ -557,7 +557,7 @@ void Game::nextLevel()
 	
 	cur_scene->addItem(mario);
 	mario->setLevelName(cur_level_name);
-	mario->setPos(16 * (cur_level_name == "World 6-9-2" ? 4 : 8), 0);	
+	mario->setPos(((cur_level_name == "World 6-9-2" ? 4 : 8)*16)+5, 0);	
 }
 
 void Game::prevLevel()
@@ -570,7 +570,11 @@ void Game::prevLevel()
 
 	cur_scene->addItem(mario);
 	mario->setLevelName(cur_level_name);
-	mario->setPos( (cur_level_name=="World 6-9-2" ? 70:52) * 16, (cur_level_name=="World 6-9-2" ? 25:23) * 16);
+	if (mario->isRaccoon())
+		mario->setPos(((cur_level_name == "World 6-9-2" ? 70 : 52) * 16) + 5, ((cur_level_name == "World 6-9-2" ? 25 : 25) * 16) - 4);
+	else
+		mario->setPos( ((cur_level_name=="World 6-9-2" ? 70:52) * 16)+5, ((cur_level_name=="World 6-9-2" ? 25:25) * 16)-1);
+	
 }
 
 void Game::hurryUp()

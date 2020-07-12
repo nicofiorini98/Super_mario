@@ -103,8 +103,11 @@ void FireBall::advance()
 void FireBall::hit(Object* what, Direction fromDir)
 {
 	
-	/*if (dynamic_cast<BlooberBaby*>(what))
-		return;*/
+	if (dynamic_cast<FireBall*>(what))
+	{
+		dying = true;
+	}
+		
 	//hurt enemy if hittedd and dying
 	Enemy* enemy = dynamic_cast<Enemy*>(what);
 	if (dynamic_cast<Enemy*>(what) )

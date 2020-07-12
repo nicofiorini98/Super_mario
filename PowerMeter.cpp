@@ -2,7 +2,6 @@
 #include "Sprites.h"
 #include <iostream>
 #include "Sounds.h"
-//#include <QObject>
 
 PowerMeter::PowerMeter()
 {
@@ -45,12 +44,6 @@ void PowerMeter::doUpdate(const std::string& update_info)
 	std::cout << "doUpdate powerMeter\n";
 	power = std::stoi(update_info);
 
-	/*
-	if (power == 0)
-	{
-		reset();
-		return;
-	}*/
 	reset();
 	std::cout << "doUpdate powerMeter2\n";
 	
@@ -67,5 +60,4 @@ void PowerMeter::doUpdate(const std::string& update_info)
 	}
 	else											//turn off P
 		pan[6]->setPixmap(texture_arrow[3]);
-
 }
