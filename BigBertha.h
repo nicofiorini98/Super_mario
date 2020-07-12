@@ -6,6 +6,7 @@
 class BigBertha : public Enemy
 {
 private:
+    Mario* mario;
     bool launch_baby;                //is big bertha launch the baby during the script?
 	
     int moving_start_counter;        //counts the number of frames since the script is started
@@ -30,5 +31,6 @@ public:
     virtual void hit(Object* what, Direction fromDir);
     virtual void hurt();
     virtual void advance();
+    QPainterPath shape() const;
 
 };

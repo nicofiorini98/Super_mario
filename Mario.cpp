@@ -12,6 +12,7 @@
 #include "KoopaTroopa.h"
 #include "FireBall.h"
 #include "Splash.h"
+#include "BrickBlock.h"
 
 Mario::Mario(QPoint position,std::string _level_name) : Entity()
 {
@@ -35,6 +36,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	outOfWater = true;
 	inWater = false;
 	inWater_surface = false;
+	splash = false;
 	
 	big = false;
 	fire = false;
@@ -252,8 +254,8 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 void Mario::advance()
 {
 	//std::cout << "walkable_object : " << walkable_object << '\n';
-	//if (prev_power != power)
-		//Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
+	if (prev_power != power)
+		Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
 	//std::cout << "collidable:" << collidable << "\n";
 	
 	if (dying)
@@ -270,7 +272,7 @@ void Mario::advance()
 		return;
 	}
 
-	bool splash = false;
+	splash = false;
 	//check position of mario for manage the physic parameters in the space
 	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
 	{
@@ -340,13 +342,6 @@ void Mario::advance()
 				//setPos(106 * 16, 9 * 16);
 		}
 
-		//if (script_move_counter == 0 && raccoon )
-		//{
-		//	std::cout<< "prima"<< pos().x()<<"\n";
-		//	setX(x() + 8);
-		//	std::cout << "dopo" << pos().x() << "\n";
-		//}
-		//
 		if (script_move_counter >= 0)
 			script_move_counter++;
 
@@ -508,7 +503,6 @@ void Mario::advance()
 
 		solveCollisions();
 	}
-
 	if (fly_float)
 	{
 		prevPos = pos();
@@ -569,23 +563,6 @@ void Mario::advance()
 			dir_change_counter = -1;
 		}
 
-		//// slow down jumping speed during last iterations
-		//if (bounce_block)
-		//{
-		//	falling = false;
-		//	if (rebound)
-		//		jumping_duration = 4 * 16 + 24;
-		//	else if (!rebound)
-		//		jumping_duration =  25 + 24;
-
-		//	if (jump_counter < 12)
-		//		jumping_speed = -1;
-		//	else if (jump_counter >= 12 && jump_counter < 24)
-		//		jumping_speed = 1;
-
-		//	else if (jump_counter >= 24)
-		//		jumping_speed = 3;
-		//}
 		if(!bounce_block)
 		{
 			if (jump_counter >= jumping_duration - 8)
@@ -599,9 +576,10 @@ void Mario::advance()
 
 		}
 
-
 		// slow down falling speed during first iterations
-		if (falling_counter < 16)
+		if (falling_counter < 8)
+			falling_speed = 1;
+		else if (falling_counter < 16)
 			falling_speed = 2;
 		else
 			falling_speed = 3;
@@ -617,53 +595,53 @@ void Mario::advance()
 				moving_speed = moving_start_counter % 2;		// = 0.5 speed
 				animation_div = 7;
 			}
-			if (moving_start_counter > 12 && moving_start_counter <= 25)
+			else if (moving_start_counter > 12 && moving_start_counter <= 25)
 			{
 				moving_speed = moving_start_counter % 4 != 0;     //0.75 speed
 				animation_div = 6;
 			}
-			if (moving_start_counter > 25 && !running)
+			else if (moving_start_counter > 25 && !running)
 			{
 				moving_speed = 1;                               //1 speed
 				animation_div = 5;
 			}
-			if (moving_start_counter > 25 && moving_start_counter <= 40 && running)
+			else if (moving_start_counter > 25 && moving_start_counter <= 40 && running)
 			{
 				power = 1;
 				moving_speed = (moving_start_counter % 4 == 0) + 1;	// 1.25 speed
 				animation_div = 4;
 			}
-			if (moving_start_counter > 40 && moving_start_counter <= 55 && running)
+			else if (moving_start_counter > 40 && moving_start_counter <= 55 && running)
 			{
 				power = 2;
 				moving_speed = moving_start_counter % 2 + 1;        //1.5 speed                              
 				animation_div = 3;
 			}
-			if (moving_start_counter > 55 && moving_start_counter <= 70 && running)
+			else if (moving_start_counter > 55 && moving_start_counter <= 70 && running)
 			{
 				power = 3;
 				moving_speed = (moving_start_counter % 4 != 0) + 1;  //1.75 speed
 				animation_div = 3;
 			}
-			if (moving_start_counter > 70 && moving_start_counter <= 85 && running)
+			else if (moving_start_counter > 70 && moving_start_counter <= 85 && running)
 			{
 				power = 4;
 				moving_speed = 2;	                                // 2 speed
 				animation_div = 3;
 			}
-			if (moving_start_counter > 85 && moving_start_counter <= 110 && running)
+			else if (moving_start_counter > 85 && moving_start_counter <= 110 && running)
 			{
 				power = 5;
 				moving_speed = moving_start_counter % 2 + 2;        //2.5 speed
 				animation_div = 3;
 			}
-			if (moving_start_counter > 110 && moving_start_counter <= 130 && running)
+			else if (moving_start_counter > 110 && moving_start_counter <= 130 && running)
 			{
 				power = 6;
 				moving_speed = 3;                                   // 3 speed
 				animation_div = 2;
 			}			
-			if (moving_start_counter > 130 && running)
+			else if (moving_start_counter > 130 && running)
 			{
 				power = 7;
 				moving_speed = 4;                                    //4 speed
@@ -710,22 +688,22 @@ void Mario::advance()
 
 		if (moving_start_counter >= 0 && moving_stop_counter < 0 && !walkable_object)
 		{
-			if (moving_start_counter <= 12)											//  0.5 speed
+			if (moving_start_counter <= 12)												//  0.5 speed
 			{
 				moving_speed = moving_start_counter % 2;
 				animation_div = 12;
 			}
-			if (moving_start_counter > 12 && moving_start_counter <= 25)			//0.75 speed
+			else if (moving_start_counter > 12 && moving_start_counter <= 25)			//0.75 speed
 			{
 				moving_speed = moving_start_counter % 4 != 0;
 				animation_div = 10;
 			}
-			if (moving_start_counter > 25 && moving_start_counter <= 50)				//1 speed
+			else if (moving_start_counter > 25 && moving_start_counter <= 50)			//1 speed
 			{
 				moving_speed = 1;
 				animation_div = 8;
 			}
-			if (moving_start_counter > 50)											//2   speed									
+			else if (moving_start_counter > 50)											//2   speed									
 			{
 				moving_speed = 1 + moving_start_counter % 2;
 				animation_div = 6;
@@ -748,7 +726,6 @@ void Mario::advance()
 	//horizontal deceleration when moving ends
 	if (!script_move && moving_start_counter >= 0 && moving_stop_counter >= 0)
 	{
-		//todo migliorare il power decelleration
 		// decelerate for the same extent of the initial acceleration (max 30 frames)
 		if (moving_stop_counter < std::min(moving_start_counter, 30))
 		{
@@ -769,13 +746,13 @@ void Mario::advance()
 	//manage movement on the uphill and downhill
 	if (script_move)
 	{
-		//change direction instantly
-		if(dir_change_counter>0)
-		{
-			//prev_dir = dir; //todo check this
-			std::cout << "dir_change_instantly\n";
-			setDirection(inverse(dir));
-		}
+		////change direction instantly
+		//if(dir_change_counter>0)
+		//{
+		//	//prev_dir = dir; //todo check this
+		//	std::cout << "dir_change_instantly\n";
+		//	setDirection(inverse(dir));
+		//}
 		
 		//stop moving instantly
 		if (moving_stop_counter > 0) //todo, non mi fido di questo pezzo
@@ -1435,6 +1412,9 @@ void Mario::hit(Object* what, Direction fromDir)
 		dir = RIGHT;
 		moving = true;
 	}
+	
+	/*if (dynamic_cast<BrickBlock*>(what) && fromDir == UNDETERMINED)
+		solveCollisions();*/
 
 	// disable deceleration if mario hits impenetrable object
 	if (dynamic_cast<Inert*>(what) && (fromDir == LEFT || fromDir == RIGHT))
@@ -1443,32 +1423,7 @@ void Mario::hit(Object* what, Direction fromDir)
 		if(script_move)  
 			falling = true;
 	}
-	//bug collisioni dei nemici, da aggiornare
-	//if (dynamic_cast<Enemy*>(what))
-	//{
-	//	if (fromDir == DOWN)
-	//	{
 
-	//		if (dynamic_cast<KoopaTroopa*>(what))
-	//			bounce();
-	//		else
-	//		{
-	//			dynamic_cast<Enemy*>(what)->hurt();
-	//			Muncher* muncher_obj = dynamic_cast<Muncher*>(what);
-	//			if (!muncher_obj)
-	//				bounce();
-	//		}
-
-	//	}
-	//	else
-	//		powerDown();
-	//	/*else if (big)
-	//		big = false;
-	//	else
-	//		die();*/
-	//}
-
-	//bug hit di jacopo per il koopa troopa
 	if (dynamic_cast<Enemy*>(what))
 	{
 		KoopaTroopa* koopa = dynamic_cast<KoopaTroopa*>(what);
@@ -1482,14 +1437,9 @@ void Mario::hit(Object* what, Direction fromDir)
 				powerDown();
 
 		}
-		/*else if (k && k->isShell())
-			std::cout << "implementare tutta la faccenda\n";*/
 		else
 			powerDown();
-		/*else if (big)
-			big = false;
-		else
-			die();*/
+		
 	}
 }
 
@@ -1504,7 +1454,10 @@ void Mario::setRunning(bool _running)
 	// set new running state
 	running = _running;
 	if (!running)
+	{
 		super_running = false;
+		moving_start_counter = 24;
+	}
 }
 
 void Mario::enterPipe(Direction fromDir)

@@ -14,7 +14,6 @@ PiranhaFire::PiranhaFire(QPoint position, Direction direction) : Plant()
 	falling_counter = 0;
 	jump_counter = 0;
 	angle = 30;
-	mario = nullptr;
 	pos_in = position;
 	dir = direction;
 	
@@ -48,14 +47,6 @@ void PiranhaFire::advance()
 			angle = -30;
 		else
 			angle = -45;
-
-		//when mario goes out of sight of the piranha, then piranha is freezed
-		if ((mario->pos().x() >= pos().x() + 16 * 16 || mario->pos().x() <= pos().x() - 16 * 16) 
-			|| (mario->pos().y() >= pos().y() + 10 * 16 || mario->pos().x() <= pos().x() - 12 * 16))
-			freezed = true;
-		else
-			freezed = false;
-		
 
 
 		if (mario->pos().x() >= pos().x() + boundingRect().width() / 2)

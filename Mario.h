@@ -109,6 +109,7 @@ class Mario : public Entity
 		bool big;							// is Mario big?
 		bool crouch;						// is Mario crouched?
 		bool swimming;                      // is Mario swimming?
+		bool splash;						// is Mario touching with water surface?
 		bool script_move_in_pipe;           // is Mario moving into the pipe?
 		bool entering_pipe;                 // is Mario entering the pipe?
 		bool running_out_of_view;			// is Mario running out of view?

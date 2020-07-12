@@ -3,6 +3,7 @@
 #include "Sprites.h"
 #include "Leaf.h"
 #include <iostream>
+
 Leaf::Leaf(QPoint position) : Collectable(position)
 {
 	// set attributes

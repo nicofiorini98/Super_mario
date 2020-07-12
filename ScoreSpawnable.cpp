@@ -12,7 +12,6 @@ ScoreSpawnable::ScoreSpawnable(QPoint position,std::string id) : Entity()
 	
 
 	// make background color (224, 163, 216) transparent
-	//for (int i = 0; i < 4; i++)
 	texture.setMask(texture.createMaskFromColor(QColor(224, 163, 216)));
 
 	// set texture and position
@@ -35,7 +34,6 @@ void ScoreSpawnable::advance()
 		setY(y()-1);
 	else
 	{
-		//todo check this
 		Mario* mario = Game::instance()->getMario();
 		die();
 	}

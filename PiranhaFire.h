@@ -8,8 +8,6 @@ class PiranhaFire : public Plant
 {
 protected:
 	
-	Mario* mario;
-
 	int angle;  
 
 

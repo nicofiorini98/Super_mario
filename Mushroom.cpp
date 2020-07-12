@@ -8,7 +8,6 @@
 Mushroom::Mushroom(QPoint position, Direction _dir, bool _red) : Collectable(position)
 {
 	// set attributes
-	//slow = false;
 	red = _red;
 	dir = _dir;
 	if (red)
@@ -16,8 +15,8 @@ Mushroom::Mushroom(QPoint position, Direction _dir, bool _red) : Collectable(pos
 	else
 		type = LIFE;
 
-	fall_counter = 0;
 	moving_counter = 0;
+	falling_speed = 2;
 
 	// set texture and position
 	setPixmap(Sprites::instance()->get(red ? "mushroom-red" : "mushroom-green"));
@@ -65,7 +64,10 @@ void Mushroom::hit(Object* what, Direction fromDir)
 			mario->powerUp(type);
 		
 		if(type==LIFE)
+		{
 			mario->updateLives(1, pos().toPoint());
+			Sounds::instance()->play("1up");
+		}
 		else 
 			mario->updateScore(1000,pos().toPoint());
 		die();
@@ -85,122 +87,47 @@ void Mushroom::hit(Object* what, Direction fromDir)
 
 void Mushroom::advance()
 {
-	//todo rimettere dopo lo splash
-	/*if (level_name == "World 6-9-2" && pos().y() > 15.8 * 16 && pos().y() < 16 * 16)
-		new Splash(pos());*/
-
-	//todo controllare se l'entity advance da problemi alla fine, anche se non dovrebbe
-	//Entity::advance();
-	//
-	/*if (walkable_object)
+	if (dir == UP)
 	{
-		falling_counter = 0;
-		moving = true;
-	}
-
-	if(falling)
-	{
-		falling_counter++;
-		if (falling_counter >= 80)
-		{
-			moving = false;
-		}
-
-	}*/
-	
-	
-	if (dir == UP) {
 		collidable = true;
-		if(y()>= spawned_position.y() - pixmap().height())
+		if (y() >= spawned_position.y() - pixmap().height())
 		{
 			setY(y() - moving_speed);
 		}
-		if (y() == spawned_position.y() - pixmap().height())
+		if (y() < spawned_position.y() - pixmap().height())
 		{
-			if (type == LIFE) 
+			if (type == LIFE)
 			{
 				jumping = true;
 				jumping_duration = 60;
 			}
 			else
-			    falling = true;
+				falling = true;
 			
+
 			slow = false;
 			moving_speed = 1;
 			dir = RIGHT;
 		}
 	}
-	
-	if (dir == DOWN) {
+
+
+	else if (dir == DOWN) {
 		slow = false;
 		falling = true;
-		
+
 		if (y() >= spawned_position.y() + pixmap().height() + 16) {
 			collidable = true;
 			moving_speed = 1;
 		}
-		if (walkable_object) {
+		if (walkable_object)
+		{
 			dir = RIGHT;
 		}
+
 	}
+	else
+		Entity::advance();
 
-	Entity::advance();
-
+	
 }
-
-
-//#include "Mushroom.h"
-//#include "Mario.h"
-//#include "Sounds.h"
-//#include "Sprites.h"
-//
-//
-//Mushroom::Mushroom(QPoint position, bool _red) : Collectable(position)
-//{
-//	// set attributes
-//	red = _red;
-//
-//	// set texture and position
-//	setPixmap(Sprites::instance()->get(red ? "mushroom-red" : "mushroom-green"));
-//	setPos(position);
-//
-//	// play mushroom sound
-//	Sounds::instance()->play("spawn");
-//}
-//
-//void Mushroom::animate()
-//{
-//	Entity::animate();
-//
-//	// if mushroom fully emerges from spawn position, 
-//	// start moving right and become collidable
-//	if(y() == spawned_position.y()-pixmap().height())
-//	{
-//		collidable = true;
-//		falling = true;
-//		slow = true;
-//		moving_speed_div = 2;
-//		dir = RIGHT;
-//	}
-//}
-//
-//void Mushroom::hit(Object *what, Direction fromDir)
-//{
-//	
-//	Object::hit(what, fromDir);
-//
-//	// if hit by Mario, Mario eats mushroom and mushroom dies
-//	Mario* mario = dynamic_cast<Mario*>(what);
-//	if(mario)
-//	{
-//		mario->powerUp(MUSHROOM);
-//		die();
-//		return;
-//	}
-//
-//	// if hit from its left or right side, it
-//	// has to move to the opposite direction w.r.t. the one
-//	// is he currently moving
-//	if(fromDir == RIGHT || fromDir == LEFT)
-//		setDirection(inverse(dir));
-//}

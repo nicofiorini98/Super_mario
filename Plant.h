@@ -1,10 +1,12 @@
 #pragma once
 #include "Enemy.h"
+#include "Mario.h"
 
 
 class Plant : public Enemy
 {
 protected:
+	Mario* mario;
 
 	//parameters
 	int out_counter;

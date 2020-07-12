@@ -12,7 +12,7 @@ protected:
 	int duration;
 public:
 
-	BrokenBlock(QPointF _pos, Direction _dir, bool diocane);
+	BrokenBlock(QPointF _pos, Direction _dir, bool _big_jump);
 
 	// pure virtual methods to be implemented
 	virtual std::string name() { return "BrokenBlock"; }

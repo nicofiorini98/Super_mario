@@ -1,14 +1,15 @@
 #include "BrickBlock.h"
 #include "Sprites.h"
 #include <iostream>
+#include "Leaf.h"
 
-BrickBlock::BrickBlock(QPoint position, std::string _type) : BouncingBlock()
+BrickBlock::BrickBlock(QPoint position, std::string _type,spawnable_t _content) : BouncingBlock()
 {
 	if (_type != "ice" && _type != "")
 		std::cerr << "Type not valid\n";
 	type = _type;
 	animation_counter = 0;
-
+	content = _content;
 	// textures
 	if (_type == "") 
 	{
@@ -77,20 +78,38 @@ void BrickBlock::animate()
 
 void BrickBlock::hit(Object* what, Direction fromDir)
 {
+	if(active)
+	{
+		if (content == LIFE && (fromDir == DOWN || fromDir == RIGHT))
+		{
+			new Mushroom(pos().toPoint(), UP, false);
+			active = false;
+		}
+
+		if (content == LEAF && (fromDir == DOWN || fromDir == RIGHT))
+		{
+			new Leaf(pos().toPoint() + QPoint(4, 0));
+			active = false;
+		}
+	}
+	
+	Mario* mario = dynamic_cast<Mario*>(what);
 	if (type == "")
 		BouncingBlock::hit(what, fromDir);
 
 	
 	else if (type == "ice" && (dynamic_cast<KoopaTroopa*>(what) && dynamic_cast<KoopaTroopa*>(what)->isShellMoving()))  
- {
+	{
 		collidable = false;
 		setVisible(false);
 
+		if(dynamic_cast<Mario*>(what))
+			mario->hit(this, UNDETERMINED);
+		
 		//the block is broken in four pieces
 		new BrokenBlock(pos(), LEFT, true);
 		new BrokenBlock(pos() + QPointF(0, 9), LEFT, false);
 		new BrokenBlock(pos() + QPointF(8, 0), RIGHT, true);
 		new BrokenBlock(pos() + QPointF(8, 9), RIGHT, false);
-
 	}
 }

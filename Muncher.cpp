@@ -17,7 +17,7 @@ Muncher::Muncher(QPoint position) : Enemy()
 	for (int i = 0; i < 3; i++)
 		texture_animation[i].setMask(texture_animation[i].createMaskFromColor(QColor(224, 163, 216)));
 
-	temp_coin = 0;
+	temp_coin = nullptr;
 
 	setPixmap(texture_animation[0]);
 	setPos(position);

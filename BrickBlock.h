@@ -6,12 +6,13 @@ class BrickBlock : public BouncingBlock
 {
 protected:
 	std::string type;                       //is ice or normal?
+	
 	QPixmap texture_active[4];              //breakable block texture
 	QPixmap texture_inactive[2];            //unbreakable block texture
 
 public:
 
-	BrickBlock(QPoint position, std::string _type);
+	BrickBlock(QPoint position, std::string _type,spawnable_t _content=EMPTY );
 
 	virtual std::string name() { return "BrickBlock"; }
 	virtual void advance();

@@ -10,7 +10,7 @@
 BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
 {
     dir = direction;
-	
+    mario = nullptr;
     //flags
     slow = true;
     launch_baby = false;
@@ -43,6 +43,15 @@ BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
 
 void BigBertha::advance() 
 {
+    //moving only when see mario
+    if (mario)
+    {
+        if ((mario->pos().x() >= pos().x() + 16 * 16 || mario->pos().x() <= pos().x() - 16 * 16)
+            || (mario->pos().y() >= pos().y() + 10 * 16 || mario->pos().x() <= pos().x() - 12 * 16))
+            freezed = true;
+        else
+            freezed = false;
+    }
 
 	//when the baby dies, forget it
 	if(baby && baby->isDying())
@@ -223,7 +232,6 @@ void BigBertha::advance()
             baby->setPos(pos() + QPoint(7, 13));
         }
 	}
-    
 
     //floating up and down during the time 
     if(moving_start_counter % 128 == 1 )
@@ -246,8 +254,12 @@ void BigBertha::advance()
 
 void BigBertha::animate()
 {
+    
+	
     Entity::animate();
 
+    if (animation_counter == 1)
+        mario = Game::instance()->getMario();
     // set the proper texture
     if (dying)
         setPixmap(texture_death);
@@ -271,24 +283,41 @@ void BigBertha::hit(Object* what, Direction fromDir)
 
 void BigBertha::hurt()
 {
+    if (dying)
+        return;
     Mario* mario = Game::instance()->getMario();
     Sounds::instance()->play("stomp");
+
     dying = true;
-    script_counter=0;
+    script_counter = 0;
     moving_start_counter = 0;
     script_duration = death_duration;
-
+	
 	//when BigBertha die and the baby is inside the mouth,then baby die
-    if(baby && !baby->isScript_Move())
+    if(!baby->isScript_Move() )
     {
         mario->updateScore(100, pos().toPoint());
-        baby->die();
+    	if(baby)
+    	{
+
+            baby->die();
+            baby = nullptr;
+    	}
     }
 	//when the baby is outside the mouth, baby go away alone
     else
     {
-	    
-        baby->setBabyFree(true);
+    	baby->setBabyFree(true);
     }
+    
+}
 
+
+QPainterPath BigBertha::shape() const
+{
+    QPainterPath path;
+
+    path.addRect(4, boundingRect().top() + 4, boundingRect().width() - 8, boundingRect().bottom() - -8);
+
+    return path;
 }

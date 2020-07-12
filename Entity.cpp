@@ -241,8 +241,14 @@ void Entity::solveCollisions()
 				(dynamic_cast<Inert*>(this) && dynamic_cast<Leaf*>(obj)))
 				continue;
 			
+			/*if ((dynamic_cast<Mushroom*>(this) && dynamic_cast<BouncingBlock*>(obj)) ||
+				(dynamic_cast<BouncingBlock*>(this) && dynamic_cast<Mushroom*>(obj)))
+				continue;*/
+
+			
+			
 			//ignore collisions between Collectables and Enemies
-			if ((dynamic_cast<Collectable*>(this) && dynamic_cast<Enemy*>(obj)) ||
+			if ((dynamic_cast<Collectable*>(this) && dynamic_cast<Enemy*>(obj)) && !dynamic_cast<Muncher*>(obj) ||
 				(dynamic_cast<Enemy*>(this) && dynamic_cast<Collectable*>(obj)))
 				continue;
 
@@ -353,8 +359,8 @@ void Entity::solveCollisions()
 		}
 
 		//todo da vedere questa if
-		/*if (coll_dir == RIGHT || coll_dir == LEFT || coll_dir == UP)
-			touching_correction = false;*/
+		if (coll_dir == RIGHT || coll_dir == LEFT || coll_dir == UP)
+			touching_correction = false;
 
 		//FINE BUG FIX MIO
 
@@ -414,21 +420,24 @@ void Entity::solveCollisions()
 		//manage collision of bloober nanny for each object
 		if (dynamic_cast<BlooberNanny*>(this))
 		{
-			//if(coll_dir == UNDETERMINED)
-			 //       setPos(prevPos);
-			if (coll_dir == UP || coll_dir == DOWN)
-				setY(prevPos.y());
+			//special case for bloober when hit with downhill2
+			if (dynamic_cast<Iceberg*>(obj) && dynamic_cast<Iceberg*>(obj)->type() == "downhill2")
+				setPos(prevPos);
 			else
-				setX(prevPos.x());
+			{
+				if (coll_dir == UP || coll_dir == DOWN)
+					setY(prevPos.y());
+				else
+					setX(prevPos.x());
+			}
 		}
-		
 		revert = true;
 	}
 
 	//revert to previous position if needed
 	if (revert && !dynamic_cast<BlooberNanny*>(this))
 		setPos(prevPos);
-	
+
 	//touchdown correction
 	//entity is on a walkable object but is not touching it!
 	//(this occurs when the entity penetrates the walkable object,
@@ -446,6 +455,7 @@ void Entity::solveCollisions()
 			}
 		if(i==4)
 		{
+			std::cout << "horizontal correction\n";
 			setX(x() + (dir == RIGHT ? -2 : 2));
 		}
 	}

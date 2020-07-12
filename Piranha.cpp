@@ -64,6 +64,8 @@ void Piranha::advance() {
 void Piranha::animate()
 {
 	Entity::animate();
+	if (animation_counter == 1)
+		mario = Game::instance()->getMario();
 	
 	if (dying)
 	{

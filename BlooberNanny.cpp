@@ -434,7 +434,7 @@ QPoint BlooberNanny::posBaby(int id)
 
         return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
-    if (id == 2)
+    else if (id == 2)
     {
         if (previous_pos - 20 >= 0)
             aux = previous_pos - 20;
@@ -443,7 +443,7 @@ QPoint BlooberNanny::posBaby(int id)
 
         return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
-    if (id == 3)
+    else if (id == 3)
     {
         if (previous_pos - 30 >= 0)
 
@@ -454,7 +454,7 @@ QPoint BlooberNanny::posBaby(int id)
 
         return (nframe_prev_pos[aux] + QPoint(4, 0));
     }
-    if (id == 4)
+    else
     {
         if (previous_pos - 40 >= 0)
             aux = previous_pos - 40;

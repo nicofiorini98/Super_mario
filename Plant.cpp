@@ -5,7 +5,7 @@
 #include "Sounds.h"
 Plant::Plant() : Enemy()
 {
-
+	mario = nullptr;
 	in_counter = 0;
 	out_counter = 0;
 	in = true;
@@ -36,6 +36,18 @@ Plant::Plant() : Enemy()
 
 void Plant::advance() {
 
+
+	//when mario goes out of sight of the piranha, then piranha is freezed
+	if(mario)
+	{
+		if ((mario->pos().x() >= pos().x() + 16 * 16 || mario->pos().x() <= pos().x() - 16 * 16)
+			|| (mario->pos().y() >= pos().y() + 10 * 16 || mario->pos().x() <= pos().x() - 12 * 16))
+			freezed = true;
+		else
+			freezed = false;
+	}
+	
+	
 	if (freezed)
 		return;
 

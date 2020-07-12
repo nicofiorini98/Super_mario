@@ -16,5 +16,5 @@ Collectable::Collectable(QPoint position)
 	falling_speed = 1;
 	death_duration = 0;
 
-	setZValue(5); //todo rimettere a 2 
+	setZValue(2); 
 }
