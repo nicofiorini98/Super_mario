@@ -1435,11 +1435,9 @@ void Mario::hit(Object* what, Direction fromDir)
 			//else if (koopa->isShell() )
 			else if(!koopa->isShell())
 				powerDown();
-
 		}
 		else
 			powerDown();
-		
 	}
 }
 
@@ -1670,16 +1668,10 @@ QPainterPath Mario::shape() const
 	else if (raccoon)
 	{
 		if (attack && attack_counter == 12)
-		{
-			if (dir == RIGHT)
-				path.addRect(0, boundingRect().top() + 3, boundingRect().width()-3, boundingRect().bottom() - 3);
-			else
-				path.addRect(3, boundingRect().top() + 3, boundingRect().width() -3, boundingRect().bottom() - 3);
-		}
-		else if (dir == RIGHT)
-			path.addRect(11, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
-		else if (dir == LEFT)
-			path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
+			path.addRect(dir == RIGHT ? 0 : 3, boundingRect().top() + 3, boundingRect().width() - 3, boundingRect().bottom() - 3);
+		
+		else
+			path.addRect(dir==RIGHT ? 11:3, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
 	}
 	return path;
 }
