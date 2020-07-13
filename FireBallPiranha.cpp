@@ -21,7 +21,7 @@ FireBallPiranha::FireBallPiranha(QPoint position, Direction direction, int _angl
 
 	setPixmap(texture[0]);
 	setPos(position - QPoint(0, pixmap().height()));
-	setZValue(2);
+	setZValue(5);
 }
 
 void FireBallPiranha::animate()

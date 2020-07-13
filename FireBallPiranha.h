@@ -19,5 +19,5 @@ public:
 	virtual void hit(Object* what, Direction fromDir){}
 	virtual void advance();
 	
-	virtual void hurt(){}
+	virtual void hurt(){/*do nothing*/}
 };

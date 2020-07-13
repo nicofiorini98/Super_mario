@@ -241,10 +241,6 @@ void Entity::solveCollisions()
 				(dynamic_cast<Inert*>(this) && dynamic_cast<Leaf*>(obj)))
 				continue;
 			
-			/*if ((dynamic_cast<Mushroom*>(this) && dynamic_cast<BouncingBlock*>(obj)) ||
-				(dynamic_cast<BouncingBlock*>(this) && dynamic_cast<Mushroom*>(obj)))
-				continue;*/
-
 			
 			
 			//ignore collisions between Collectables and Enemies
@@ -264,6 +260,12 @@ void Entity::solveCollisions()
 			if ((dynamic_cast<Plant*>(this) && dynamic_cast<Inert*>(obj)) ||
 				(dynamic_cast<Plant*>(obj) && dynamic_cast<Inert*>(this)))
 				continue;
+
+			//ignore collision between Plant and Inert
+			if ((dynamic_cast<Plant*>(this) && dynamic_cast<Mario*>(obj)))
+				continue;
+
+			
 			
 			if ((dynamic_cast<BigBertha*>(this) && dynamic_cast<Inert*>(obj)) ||
 				(dynamic_cast<BigBertha*>(obj) && dynamic_cast<Inert*>(this)))
@@ -294,7 +296,6 @@ void Entity::solveCollisions()
 			if ((dynamic_cast<Enemy*>(this) && dynamic_cast<Enemy*>(obj)))
 				continue;
 
-
 			//ignore collision with enemy when mario is injured
 			if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isInjured() && dynamic_cast<Enemy*>(obj))
 				continue;
@@ -305,6 +306,12 @@ void Entity::solveCollisions()
 			if ((dynamic_cast<Mario*>(this) && dynamic_cast<FireBall*>(obj)) ||
 				(dynamic_cast<Mario*>(obj) && dynamic_cast<FireBall*>(this)))
 				continue;
+
+			//ignore collision with FireballPiranha and mario
+			if ((dynamic_cast<FireBallPiranha*>(this) && !dynamic_cast<Mario*>(obj)))
+				continue;
+
+			
 
 			//ignore collision of a dying entity with anoter entity
 			Entity* entity_obj = dynamic_cast<Entity*>(obj);
@@ -336,9 +343,15 @@ void Entity::solveCollisions()
 				setX(x() + (dir == RIGHT ? -2 : 2));
 				falling = true;
 			}
-			else if (jumping && moving)
+			else if (jumping && !moving)
 			{
-				coll_dir = UNDETERMINED;
+				if (moving)
+				{
+					coll_dir = UNDETERMINED;
+					revert = true;
+				}
+				else
+					coll_dir = UP;
 			}
 		}
 		//manage corner-corner collision in InWater
@@ -472,7 +485,7 @@ void Entity::solveCollisions()
 
 void Entity::die()
 {
-	Mario* mario = Game::instance()->getMario();
+	//Mario* mario = Game::instance()->getMario();
 	
 	//only a full living entity can die
 	if(!dead)

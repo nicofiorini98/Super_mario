@@ -12,6 +12,7 @@
     <file>graphics/sprites/stage_tiles.png</file>
     <file>graphics/sprites/title_screen.png</file>
     <file>graphics/sprites/fireworks.png</file>
+    <file>graphics/background/block.png</file>
     <file>sounds/1up.wav</file>
     <file>sounds/break.wav</file>
     <file>sounds/bump.wav</file>

@@ -53,9 +53,40 @@ void BigBertha::advance()
         else
             freezed = false;
     }
+	
 
     if (freezed)
         return;
+    //bounce and fall in the depths when big bertha dying
+    if (dying)
+    {
+        moving_start_counter++;
+        if (script_counter < 8)
+        {
+
+            moving_speed = moving_start_counter % 2;
+            setY(y() - moving_speed);
+        }
+        else if (script_counter >= 8 && script_counter < 24)
+        {
+            moving_speed = 1;
+
+            setY(y() - moving_speed);
+        }
+        else if (script_counter >= 24 && script_counter < 40)
+        {
+            moving_speed = moving_start_counter % 2;
+            setY(y() + moving_speed);
+        }
+        else
+        {
+            moving_speed = 1;
+            setY(y() + moving_speed);
+        }
+        script_counter += moving_speed;
+
+        return;
+    }
 
 	//when the baby dies, forget it
 	if(baby && baby->isDying())
@@ -81,35 +112,7 @@ void BigBertha::advance()
     if(moving_start_counter >= 0)
          moving_start_counter++;
 
-	//bounce and fall in the depths when big bertha dying
-    if(dying)
-    {
-        if(script_counter < 10)
-        {
-        	
-            moving_speed = moving_start_counter % 2;
-            setY(y()-moving_speed);
-        }
-        else if(script_counter >=8 && script_counter <24) // ho messo che il salto prima de affoga è 16, forse è più lungo, 32 mi sembra eccessivo
-        {
-            moving_speed = 1;
-        	
-            setY(y()-moving_speed);
-        }
-        else if(script_counter >=24 && script_counter <40)
-        {
-            moving_speed = moving_start_counter % 2;
-            setY(y()+moving_speed);
-        }
-        else
-        {
-            moving_speed = 1;
-            setY(y()+moving_speed);
-        }
-        script_counter += moving_speed;
-
-        return; 
-    }
+	
 
 	//script moving when don't launch the baby
     if(!launch_baby)
@@ -290,6 +293,8 @@ void BigBertha::hurt()
     if (dying)
         return;
     Mario* mario = Game::instance()->getMario();
+
+    mario->updateScore(100, pos().toPoint());
     Sounds::instance()->play("stomp");
 
     dying = true;
@@ -298,21 +303,25 @@ void BigBertha::hurt()
     script_duration = death_duration;
 	
 	//when BigBertha die and the baby is inside the mouth,then baby die
-    if(!baby->isScript_Move() )
+    if (baby && !baby->isDying())
     {
-        mario->updateScore(100, pos().toPoint());
-    	if(baby)
-    	{
+        if (!baby->isScript_Move())
+        {
+            if (baby)
+            {
+                baby->die();
+                baby = nullptr;
+            }
+        }
+        //when the baby is outside the mouth, baby go away alone
+        if (baby && baby->isScript_Move())
+        {
+            if (baby)
+                baby->setBabyFree(true);
 
-            baby->die();
-            baby = nullptr;
-    	}
+        }
     }
-	//when the baby is outside the mouth, baby go away alone
-    else
-    {
-    	baby->setBabyFree(true);
-    }
+    
     
 }
 

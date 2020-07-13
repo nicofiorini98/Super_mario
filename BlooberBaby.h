@@ -35,7 +35,7 @@ public:
     
 
     void setScript_Move(bool _script) { script = _script; }
-
+    void setDying(bool _dying) { dying = _dying;}
     bool getScript_Move() { return script; }
 
 

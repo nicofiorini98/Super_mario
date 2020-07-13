@@ -133,6 +133,7 @@ class Mario : public Entity
 
 		
 		//override end jumping
+		virtual void startJumping();
 		virtual void endJumping();
 
 		

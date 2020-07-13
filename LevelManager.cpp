@@ -36,25 +36,25 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 	if (level_name == "World 6-9-1")
 	{
-
+		// terrain level
+		int terrain_level = 26 * 16;
 		scene->setSceneRect(0, 0, 97*16, 27*16);
 		
 		// set background color
 		scene->setBackgroundBrush(QBrush(Sprites::instance()->get("sky")));
 		
 		new Background(QPoint(1151, 27*16), ":/graphics/background/sky1.png");
-
-		// terrain level
-		int terrain_level = 26*16;
+		new Background(QPoint(24*16, terrain_level), ":/graphics/background/block.png");
+		new FixedBlock(QPoint(24 * 16, terrain_level - 192), "collider-up");
+	   (new FixedBlock(QPoint(24 * 16+6, terrain_level - 192), "collider-side"))->setRotation(90);
+	   (new FixedBlock(QPoint(800, terrain_level - 192), "collider-side"))->setRotation(90);
+		
 
 		// terrain
 		new Terrain(QRect(0, terrain_level, 97*16, 1*16));
 
 		for (int i = 0; i < 3; i++)
 			new FixedBlock(QPoint(8*16 + (32*i), terrain_level - 32),"ice");
-		
-		//new Leaf(QPoint(6 * 16, terrain_level - 80));//todo foglia di debug
-		
 		
 		// ice_block
 		new FixedBlock(QPoint(10*16, terrain_level-64),  "ice");
@@ -64,18 +64,18 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new FixedBlock(QPoint(16*16, terrain_level-32*2),"ice");
 		new FixedBlock(QPoint(18*16, terrain_level-32),  "ice");
 
-		for (int raw = 0; raw < 13; raw++)
+		/*for (int raw = 0; raw < 13; raw++)
 			for (int col = 0; col < 6; col++)
-				new FixedBlock(QPoint(24 * 16 + 32 * raw, terrain_level - 32 - 32 * col), "ice");
+				new FixedBlock(QPoint(24 * 16 + 32 * raw, terrain_level - 32 - 32 * col), "ice");*/
 		new FixedBlock(QPoint(50 * 16, terrain_level - 32), "ice");
 		new FixedBlock(QPoint(54 * 16, terrain_level - 32), "ice");
 		new FixedBlock(QPoint(62 * 16, terrain_level - 32), "ice");
 		//todo solo per il debug
-		//(new Iceberg(QRect(18 * 16, terrain_level - 64 + 1, 159, 1), level_name, "downhill"))->setRotation(45);
+		(new Iceberg(QRect(18 * 16-1, terrain_level - 64 , 159, 1), level_name, "downhill"))->setRotation(45);
 
 		// pipe
 		new Pipe(QPoint(14*16, terrain_level+16), level_name, 4);
-		new Pipe(QPoint(52 * 16, terrain_level + 16), level_name, 3);
+		new Pipe(QPoint(52 * 16, terrain_level + 16+1), level_name, 3);
 
 
 		//debug piranha fire
@@ -114,11 +114,12 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		
 		//new JumpBlock(QPoint(6 * 16, terrain_level - 80));
 		
-		new Coin(QPoint(80 * 16, terrain_level-32));
+		/*new Coin(QPoint(80 * 16, terrain_level-32));
+		new Cheep(QPoint(80 * 16, terrain_level - 48));*/
 		
 		// Mario
 		mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
-		//	mario = new Mario(QPoint(15 * 16, terrain_level-64), level_name); //mario sopra la pipe
+		//mario = new Mario(QPoint(15 * 16, terrain_level-64), level_name); //mario sopra la pipe
 		//mario = new Mario(QPoint(80 * 16, terrain_level), level_name); //mario fine livello
 		//mario = new Mario(QPoint(30 * 16, terrain_level-192), level_name); // mario sopra l'iceberg
 		//mario = new Mario(QPoint(26 * 16, terrain_level-192), level_name); // mario sopra l'iceberg
@@ -156,7 +157,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		(new Iceberg(QRect(28  , 19 * 16, 163, 1),     level_name, "downhill"))->setRotation(45);
 		(new Iceberg(QRect(8*16+2, 14 * 16, 112, 1),     level_name, "downhill2"))->setRotation(45);    //todo settare lunghezza giusta, forse un poco più corta
 		(new Iceberg(QRect(60*16,19 * 16 + 1, 159, 1), level_name, "downhill"))->setRotation(45);
-		(new Iceberg(QRect(120*16, 12 * 16 + 1, 324, 1),level_name, "uphill"))->setRotation(135);
+		(new Iceberg(QRect(120*16+3, 12 * 16+3 , 324, 1),level_name, "uphill"))->setRotation(135);
 		new Iceberg(QRect( 1*16,   0  ,  1*16, 19*16), level_name, "vert-right-edge");
 		new Iceberg(QRect(19*16,  2*16,  1*16, 16*16), level_name, "vert-right-edge");
 		new Iceberg(QRect( 8*16,   0  ,  1*16, 14*16), level_name, "vert-left-edge" );

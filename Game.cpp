@@ -131,27 +131,35 @@ void Game::reset()
 	centerOn(0, 0);
 }
 
-// game over
+
 void Game::gameover()
 {
-	// stop game
-	cur_state = GAME_OVER;
-	engine.stop();
-	game_time->stop();
-	//update attributes
-	lives = mario->getLives()-1;
-	score = mario->getScore();
+	if(!mario->isDead())
+	{
+		if (!mario->isDying())
+			mario->die();
 
-	//todo vedere che succede qui, il gioco deve finire
-	/*if (lives == 0)
-		reset();*/
+		// set black background
+		cur_scene->setBackgroundBrush(QBrush(Qt::black));
+
+		//  stop music and play game over sound
+		stopMusic();
+
+		Sounds::instance()->play("gameover");
+	}
+	else
+	{
+		// stop game
+		cur_state = GAME_OVER;
+		engine.stop();
+		game_time->stop();
+		
+		//update attributes
+		lives = mario->getLives() - 1;
+		score = mario->getScore();
+
+	}
 	
-	// set black background
-	//cur_scene->setBackgroundBrush(QBrush(Qt::black));
-
-	//  stop music and play game over sound
-	/*stopMusic();
-	Sounds::instance()->play("gameover");*/
 }
 
 // start new game
@@ -328,8 +336,6 @@ void Game::keyPressEvent(QKeyEvent* e)
 			mario->jump();
 	}
 		
-	
-
 	// Mario's running
 	if (e->key() == Qt::Key_Z)
 		mario->setRunning(true);
@@ -387,19 +393,6 @@ void Game::wheelEvent(QWheelEvent* e)
 		scale(1 / 1.1 ,1 / 1.1);
 }
 
-void Game::dying()
-{
-	//game_time->stop();
-	
-	// set black background
-	cur_scene->setBackgroundBrush(QBrush(Qt::black));
-
-	//  stop music and play game over sound
-	stopMusic();
-	
-	Sounds::instance()->play("gameover");
-}
-
 void Game::advance()
 {
 	// do nothing if game is not running
@@ -436,11 +429,10 @@ void Game::advance()
 		}
 	}
 
-	if (cur_state != END_OF_LEVEL) { //todo è giusto, tranne per mario attack, per mario attack lo shape cambia
-		if (!mario->isRaccoonAttack())// center view on shape of Mario
+	if (cur_state != END_OF_LEVEL) 
+	{
+		if (!mario->isRaccoonAttack() && !mario->isDying())// center view on shape of Mario
 			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()+mario->boundingRect().height()));
-		/*else
-			centerOn(QPointF(mario->pos().x() + mario->shape().currentPosition().x(), mario->pos().y()));*/
 	}
 	else
 	{
@@ -468,15 +460,14 @@ void Game::advance()
 				else if (clear_level_counter == 300)
 				{
 					Hud::instance()->reset();
+					lives = mario->getLives();
+					score = mario->getScore();
 					reset();
 				}
 			}
-		//}
-		//if(Hud::instance()->CardsTaken()==2)
-		//	centerOn();
+		
 	}
-	//if (Hud::instance()->CardsTaken() == 1)
-		// here we have to report to 000 the hud timer 
+	// here we have to report to 000 the hud timer 
 }
 
 // freeze/unfreeze all entities
@@ -499,7 +490,6 @@ void Game::setFreezed(bool freezed)
 
 void Game::changeLevel(Direction pipe_travel_dir)
 {
-	
 	engine.stop();
 	stopMusic();
 
@@ -552,7 +542,7 @@ void Game::nextLevel()
 			cur_scene = scene3;
 			LevelManager::load(cur_level_name, cur_scene);
 		}
-		else cur_scene = scene3;
+		else cur_scene = scene3;	
 	}
 	
 	cur_scene->addItem(mario);

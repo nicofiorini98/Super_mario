@@ -3,6 +3,8 @@
 #include "Sprites.h"
 
 #include "Sounds.h"
+#include <iostream>
+
 Plant::Plant() : Enemy()
 {
 	mario = nullptr;
@@ -19,16 +21,16 @@ Plant::Plant() : Enemy()
 	death_duration = 64;
 
 	//texture of plant dying
-	texture_dying[0] = Sprites::instance()->get("piranha-dying-0");
-	texture_dying[1] = Sprites::instance()->get("piranha-dying-1");
-	texture_dying[2] = Sprites::instance()->get("piranha-dying-0");
-	texture_dying[3] = Sprites::instance()->get("piranha-dying-1");
-	texture_dying[4] = Sprites::instance()->get("piranha-dying-2");
-	texture_dying[5] = Sprites::instance()->get("piranha-dying-3");
-	texture_dying[6] = Sprites::instance()->get("piranha-dying-2");
-	texture_dying[7] = Sprites::instance()->get("piranha-dying-3");
-	texture_dying[8] = Sprites::instance()->get("piranha-dying-4");
-	texture_dying[9] = Sprites::instance()->get("piranha-dying-5");
+	texture_dying[0]  = Sprites::instance()->get("piranha-dying-0");
+	texture_dying[1]  = Sprites::instance()->get("piranha-dying-1");
+	texture_dying[2]  = Sprites::instance()->get("piranha-dying-0");
+	texture_dying[3]  = Sprites::instance()->get("piranha-dying-1");
+	texture_dying[4]  = Sprites::instance()->get("piranha-dying-2");
+	texture_dying[5]  = Sprites::instance()->get("piranha-dying-3");
+	texture_dying[6]  = Sprites::instance()->get("piranha-dying-2");
+	texture_dying[7]  = Sprites::instance()->get("piranha-dying-3");
+	texture_dying[8]  = Sprites::instance()->get("piranha-dying-4");
+	texture_dying[9]  = Sprites::instance()->get("piranha-dying-5");
 	texture_dying[10] = Sprites::instance()->get("piranha-dying-4");
 	texture_dying[11] = Sprites::instance()->get("piranha-dying-5");
 }
@@ -57,17 +59,29 @@ void Plant::advance() {
 			falling_counter++;
 
 		if (falling_counter <= 48)
-			falling_speed = (falling_counter) % 2;    //0.5 speed
+			falling_speed = (falling_counter) % 2;
 
 		else if (falling_counter >= 48)
 		{
+			falling_speed = 0;
+
+			//std::cout << mario->isOnPipe("World 6-9-2");
+
+			if (out_counter > 0)
+				collidable = false;
+
 			out_counter++;
+			
+			//if(!mario->isOnPipe("World 6-9-2"))
+			
 			if (out_counter >= 200)
 			{
+				collidable = true;
 				in = false;
 				out_counter = 0;
 				falling_counter = 0;
 			}
+			
 		}
 		setY(y() + falling_speed);
 	}
@@ -89,6 +103,7 @@ void Plant::advance() {
 		}
 		setY(y() - jumping_speed);
 	}
+	solveCollisions();
 }
 
 void Plant::hit(Object* what, Direction fromDir)

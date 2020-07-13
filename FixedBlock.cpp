@@ -6,13 +6,33 @@
 FixedBlock::FixedBlock(QPoint pos, std::string _type) : Inert()
 {
 
-	if (_type != "ice" && _type != "wood")
+	if (_type != "ice" && _type != "wood" && _type !="collider-up" && _type !="collider-side")
 		std::cerr << "Type not valid\n";
 	
 	// set position
 	setPos(pos);
+	if (_type == "collider-up")
+	{
 
-	if (_type == "ice")
+		QPixmap pixmap = Sprites::instance()->get("collider-up");
+
+		// make background color (224, 163, 216) transparent
+		pixmap.setMask(pixmap.createMaskFromColor(QColor(237, 28, 36)));
+
+		setPixmap(pixmap);
+
+
+	}
+	else if (_type == "collider-side")
+	{
+		QPixmap pixmap = Sprites::instance()->get("collider-side");
+
+		// make background color (224, 163, 216) transparent
+		pixmap.setMask(pixmap.createMaskFromColor(QColor(237, 28, 36)));
+
+		setPixmap(pixmap);
+	}
+	else if (_type == "ice")
 	{
 		// create collage texture
 		QPixmap collage(32, 32);

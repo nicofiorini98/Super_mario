@@ -93,9 +93,6 @@ void PiranhaFire::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
 
-	if ((dynamic_cast<Inert*>(what) || dynamic_cast<Enemy*>(what))
-		&& (fromDir == LEFT || fromDir == RIGHT))
-		dir = inverse(dir);
 }
 
 void PiranhaFire::hurt()

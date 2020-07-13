@@ -274,13 +274,16 @@ void Mario::advance()
 
 	splash = false;
 	//check position of mario for manage the physic parameters in the space
-	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16)
+	if(level_name=="World 6-9-2" && outOfWater && !jumping && falling && pos().y() >= 16*16 )
 	{
+		//do splash when go inWater from the water surface
+		if (pos().y() <= 16 * 16 + 4)
+			splash = true;
+		
 		falling_start_counter = 0;
 		falling_counter = 0;
 		inWater = true;
 		outOfWater = false;
-		splash=true;
 		if (moving)
 			moving_start_counter = 0;
 		else
@@ -310,9 +313,9 @@ void Mario::advance()
 	
 	if (running_out_of_view)
 	{
-			moving_speed = ((animation_counter / 2) % 2) + 1;
-			if (pos().x() >= 96*16)
-				moving = false;
+		moving_speed = ((animation_counter / 2) % 2) + 1;
+		if (pos().x() >= 96*16)
+			moving = false;
 	}
 	if (raccoon)
 	{
@@ -327,19 +330,16 @@ void Mario::advance()
 			solveCollisions();
 		}
 	}
-		
 	if (script_move_in_pipe)
 	{
-		//if(level_name=="World-6-9")
 		if ((!big && ((dir == DOWN && script_move_counter == 97) || (dir == UP && script_move_counter == 128)))
 			|| (big && ((dir == DOWN && script_move_counter == 128) || (dir == UP && script_move_counter == 180))))
 		{
 			exitPipe();
-			dir = RIGHT;
 			//todo , remove this, is for debug
-			/*if (level_name == "World 6-9-2")
-				setPos(38 * 16, 23 * 16);*/
-				//setPos(106 * 16, 9 * 16);
+			//if (level_name == "World 6-9-2")
+				//setPos(38 * 16, 23 * 16);
+			//	setPos(106 * 16, 9 * 16);
 		}
 
 		if (script_move_counter >= 0)
@@ -724,7 +724,7 @@ void Mario::advance()
 	
 
 	//horizontal deceleration when moving ends
-	if (!script_move && moving_start_counter >= 0 && moving_stop_counter >= 0)
+	if (!script_move && moving_start_counter >= 0 && moving_stop_counter >= 0 && !running_out_of_view)
 	{
 		// decelerate for the same extent of the initial acceleration (max 30 frames)
 		if (moving_stop_counter < std::min(moving_start_counter, 30))
@@ -747,12 +747,12 @@ void Mario::advance()
 	if (script_move)
 	{
 		////change direction instantly
-		//if(dir_change_counter>0)
-		//{
-		//	//prev_dir = dir; //todo check this
-		//	std::cout << "dir_change_instantly\n";
-		//	setDirection(inverse(dir));
-		//}
+		if(dir_change_counter>0)
+		{
+			//prev_dir = dir; //todo check this
+			
+			setDirection(inverse(dir));
+		}
 		
 		//stop moving instantly
 		if (moving_stop_counter > 0) //todo, non mi fido di questo pezzo
@@ -886,6 +886,12 @@ void Mario::swim()
 		Sounds::instance()->play("jump"); //todo mettere suono swim
 }
 
+void Mario::startJumping()
+{
+	crouch = false;
+	Entity::startJumping();
+}
+
 void Mario::endJumping()
 {
 	
@@ -1012,6 +1018,11 @@ void Mario::bounceBlock()
 // @override setMoving() to add horizontal acceleration
 void Mario::setMoving(bool _moving)
 {
+	//when _moving true, and crouch, don't move
+	if (crouch && _moving)
+		crouch = false;
+		
+	
 	// transition move -> stop, then activate moving stop counter
 	if (_moving == false && moving)
 		if (!script_move)
@@ -1029,9 +1040,14 @@ void Mario::setMoving(bool _moving)
 // @override setDirection() to avoid instant direction change
 void Mario::setDirection(Direction _dir)
 {
+	//don't change direction when the pipe travel is started
+	if (script_move_in_pipe)
+		return;
+	
+	//change direction instantly in script_move
 	if(script_move)
 	{
-		//change direction instantly in script_move
+		
 		prev_dir = dir;
 		dir = _dir;
 		dir_change_counter = -1;
@@ -1376,7 +1392,6 @@ void Mario::hit(Object* what, Direction fromDir)
 	if (swimming && (fromDir == DOWN || fromDir == UP))
 		endSwimming();
 
-
 	if (fly_float && (fromDir == DOWN))
 		endFlyFloating();
 
@@ -1428,10 +1443,8 @@ void Mario::hit(Object* what, Direction fromDir)
 		KoopaTroopa* koopa = dynamic_cast<KoopaTroopa*>(what);
 		if (koopa)
 		{
-
 			if (fromDir == DOWN)
 				bounce();
-			//else if (koopa->isShell() )
 			else if(!koopa->isShell())
 				powerDown();
 		}
@@ -1485,7 +1498,7 @@ void Mario::exitPipe()
 		prevPos = pos();
 	}
 
-	dir == RIGHT;
+	dir = RIGHT;
 	setZValue(6);
 	Sounds::instance()->play("pipe");
 }
@@ -1496,8 +1509,7 @@ void Mario::startPipeTravel()
 	entering_pipe = false;
 	script_move_in_pipe = true;
 	
-	
-	setZValue(2);
+	setZValue(1);
 
 	collidable = false;
 
@@ -1518,15 +1530,21 @@ void Mario::die()
 {
 	// call superclass method
 	dying = true;
-	Game::instance()->dying();
+	Game::instance()->gameover();
 
 }
 
 // crouch
 void Mario::setCrouch(bool active)
 {
+	if (active && moving)
+		setMoving(false);
+	
 	if (!jumping && !falling)
 		crouch = active;
+
+	if (!active)
+		crouch = false;
 }
 
 void Mario::powerUp(spawnable_t _power) 
@@ -1541,7 +1559,7 @@ void Mario::powerUp(spawnable_t _power)
 	transformation_counter = 0;
 
 	//only for debug
-	if(!_power) //!power is DEBUG enum, todo da togliere
+	if(!_power) 
 	{
 		if (!big)
 			big = true;
@@ -1613,12 +1631,20 @@ bool Mario::isOnPipe(std::string level_name)
 	int pos_x = pos().x();
 	if (raccoon && dir == RIGHT)
 		pos_x += 8;
-	
-		if (((level_name == "World 6-9-1" && pos_x >= 14 * 16 + 4 && (pos_x + 16) <= 16 * 16 - 4)
-			|| (level_name == "World 6-9-2" && pos_x >= 54 * 16 + 4 && (pos_x + 16) <= 56 * 16 - 4)) && !falling && !jumping)
-			return true;
-		else 
-			return false;
+	/*
+	if (((level_name == "World 6-9-1" && pos_x >= 14 * 16 + 4 && (pos_x + 16) <= 16 * 16 - 4)
+		|| (level_name == "World 6-9-2" && pos_x >= 54 * 16 + 4 && (pos_x + 16) <= 56 * 16 - 4)) && !falling && !jumping)
+		return true;
+	else
+		return false;*/
+	if (!dynamic_cast<Pipe*>(walkable_object))
+		return false;
+	if (level_name == "World 6-9-1" && pos_x >= 14 * 16 + 4 && (pos_x + 16) <= 16 * 16 - 4)
+		return true;
+	else if (level_name == "World 6-9-2" && pos_x >= 54 * 16 + 4 && (pos_x + 16) <= 56 * 16 - 4 && !falling && !jumping /*&& pos().y() >= 22 * 16 - 2*/)
+		return true;
+	else
+		return false;
 	
 }
 

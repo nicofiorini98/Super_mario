@@ -1,6 +1,7 @@
 #include "PowerMeter.h"
 #include "Sprites.h"
 #include <iostream>
+#include "Sounds.h"
 
 PowerMeter::PowerMeter()
 {
@@ -58,7 +59,12 @@ void PowerMeter::doUpdate(const std::string& update_info)
 		pan[i]->setPixmap(texture_arrow[1]);
 
 	if (speed == 7)									//turn on P
+	{
+
 		pan[6]->setPixmap(texture_arrow[2]);
+		Sounds::instance()->play("power-meter");
+	
+	}
 	else											//turn off P
 		pan[6]->setPixmap(texture_arrow[3]);
 

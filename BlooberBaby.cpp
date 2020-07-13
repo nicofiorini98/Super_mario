@@ -345,7 +345,10 @@ void BlooberBaby::animate()
 
 	// set the proper texture
 	if (dying)
+	{
+		collidable = false;
 		setPixmap(texture_death);
+	}
 	if (jumping)
 		setPixmap(texture_swim[1]);
 	else if (falling)

@@ -40,7 +40,9 @@ static QRect night_sky(681, 188, 16, 16);
 static QRect iceberg(545, 154, 16, 16);
 static QRect cheep(384, 0, 16, 15);
 static QRect number(33, 32, 8, 7);
-static QRect downhill(0, 0, 163, 1);
+static QRect downhill(0, 0, 400, 1);
+static QRect collider(0, 129, 416, 6);
+static QRect collider_side(0, 129, 192, 6);
 static QRect wood_block(1004, 35, 16, 16);
 static QRect brick_block(1038, 18, 16, 16);
 static QRect broken_block(1089, 103, 8, 9);
@@ -416,8 +418,10 @@ QPixmap Sprites::get(const std::string & id)
 		return hud.copy(downhill);
 	if (id == "uphill")
 		return hud.copy(downhill);
-	if(id=="ice")
-		return hud.copy(downhill);
+	if(id=="collider-up")
+		return hud.copy(collider);
+	if (id == "collider-side")
+		return hud.copy(collider_side);
 
 	if (id == "main-screen")
 		return title_screen.copy(QRect(516, 226, 16*16, 15*16));

@@ -135,12 +135,14 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 		&& (fromDir == LEFT || fromDir == RIGHT))
 		dir = inverse(dir);
 	
-	else if (mario) {
+	else if (mario) 
+	{
 		//change direction if hit by mario
 		if (mario->x() >= this->x() + (this->boundingRect().width() / 2))
 			dir = LEFT;
 		else
 			dir = RIGHT;
+		
 		//going to shell mode when is normal and hit by mario from UP
 		if (fromDir == UP && normal) 
 		{
