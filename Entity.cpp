@@ -252,6 +252,10 @@ void Entity::solveCollisions()
 				(dynamic_cast<Enemy*>(this) && dynamic_cast<Collectable*>(obj)))
 				continue;
 
+			if ((dynamic_cast<Mushroom*>(this) && dynamic_cast<Coin*>(obj)) || 
+				(dynamic_cast<Coin*>(this) && dynamic_cast<Mushroom*>(obj)))
+				continue;
+			
 			//ignore collisions between two Collectables
 			if (dynamic_cast<Collectable*>(this) && dynamic_cast<Collectable*>(obj))
 				continue;
@@ -347,6 +351,7 @@ void Entity::solveCollisions()
 			 */
 		}
 		// bug fix collision per la medusa
+		//manage corner-corner collision for bloober nanny
 		else if (dynamic_cast<BlooberNanny*>(this) && coll_dir == UNDETERMINED)
 		{
 			if (!dynamic_cast<BlooberNanny*>(this)->isBlocked_up() && !dynamic_cast<BlooberNanny*>(this)->isBlocked_side())
@@ -370,10 +375,13 @@ void Entity::solveCollisions()
 		Muncher* muncher_obj = dynamic_cast<Muncher*>(obj);
 		if (coll_dir == DOWN && falling && ((inert_obj && inert_obj->isWalkable()) || muncher_obj ))
 		{
+			
 			falling = false;
 			falling_counter = 0;
 			if (inert_obj)
+			{
 				walkable_object = inert_obj;
+			}
 		}
 
 
@@ -455,7 +463,7 @@ void Entity::solveCollisions()
 			}
 		if(i==4)
 		{
-			std::cout << "horizontal correction\n";
+			//std::cout << "horizontal correction\n";
 			setX(x() + (dir == RIGHT ? -2 : 2));
 		}
 	}

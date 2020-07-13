@@ -99,7 +99,7 @@ Iceberg::Iceberg(QRect rect, std::string _level_name,std::string type, std::stri
 	
 	setPixmap(collage);
 		
-	setZValue(2);
+	setZValue(3);
 }
 std::string Iceberg::name()
 {

@@ -195,17 +195,17 @@ QPixmap Sprites::get(const std::string & id)
 
 	//mario raccoon and fire transformation
 	if (id == "mario-transformation-0")
-		return mario.copy(QRect(451, 1, 16, 16));
+		return mario.copy(QRect(451, 1, 16, 27));
 	if (id == "mario-transformation-1")
-		return mario.copy(QRect(469, 1, 16, 16));
+		return mario.copy(QRect(469, 1, 16, 27));
 	if (id == "mario-transformation-2")
-		return mario.copy(QRect(415, 1, 16, 16));
+		return mario.copy(QRect(415, 1, 16, 27));
 	if (id == "mario-transformation-3")
-		return mario.copy(QRect(433, 1, 16, 16));
+		return mario.copy(QRect(433, 1, 16, 27));
 	if (id == "mario-transformation-4")
-		return mario.copy(QRect(469, 1, 16, 16));
+		return mario.copy(QRect(469, 1, 16, 27));
 	if (id == "mario-transformation-5")
-		return mario.copy(QRect(451, 1, 16, 16));
+		return mario.copy(QRect(451, 1, 16, 27));
 
 	//mario fire
 	if (id == "mario-fire-stand")
@@ -415,6 +415,8 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "downhill2")
 		return hud.copy(downhill);
 	if (id == "uphill")
+		return hud.copy(downhill);
+	if(id=="ice")
 		return hud.copy(downhill);
 
 	if (id == "main-screen")

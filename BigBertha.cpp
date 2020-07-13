@@ -31,12 +31,13 @@ BigBertha::BigBertha(QPoint position, Direction direction) : Enemy()
     texture_swim_open[1] = Sprites::instance()->get("big-bertha-0");
     texture_death = Sprites::instance()->get("big-bertha-0").transformed(QTransform().scale(1, -1));
 
-	//create a baby inside the mouth
-    baby = new BabyCheep((pos() + QPoint(7, 13)).toPoint(), dir);
 
     // set texture and position
     setPixmap(texture_swim_close[0]);
     setPos(position);
+	
+    //create a baby inside the mouth
+    baby = new BabyCheep((pos() + QPoint(7, 13)).toPoint(), dir);
     setZValue(3);
 
 }
@@ -52,6 +53,9 @@ void BigBertha::advance()
         else
             freezed = false;
     }
+
+    if (freezed)
+        return;
 
 	//when the baby dies, forget it
 	if(baby && baby->isDying())
@@ -317,7 +321,7 @@ QPainterPath BigBertha::shape() const
 {
     QPainterPath path;
 
-    path.addRect(4, boundingRect().top() + 4, boundingRect().width() - 8, boundingRect().bottom() - -8);
+    path.addRect(4, boundingRect().top() + 4, boundingRect().width() - 8, boundingRect().bottom() -8);
 
     return path;
 }

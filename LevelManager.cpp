@@ -63,6 +63,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new FixedBlock(QPoint(16*16, terrain_level-32),  "ice");
 		new FixedBlock(QPoint(16*16, terrain_level-32*2),"ice");
 		new FixedBlock(QPoint(18*16, terrain_level-32),  "ice");
+
 		for (int raw = 0; raw < 13; raw++)
 			for (int col = 0; col < 6; col++)
 				new FixedBlock(QPoint(24 * 16 + 32 * raw, terrain_level - 32 - 32 * col), "ice");
@@ -80,7 +81,6 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		//debug piranha fire
 		//new Pipe(QPoint(3 * 16, terrain_level + 16), level_name, 3);
 		//new KoopaTroopa(QPoint(3.5 * 16, terrain_level-4.5));
-		new BrickBlock(QPoint(2 * 16, terrain_level-16),"ice");
 		new BrickBlock(QPoint(37 * 16, terrain_level-15*16),"",LIFE);
 		new BrickBlock(QPoint(35 * 16, terrain_level-13*16),"ice");
 		new BrickBlock(QPoint(39 * 16, terrain_level-13*16),"ice");
@@ -112,15 +112,15 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 		//new Mushroom(QPoint(6 * 16, terrain_level - 80),UP);
 		
-		new JumpBlock(QPoint(6 * 16, terrain_level - 80));
+		//new JumpBlock(QPoint(6 * 16, terrain_level - 80));
 		
 		new Coin(QPoint(80 * 16, terrain_level-32));
 		
 		// Mario
-		//mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
+		mario = new Mario(QPoint(1.5 * 16, terrain_level), level_name); //mario di default
 		//	mario = new Mario(QPoint(15 * 16, terrain_level-64), level_name); //mario sopra la pipe
 		//mario = new Mario(QPoint(80 * 16, terrain_level), level_name); //mario fine livello
-		mario = new Mario(QPoint(30 * 16, terrain_level-192), level_name); // mario sopra l'iceberg
+		//mario = new Mario(QPoint(30 * 16, terrain_level-192), level_name); // mario sopra l'iceberg
 		//mario = new Mario(QPoint(26 * 16, terrain_level-192), level_name); // mario sopra l'iceberg
 
 	}
@@ -265,7 +265,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 	   new Piranha(QPoint(35.5 * 16, 5 * 16), DOWN, false, true);
 	   new Piranha(QPoint(101.5 * 16, 9.5 * 16), UP, false, false);
 	   new Piranha(QPoint(51.5 * 16, 9 * 16), DOWN, true, true);
-	   //new PiranhaFire(QPoint(108.5 * 16, 8.5 * 16),UP);
+	   new PiranhaFire(QPoint(108.5 * 16, 8.5 * 16),UP);
 
 	   for (int i = 0; i <= 3; i++)
 		   new Muncher(QPoint((28+i)*16, 10*16));

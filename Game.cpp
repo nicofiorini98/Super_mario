@@ -570,6 +570,7 @@ void Game::prevLevel()
 
 	cur_scene->addItem(mario);
 	mario->setLevelName(cur_level_name);
+	
 	if (mario->isRaccoon())
 		mario->setPos(((cur_level_name == "World 6-9-2" ? 70 : 52) * 16) + 5, ((cur_level_name == "World 6-9-2" ? 25 : 25) * 16) - 4);
 	else

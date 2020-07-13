@@ -248,7 +248,7 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 	setPos(position - QPoint(0, pixmap().height()));
 
 	// Mario is at a higher layer than other objects
-	setZValue(1);
+	setZValue(6);
 }
 
 void Mario::advance()
@@ -317,10 +317,10 @@ void Mario::advance()
 	if (raccoon)
 	{
 		//manage asymmetry texture of mario raccoon
-		if (prev_dir != dir && (outOfWater || walkable_object) && !script_move_in_pipe)
+		if (prev_dir != dir /*&& (outOfWater || walkable_object)*/ && !script_move_in_pipe)
 		{
-			
-			std::cout << "asymmetry correction\n";
+			//todo togliere stampa
+			//std::cout << "asymmetry correction\n";
 			setX(x() + (dir == LEFT ? 8 : -8));
 			
 			prev_dir = dir;
@@ -757,7 +757,7 @@ void Mario::advance()
 		//stop moving instantly
 		if (moving_stop_counter > 0) //todo, non mi fido di questo pezzo
 		{
-			std::cout << "stop_moving_instantly\n";
+			//std::cout << "stop_moving_instantly\n";
 			moving_stop_counter = -1;
 			moving = false;
 			
@@ -1029,7 +1029,6 @@ void Mario::setMoving(bool _moving)
 // @override setDirection() to avoid instant direction change
 void Mario::setDirection(Direction _dir)
 {
-	//bug here, check, maybe i solved it
 	if(script_move)
 	{
 		//change direction instantly in script_move
@@ -1485,6 +1484,9 @@ void Mario::exitPipe()
 		falling = true;
 		prevPos = pos();
 	}
+
+	dir == RIGHT;
+	setZValue(6);
 	Sounds::instance()->play("pipe");
 }
 
@@ -1592,7 +1594,9 @@ void Mario::powerDown()
 	transformation_counter = 0;
 
 	if (raccoon)
+	{
 		raccoon = false;
+	}
 	else if (fire)
 		fire = false;
 	else if (big)
@@ -1602,6 +1606,7 @@ void Mario::powerDown()
 
 	Sounds::instance()->play("leaf");
 }
+
 
 bool Mario::isOnPipe(std::string level_name)
 {
