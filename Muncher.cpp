@@ -25,6 +25,7 @@ Muncher::Muncher(QPoint position) : Enemy()
 
 void Muncher::animate()
 {
+	//muncher disappear when bottom is pushed,coins appear
 	if (SwitchBlock::SwitchEffect())
 	{
 		if (!temp_coin)
@@ -38,7 +39,7 @@ void Muncher::animate()
 	}
 	else
 	{
-		// aggiungere commenti qua
+		//coins die if not taken by mario
 		if (!isVisible())
 		{
 			collidable = true;

@@ -1,10 +1,11 @@
 #include "CardsTaken.h"
 #include "Hud.h"
 #include "Game.h"
-//#include "LifeUp.h"
 
 void CardsTaken::reset()
 {
+	//clears panel if is full
+
 	if (!panel.empty())
 	{
 		if (panel.size() == 3)
@@ -21,7 +22,8 @@ void CardsTaken::reset()
 
 void CardsTaken::doUpdate(const std::string& card_id)
 {
-	
+	//adds card for each free slot
+
 	if (panel.empty())
 	{
 		panel.push_back(new Card(QPoint(169, 8), card_id, Hud::instance()->getScene()));
@@ -36,15 +38,6 @@ void CardsTaken::doUpdate(const std::string& card_id)
 	{
 		panel.push_back(new Card(QPoint(218, 8), card_id, Hud::instance()->getScene()));
 		addToGroup(panel[2]);
-		//if (panel[0]->getId() == panel[1]->getId())
-		//	if (panel[2]->getId() == panel[1]->getId())
-		//	{
-		//		if (panel[2]->getId() == "mushroom")
-		//			new LifeUp();
-		//		else if (panel[2]->getId() == "flower")
-		//			new LifeUp();
-		//		else if (panel[2]->getId() == "star")
-		//			new LifeUp();
-		//	}
+		
 	}
 }

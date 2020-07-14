@@ -326,10 +326,13 @@ void Game::keyPressEvent(QKeyEvent* e)
 	// Mario's jump
 	if (e->key() == Qt::Key_Space)
 	{
+		//mario is swimming
 		if (mario->isInWater())
 			mario->swim();
+		//mario is rebounding on jumpblock
 		else if (mario->isBouncing())
 			mario->setRebound(true);
+		//mario raccoon is flying
 		else if (mario->isRaccoon() && mario->isSuperRunning())
 			mario->fly();
 		else
@@ -342,7 +345,7 @@ void Game::keyPressEvent(QKeyEvent* e)
 
 	// Mario's transformation
 	if (e->key() == Qt::Key_T)
-		mario->powerUp(DEBUG);  //todo debug è momentaneo
+		mario->powerUp(DEBUG); 
 
 		//Mario's shooting
 	if (e->key() == Qt::Key_B)
@@ -452,7 +455,7 @@ void Game::advance()
 				{
 					new Card(QPoint(1464, 299), mario->ItemTaken(), scene1);
 					Hud::instance()->updatePanel("CardsTaken", mario->ItemTaken());
-					//Hud::instance()->updatePanel("Score", "add-time-left");
+					
 				}
 				else if (clear_level_counter == 170)
 					fastResetOfGameTime();
@@ -502,7 +505,6 @@ void Game::changeLevel(Direction pipe_travel_dir)
 	else
 		setScene(black_scene);
 
-	///da rifare la funzione hide non esiste più
 	Hud::instance()->hide();
 
 	// after 200 ms the screen has been obscured show it again
@@ -534,7 +536,6 @@ void Game::nextLevel()
 	}
 	else if (cur_level_name == "World 6-9-3" )
 	{
-
 		scene2->removeItem(mario);
 		if (!scene3)
 		{

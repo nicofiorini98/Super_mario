@@ -52,9 +52,10 @@ void Plant::advance() {
 	
 	if (freezed)
 		return;
-
+	//plant is out of pipe
 	if (in) 
 	{
+		//descending phase in pipe
 		if (falling_counter >= 0)
 			falling_counter++;
 
@@ -65,15 +66,15 @@ void Plant::advance() {
 		{
 			falling_speed = 0;
 
-			//std::cout << mario->isOnPipe("World 6-9-2");
-
+			
+			//plant is in pipe for a while
 			if (out_counter > 0)
 				collidable = false;
 
 			out_counter++;
 			
-			//if(!mario->isOnPipe("World 6-9-2"))
 			
+			//plant is starting to raise out of pipe
 			if (out_counter >= 200)
 			{
 				collidable = true;
@@ -85,15 +86,19 @@ void Plant::advance() {
 		}
 		setY(y() + falling_speed);
 	}
+	//plant is in pipe
 	else
 	{
+		//raising phase out pipe
 		if (jump_counter >= 0)
 			jump_counter++;
 		if (jump_counter <= 48)
 			jumping_speed = jump_counter % 2;
+		//plant is out pipe for a while
 		else if (jump_counter >= 48)
 		{
 			in_counter++;
+			//plant is starting to descend in pipe
 			if (in_counter >= 200)
 			{
 				in = true;
@@ -108,6 +113,8 @@ void Plant::advance() {
 
 void Plant::hit(Object* what, Direction fromDir)
 {
+	if (dynamic_cast<Mario*>(what) && dynamic_cast<Mario*>(what)->isRaccoonAttack())
+		dying = true;
 	Object::hit(what, fromDir);
 }
 

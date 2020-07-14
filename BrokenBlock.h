@@ -6,9 +6,9 @@ class BrokenBlock : public Entity
 {
 protected:
 
-	bool big_jump;
+	bool big_jump;                 //a broken block can do a big or a small jump
 	QPixmap texture_broken[2];
-	int counter;
+	
 	int duration;
 public:
 

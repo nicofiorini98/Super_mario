@@ -16,6 +16,7 @@ Splash::Splash(QPointF _pos)
 	texture_splash[4] = Sprites::instance()->get("Splash-4");
 	
 	setPixmap(texture_splash[0]);
+	
 	setPos(pos.x(),15*16+2);
 	setZValue(3);
 }
@@ -25,7 +26,7 @@ void Splash::animate()
 	Entity::animate();
 		
 		setPixmap(texture_splash[(animation_counter / animation_div) % 5]);
-	
+	//ending of splash animation and disappear
 	if (animation_counter == 5 * animation_div ) {
 		animation_counter = -1;
 		setVisible(false);

@@ -41,6 +41,7 @@ void Leaf::hit(Object* what, Direction fromDir)
 
 void Leaf::advance()
 {
+	//describing the floating trajectory
 	if (dir == UP) 
 	{
 		if (y() == spawned_position.y() - 3 * pixmap().height() + 16)

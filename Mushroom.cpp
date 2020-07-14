@@ -31,15 +31,14 @@ void Mushroom::animate()
 {
 	Entity::animate();
 
-	// if mushroom fully emerges from spawn position, 
-	// start moving right and become collidable
+	
 }
 
 void Mushroom::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir); 
 
-
+	//walking phase on uphill or downhill
 	if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "downhill")
 	{
 		falling = false;
@@ -60,9 +59,10 @@ void Mushroom::hit(Object* what, Direction fromDir)
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
 	{
+		//if mushroom is red mario becomes big
 		if(red)
 			mario->powerUp(type);
-		
+		//if mushroom is green mario gains a new life
 		if(type==LIFE)
 		{
 			mario->updateLives(1, pos().toPoint());
@@ -87,6 +87,7 @@ void Mushroom::hit(Object* what, Direction fromDir)
 
 void Mushroom::advance()
 {
+	//raising phase from the block
 	if (dir == UP)
 	{
 		collidable = true;
@@ -111,7 +112,7 @@ void Mushroom::advance()
 		}
 	}
 
-
+	//falling phase from the block
 	else if (dir == DOWN) {
 		slow = false;
 		falling = true;

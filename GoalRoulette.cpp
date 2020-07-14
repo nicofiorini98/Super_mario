@@ -27,7 +27,7 @@ void GoalRoulette::animate()
 		return;
 
 	setPixmap(ranging_items[(animation_counter++ / 6) % 3].second);
-	content = ranging_items[(animation_counter / 4) % 3].first;
+	content = ranging_items[(animation_counter / 6) % 3].first;
 }
 
 void GoalRoulette::hit(Object* what, Direction fromDir)

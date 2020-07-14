@@ -12,7 +12,7 @@ GameTime::GameTime()
 		addToGroup(panel_numbers[i]);
 	}
 
-	// RIVEDERE
+	
 	resetValues();
 }
 

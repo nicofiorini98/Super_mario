@@ -185,7 +185,8 @@ class Mario : public Entity
 		bool isSuperRunning() { return super_running; }
 		void setRebound(bool _rebound) { rebound = _rebound; }
 		void setRunning(bool _running);
-		void setScriptMove(bool _script_move) { script_move = _script_move; }
+		void setScriptMove(bool _script_move) { script_move = _script_move;}
+		void setFalling(bool _falling);
 		
 		void setAttack(bool _attack) { attack = _attack; } 
 

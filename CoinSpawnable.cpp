@@ -34,7 +34,7 @@ void CoinSpawnable::animate()
 	setPixmap(texture_animation[(animation_counter/10)%4]);
 }
 
-// @overridee
+// @override
 void CoinSpawnable::advance()
 {
 	if(animation_counter < 28)
@@ -43,7 +43,6 @@ void CoinSpawnable::advance()
 		setY(y()+2);
 	else
 	{
-		//todo check this
 		Mario* mario = Game::instance()->getMario();
 		mario->updateScore(100,pos().toPoint());
 		die();

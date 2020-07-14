@@ -29,7 +29,7 @@ void ScoreSpawnable::animate()
 // @overridee
 void ScoreSpawnable::advance()
 {
-	//l'icona va solo all'in su.
+	
 	if (animation_counter < 50)
 		setY(y()-1);
 	else

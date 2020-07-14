@@ -22,6 +22,7 @@ Piranha::Piranha(QPoint position, Direction direction, bool _red, bool _rotate) 
 	slow = true;  
 
 	// textures
+	// there are different plants,green or red, rotated or not
 	if (!red && !rotate)
 	{
 		texture_crunch[0] = Sprites::instance()->get("green-plant-0");
@@ -64,6 +65,8 @@ void Piranha::advance() {
 void Piranha::animate()
 {
 	Entity::animate();
+	//after 1 frame plants get mario's address,
+    //otherwise mario points to null at starting of the game, and crash
 	if (animation_counter == 1)
 		mario = Game::instance()->getMario();
 	

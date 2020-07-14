@@ -7,7 +7,7 @@
 
 SecretBox::SecretBox(QPoint position,spawnable_t _spawnable) : BouncingBlock()
 {
-	//todo vedere se c'è un animazione nella mega secret box
+	
 	// textures
 	animation_counter = 0;
 	spawn_counter = -1;
@@ -57,7 +57,7 @@ void SecretBox::advance()
 		{
 			hit_counter = -1;
 			spawn_counter = 0;
-			//new Mushroom(QPoint(x(), y()), UP);
+			
 			BouncingBlock::spawn(UP);  //spawn of mushroom
 		}
 		BouncingBlock::advance();
@@ -78,29 +78,3 @@ void SecretBox::hit(Object* what, Direction fromDir)
 	BouncingBlock::hit(what, fromDir);
 }
 
-//void SecretBox::hit(Object *what, Direction fromDir)
-//{
-//	
-//	// do nothing if not active
-//	if(!active)
-//		return;
-//
-//	mario = dynamic_cast<Mario*>(what);
-//	if(mario && fromDir == DOWN)
-//	{
-//		// start hit
-//		hit_counter = 0;
-//
-//		moving = true;
-//
-//		hit_from = fromDir;
-//
-//		// disable box
-//		active = false;
-//		
-//		//BouncingBlock::spawn();
-//
-//		// play box hit sound
-//		Sounds::instance()->play("bump");
-//	}
-//}

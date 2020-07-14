@@ -1,7 +1,9 @@
 #include "BrokenBlock.h"
 #include "Sprites.h"
-#include <iostream>
-BrokenBlock::BrokenBlock(QPointF _pos, Direction _dir, bool _big_jump) : Entity() {
+
+BrokenBlock::BrokenBlock(QPointF _pos, Direction _dir, bool _big_jump) : Entity()
+{
+
 	setPos(_pos);
 	dir = _dir;
 	setZValue(3);
@@ -9,7 +11,7 @@ BrokenBlock::BrokenBlock(QPointF _pos, Direction _dir, bool _big_jump) : Entity(
 	falling = false;
 	moving_speed_div = 3;
 	duration = 28;
-	//collidable = false;
+	
 	texture_broken[0] = Sprites::instance()->get("broken-block");
 	texture_broken[0].setMask(texture_broken[0].createMaskFromColor(QColor(224, 163, 216)));
 	texture_broken[1] = texture_broken[0].transformed(QTransform().scale(-1, 1));
@@ -17,39 +19,52 @@ BrokenBlock::BrokenBlock(QPointF _pos, Direction _dir, bool _big_jump) : Entity(
 	collidable = false;
 }
 
-void BrokenBlock::animate() {
+void BrokenBlock::animate()
+{
 	Entity::animate();
 	setPixmap(texture_broken[(animation_counter / 20) % 2]);
-
 }
 
-void BrokenBlock::advance() {
+void BrokenBlock::advance()
+{
+
+	//each brokenblock describes jump trajectory,
+    //two of these brokenblock do a small jump, others a big jump
 	if (dir == RIGHT)
 		setX(x() + animation_counter % 2);
 	else
 		setX(x() - animation_counter % 2);
+
+
+	
 	if (animation_counter <= duration) {
 
 		setY(y() - moving_speed);
-		if (animation_counter < duration / 4) {
+
+
+		if (animation_counter < duration / 4) 
+		{
 			if (!big_jump)
 				moving_speed = 3;
 			else
 				moving_speed = 9;
 		}
-		if (animation_counter > duration / 4 && animation_counter < 2 * duration / 4) {
+		if (animation_counter > duration / 4 && animation_counter < 2 * duration / 4) 
+		{
 			if (!big_jump)
 				moving_speed = 2;
 			else
 				moving_speed = 6;
 		}
-		if (animation_counter > 2 * duration / 4 && animation_counter < 3 * duration / 4) {
+		if (animation_counter > 2 * duration / 4 && animation_counter < 3 * duration / 4) 
+		{
 			if (!big_jump)
 				moving_speed = 1;
 			else
 				moving_speed = 3;
 		}
-		if (animation_counter > 3 * duration / 4 && animation_counter < 4 * duration / 4) {
+		if (animation_counter > 3 * duration / 4 && animation_counter < 4 * duration / 4) 
+		{
 			if (!big_jump)
 				moving_speed_div = 2;
 			else
@@ -57,20 +72,24 @@ void BrokenBlock::advance() {
 			moving_speed = animation_counter % moving_speed_div == 0;
 		}
 	}
-
-	else if (animation_counter > duration) {
+	else if (animation_counter > duration) 
+	{
 		setY(y() + moving_speed);
-		if (animation_counter < duration + duration / 5) {
+		if (animation_counter < duration + duration / 5) 
+		{
 			moving_speed_div = 2;
 			moving_speed = animation_counter % moving_speed_div == 0;
 		}
-		if (animation_counter > duration + duration / 4 && animation_counter < duration + 2 * duration / 4) {
+		if (animation_counter > duration + duration / 4 && animation_counter < duration + 2 * duration / 4) 
+		{
 			moving_speed = 1;
 		}
-		if (animation_counter > duration + 2 * duration / 4 && animation_counter < duration + 3 * duration / 4) {
+		if (animation_counter > duration + 2 * duration / 4 && animation_counter < duration + 3 * duration / 4) 
+		{
 			moving_speed = 2;
 		}
-		if (animation_counter > duration + 3 * duration / 4 && animation_counter < duration + 4 * duration / 4) {
+		if (animation_counter > duration + 3 * duration / 4 && animation_counter < duration + 4 * duration / 4) 
+		{
 			moving_speed = 3;
 		}
 	}

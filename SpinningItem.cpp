@@ -23,10 +23,10 @@ SpinningItem::SpinningItem(QPoint position, const std::string& _id) : Collectabl
 
 void SpinningItem::advance()
 {
+	//raising from goalroulette
 	if (animation_counter < 100)
 		setY(y() - 2);
-	//else if (animation_counter == 100 && mario->isFreezed() )
-	//	new Firework(QPoint(pos().toPoint()), id);
+
 }
 
 void SpinningItem::animate()
@@ -37,6 +37,5 @@ void SpinningItem::animate()
 		setPixmap(texture_animation[(animation_counter++/5 %2) + 3]);
 	else if(animation_counter >=200)
 		setPixmap(texture_animation[5]);
-	// sposta nell advance la seguente riga opportunamente
-		//setPos(pos() - QPointF(0,16));
+	
 }

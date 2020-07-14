@@ -41,6 +41,7 @@ void PiranhaFire::advance()
 
 	if(mario !=nullptr)
 	{
+		//depending from mario's position, plant shoots fireballs with different angles and directions
 		if (mario->pos().y() <= pos().y() - 10)
 			angle = 30;
 		else if (mario->pos().y() <= pos().y() + 10)
@@ -54,7 +55,7 @@ void PiranhaFire::advance()
 		else
 			dir = LEFT;
 	}
-
+	//shooting fireballs at regular intervals
 	if (in_counter == 66)
 		fire = new FireBallPiranha(pos().toPoint() + QPoint(0, 12), dir, angle);
 	if (in_counter == 133)
@@ -71,7 +72,8 @@ void PiranhaFire::animate()
 		Plant::animate();
 		return;
 	}
-	
+	//after 1 frame plants get mario's address,
+    //otherwise mario points to null at starting of the game, and crash
 	if (animation_counter == 1)
 		mario = Game::instance()->getMario();
 	

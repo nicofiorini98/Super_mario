@@ -6,7 +6,7 @@
 Flower::Flower(QPoint position, Direction _dir) : Collectable(position)
 {
 	// set attributes
-	dir = _dir;      //todo deve essere istanziata o dall'alto o dal basso
+	dir = _dir;      
 	type = FLOWER;
 	// set texture and position
 	setPixmap(Sprites::instance()->get("flower"));
@@ -27,7 +27,7 @@ void Flower::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
 
-	// if hit by Mario, Mario eats mushroom and mushroom dies
+	// if hit by Mario, Mario eats flower and flower dies
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario)
 	{
@@ -40,15 +40,13 @@ void Flower::hit(Object* what, Direction fromDir)
 	if (inert_obj && fromDir == DOWN)
 		walkable_object = inert_obj;
 
-	// if hit from its left or right side, it
-	// has to move to the opposite direction w.r.t. the one
-	// is he currently moving
+	
 }
 
 
 void Flower::advance()
 {
-	/*Entity::advance();*/
+    //raising phase from the block
 	if (dir == UP) 
 	{
 		collidable = true;
@@ -61,6 +59,7 @@ void Flower::advance()
 			moving = false;
 		}
 	}
+	//falling phase from the block
 	if (dir == DOWN) 
 	{
 		slow = false;

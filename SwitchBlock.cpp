@@ -69,6 +69,7 @@ void SwitchBlock::hit(Object* what, Direction fromDir)
 	Mario* mario = dynamic_cast<Mario*>(what);
 	if (mario && fromDir == UP)
 	{
+		//the botton is bushed
 		active = false;
 		collidable = false;
 		switch_effect = true;

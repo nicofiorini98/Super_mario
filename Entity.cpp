@@ -326,18 +326,16 @@ void Entity::solveCollisions()
 		if (!coll_dir)
 			continue;
 
-
-		// BUG FIX MIO, manage corner-corner collision
 	    //manage corner-corner collision in outOfWater
 		if (dynamic_cast<Mario*>(this) && !dynamic_cast<Mario*>(this)->isInWater() && coll_dir == UNDETERMINED
-			&& !dynamic_cast<JumpBlock*>(obj))//bug fix mio
+			&& !dynamic_cast<JumpBlock*>(obj))
 		{
 			if (falling)
 			{
-				touching_correction = false;  // se metto uguale a true crasha
+				touching_correction = false; 
 				coll_dir = DOWN;
 			}
-			else if (!jumping && !falling)  // mi serve per forza
+			else if (!jumping && !falling)  
 			{
 				coll_dir = dir;
 				setX(x() + (dir == RIGHT ? -2 : 2));
@@ -354,16 +352,7 @@ void Entity::solveCollisions()
 					coll_dir = UP;
 			}
 		}
-		//manage corner-corner collision in InWater
-		else if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isInWater() && coll_dir == UNDETERMINED)
-		{
-			/*
-			 * -che faccio mo qua, potrei non fare niente, tanto dentro
-			 * l'acqua non è fastidioso se non prendo il walkable_object
-			 * l'importante è che non crasha , po vedamo nsomma
-			 */
-		}
-		// bug fix collision per la medusa
+		
 		//manage corner-corner collision for bloober nanny
 		else if (dynamic_cast<BlooberNanny*>(this) && coll_dir == UNDETERMINED)
 		{
@@ -376,12 +365,9 @@ void Entity::solveCollisions()
 				coll_dir = dir;
 		}
 
-		//todo da vedere questa if
 		if (coll_dir == RIGHT || coll_dir == LEFT || coll_dir == UP)
 			touching_correction = false;
-
-		//FINE BUG FIX MIO
-
+		
 		// special case 1: collision with a walkable inert object or a muncher while falling
 		// ---> end falling and in the former case set walkable object
 		Inert* inert_obj = dynamic_cast<Inert*>(obj);
@@ -428,9 +414,8 @@ void Entity::solveCollisions()
 		//special case 4 : collision when mario is making an attack in raccoon mode
 		//---->ignore collision 
 		if (dynamic_cast<Mario*>(this) && dynamic_cast<Mario*>(this)->isRaccoonAttack())
-		{
 			continue;
-		}
+		
 
 		
 		//if we ended up here, it means we have to revert
@@ -475,17 +460,16 @@ void Entity::solveCollisions()
 				setY(y() + 1);
 			}
 		if(i==4)
-		{
-			//std::cout << "horizontal correction\n";
+		
 			setX(x() + (dir == RIGHT ? -2 : 2));
-		}
+		
 	}
 }
 
 
 void Entity::die()
 {
-	//Mario* mario = Game::instance()->getMario();
+	
 	
 	//only a full living entity can die
 	if(!dead)

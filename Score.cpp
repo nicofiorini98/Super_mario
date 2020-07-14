@@ -75,7 +75,7 @@ void Score::reset()
 	drawScore();
 
 	
-		//resetValues();
+		
 	HudSubPanel::reset();
 	
 }

@@ -8,51 +8,45 @@
 
 BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
 {
-    //std::cout << "prima di prendere mario\n";
+    //get mario
     mario = Game::instance()->getMario();
 
 	first = false;
 
+	//set bloober without babies
     baby1 = nullptr;
     baby2 = nullptr;
     baby3 = nullptr;
     baby4 = nullptr;
 
-    previous_pos = 0;
 	
     // set attribute
     over_head    = false;
     near_head    = false;
     under_head   = false;
-
-    splash = false;
-
+    splash       = false;
     blocked_up   = false;
     blocked_side = false;
-
     slow         = false;
     falling      = false;
     jumping      = false;
     moving       = false;
+    spawn_baby = true;
+    launch_baby = false;
 
     pos_in = position;
     dir    = direction;
-    //counter_movement = -2; // dovra' essere cambiata questa variabile, poi ci penso quando ho chiaro il movimento che deve fare
-    //dovra essere maggiore di 0 quando mario sara' vicino alla medusa
-
+   
     // set counter
     moving_start_counter = -1;
     moving_stop_counter = -1;
     animation_div = 16;
-	
-	//lancio dei bambini
-    spawn_baby = true;
+
+    previous_pos = 0;
     spawn_counter = 0;
     spawn_duration = 500;
-    launch_baby = false;
     launch_counter = 0;
     wait_counter = -1;
-
     jumping_speed = 1;
     falling_speed=1;
 	
@@ -60,9 +54,11 @@ BlooberNanny::BlooberNanny(QPoint position, Direction direction) : Enemy()
     death_duration = 400;
     jumping_duration = 32; 
     moving_start_counter = -1;
+	
     // textures
     texture_swim[0] = Sprites::instance()->get("Bloober-Nanny-0");
     texture_swim[1] = Sprites::instance()->get("Bloober-Nanny-1");
+	
     //texture bloober attack with babies
 	texture_launch[0]= Sprites::instance()->get("Bloober-Nanny-1");
     texture_launch[1] = Sprites::instance()->get("Bloober-Nanny-2");
@@ -88,7 +84,8 @@ void BlooberNanny::advance()
 
     if (freezed)
         return;
-	
+
+	//increase previous_pos counter for set the position of the baby
     if (previous_pos >= 0)
     {
         if (previous_pos == 40)
@@ -108,7 +105,6 @@ void BlooberNanny::advance()
         baby3->setPos(posBaby(3));
     if (baby4 && !baby4->getScript_Move())
         baby4->setPos(posBaby(4));
-    
 
 	
     //bounce and fall in the depth when dying
@@ -373,7 +369,7 @@ void BlooberNanny::advance()
             setY(y() + falling_speed);
 
             script_counter += falling_speed;
-            solveCollisions();//questo solve collision mi rimandera' nel hit, mi conviene utilizzarlo
+            solveCollisions();
         }
 
         else if(falling && over_head)
@@ -404,7 +400,7 @@ void BlooberNanny::animate()
         setPixmap(texture_swim[0]);
 
     if (launch_baby)
-        setPixmap(texture_launch[(animation_counter / 4) % 2]); //texture lampeggianti
+        setPixmap(texture_launch[(animation_counter / 4) % 2]);
 
     if(dying)
         setPixmap(texture_death);

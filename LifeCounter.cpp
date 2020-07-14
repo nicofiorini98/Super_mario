@@ -28,7 +28,7 @@ void LifeCounter::reset()
 void LifeCounter::doUpdate(const std::string& update_info)
 {
 	int info = std::stoi(update_info);
-	//lives = info;
+	
 
 	dozens = info / 10;
 	info = info % 10;

@@ -7,10 +7,7 @@
 #include "Leaf.h"
 #include <iostream>
 #include "Game.h"
-//#include "Leaf.h"
-//#include "Mushroom.h"
-//#include "Flower.h"
-//#include "Leaf.h"
+
 
 BouncingBlock::BouncingBlock() : Inert()
 {
@@ -23,7 +20,7 @@ BouncingBlock::BouncingBlock() : Inert()
 	moving_speed = 1;
 	hit_counter = -1;
 	
-	//content = FLOWER;
+	
 }
 
 void BouncingBlock::advance()
@@ -63,8 +60,7 @@ void BouncingBlock::hit(Object* what, Direction fromDir)
 	}
 }
 
-//todo mesa devo passare come parametro anche la posizione dello spawn, visto che
-//nella secretbox grande devo centrare di più rispetto alle altre
+
 void BouncingBlock::spawn(Direction _dir)
 {
 	if (content == FLOWER)

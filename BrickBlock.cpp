@@ -98,13 +98,13 @@ void BrickBlock::hit(Object* what, Direction fromDir)
 		BouncingBlock::hit(what, fromDir);
 
 	
-	else if (type == "ice" && (dynamic_cast<KoopaTroopa*>(what) && dynamic_cast<KoopaTroopa*>(what)->isShellMoving()))  
+	else if (type == "ice" && (dynamic_cast<KoopaTroopa*>(what) && dynamic_cast<KoopaTroopa*>(what)->isShellMoving()||
+            (dynamic_cast<Mario*>(what) && dynamic_cast<Mario*>(what)->isRaccoonAttack())))
 	{
 		collidable = false;
 		setVisible(false);
 
-		if(dynamic_cast<Mario*>(what))
-			mario->hit(this, UNDETERMINED);
+		
 		
 		//the block is broken in four pieces
 		new BrokenBlock(pos(), LEFT, true);
