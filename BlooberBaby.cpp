@@ -13,6 +13,7 @@ BlooberBaby::BlooberBaby(QPoint position, int _move_id) : Enemy()
 	script = false;
 	script_counter = 0;
 	script_duration = 1;
+	death_duration = 500;
 	// durations
 	
 	jumping_duration = 10;
@@ -22,7 +23,7 @@ BlooberBaby::BlooberBaby(QPoint position, int _move_id) : Enemy()
 	texture_swim[0] = Sprites::instance()->get("Bloober-Baby-0");
 	texture_swim[1] = Sprites::instance()->get("Bloober-Baby-1");
 	texture_swim[2] = Sprites::instance()->get("Bloober-Baby-2");
-	texture_death = Sprites::instance()->get("Bloober-Baby-0").transformed(QTransform().scale(-1, 1));
+	texture_death = Sprites::instance()->get("Bloober-Baby-0").transformed(QTransform().scale(1, -1));
 
 	// set texture and correct y-coordinate w.r.t. texture height
 	setPixmap(texture_swim[0]);

@@ -132,12 +132,16 @@ void BlooberNanny::advance()
     	 else if (animation_counter % 16 == 12)
             setX(x() - 1);
 
-        if (death_counter == 0)
+        if (death_counter == 1)
         {
-            baby1->setDying(true);
-            baby2->setDying(true);
-            baby3->setDying(true);
-            baby4->setDying(true);
+        	if(baby1)
+				baby1->setDying(true);
+        	if(baby2)
+				baby2->setDying(true);
+        	if(baby3)
+				baby3->setDying(true);
+        	if(baby4)
+			    baby4->setDying(true);
         }
     	//before die(), kill the babies and forget it
     	if(death_counter>=350)
