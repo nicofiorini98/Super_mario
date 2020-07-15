@@ -65,19 +65,14 @@ void Plant::advance() {
 		else if (falling_counter >= 48)
 		{
 			falling_speed = 0;
-
 			
-			//plant is in pipe for a while
-			if (out_counter > 0)
-				collidable = false;
-
+		
 			out_counter++;
 			
 			
 			//plant is starting to raise out of pipe
 			if (out_counter >= 200)
 			{
-				collidable = true;
 				in = false;
 				out_counter = 0;
 				falling_counter = 0;
@@ -123,4 +118,16 @@ void Plant::animate()
 	if (dying)
 		setPixmap(texture_dying[((animation_counter / 6) % 12)]);
 }
+
+
+QPainterPath Plant::shape() const
+{
+	QPainterPath path;
+
+	path.addRect(2, boundingRect().top() + 3, boundingRect().width() - 4, boundingRect().bottom() - 6);
+
+	return path;
+}
+
+
 

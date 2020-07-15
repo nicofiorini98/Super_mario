@@ -6,7 +6,8 @@ class LifeCounter : public NumericalPanel
 {
 	private:
 
-		int units;
+		//number in panel
+		int units;   
 		int dozens;
 
 		virtual void doUpdate(const std::string& update_info);
@@ -14,7 +15,6 @@ class LifeCounter : public NumericalPanel
 	public:
 
 		LifeCounter();
-		//int getLives() { return lives; }
 
 		virtual void reset();
 	

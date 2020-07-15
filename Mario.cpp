@@ -251,11 +251,6 @@ Mario::Mario(QPoint position,std::string _level_name) : Entity()
 
 void Mario::advance()
 {
-	std::cout << "dying: " << dying<<"\n";
-	std::cout << "death: " << dead<<"\n";
-	std::cout << "tail_attack: " << raccoon_attack<<"\n";
-	//std::cout << "tail_attack: " << attack<<"\n";
-
 	
 	if (prev_power != power)
 		Hud::instance()->updatePanel("PowerMeter", std::to_string(power));
@@ -356,7 +351,6 @@ void Mario::advance()
 	//manage moving in pipe travel
 	if (script_move_in_pipe)
 	{
-
 		//exit pipe when the limit frame for pipe travel is reached
 		if ((!big && ((dir == DOWN && script_move_counter == 97) || (dir == UP && script_move_counter == 128)))
 			|| (big && ((dir == DOWN && script_move_counter == 128) || (dir == UP && script_move_counter == 180))))
@@ -1371,7 +1365,6 @@ void Mario::animate()
 				else
 					setPixmap(texture_raccoon_stand);
 			}
-
 		}
 
 		//mirror texture istantly in the water   
@@ -1500,8 +1493,7 @@ void Mario::hit(Object* what, Direction fromDir)
 		if(script_move)  
 			falling = true;
 	}
-
-
+	
 	//hurt enemy when hit with tail attack
 	Enemy* enemy = dynamic_cast<Enemy*>(what);
 	if (raccoon && attack && enemy)
@@ -1632,7 +1624,11 @@ void Mario::powerUp(spawnable_t _power)
 	if(!_power) 
 	{
 		if (!big)
+		{
 			big = true;
+			/*if (!walkable_object)
+				setY(y() + 16);*/
+		}
 		else if (big && !fire && !raccoon)
 			fire = true;
 		else if (fire) 
@@ -1681,7 +1677,6 @@ void Mario::powerUp(spawnable_t _power)
 
 void Mario::powerDown()
 {
-	
 	injured = true;
 	attack = false;
 	raccoon_attack = false;
@@ -1761,16 +1756,19 @@ void Mario::updateLives(int lives2add, QPoint pos)
 	Hud::instance()->updatePanel("LifeCounter", std::to_string(lives));
 }
 
+void Mario::updateWalkable()
+{
+	walkable_object = nullptr;
+	falling = true;
+}
+
 //@override
 QPainterPath Mario::shape() const
 {
 	QPainterPath path;
 
 	if(script_move_in_pipe)
-	{
 		path.addRect(3, boundingRect().top(), boundingRect().width() - 6, boundingRect().bottom() - 3);
-		return path;
-	}
 	if (!big)
 		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom()-3);
 	else if ((big && !raccoon) || transformation_counter>0)
@@ -1780,7 +1778,6 @@ QPainterPath Mario::shape() const
 	{
 		if (attack && attack_counter == 12)
 			path.addRect(dir == RIGHT ? 0 : 3, boundingRect().top() + 3, boundingRect().width() - 3, boundingRect().bottom() - 3);
-		
 		else
 			path.addRect(dir==RIGHT ? 11:3, boundingRect().top() + 3, 10, boundingRect().bottom() - 3);
 	}

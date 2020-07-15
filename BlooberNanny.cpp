@@ -139,9 +139,10 @@ void BlooberNanny::advance()
         	if(baby4)
 			    baby4->setDying(true);
         }
-    	//before die(), kill the babies and forget it
+    	//before die(), kill the own babies and forget it
     	if(death_counter>=350)
     	{
+    		
             if (baby1)
             {
                 baby1->die();

@@ -31,7 +31,7 @@ protected:
 public:
 
 	KoopaTroopa(QPoint position, Direction direction = LEFT);
-	bool isShell() { return (shell || (shell_moving && harmless)); }
+	bool isShell() { return (shell || (shell_moving && harmless));}
 	int isShelling() { return shell_counter; }
 	bool isShellMoving() { return shell_moving; }
 	// pure virtual methods that must be implemented

@@ -98,7 +98,6 @@ void BigBertha::advance()
         script_counter=0;
         moving_start_counter = 0;
 
-
     	//when the previous child died, give birth to another
     	if(!baby)
             baby = new BabyCheep((pos() + QPoint(7, 13)).toPoint(), dir);
@@ -111,8 +110,6 @@ void BigBertha::advance()
 	//increase the counter
     if(moving_start_counter >= 0)
          moving_start_counter++;
-
-	
 
 	//script moving when don't launch the baby
     if(!launch_baby)
@@ -261,8 +258,6 @@ void BigBertha::advance()
 
 void BigBertha::animate()
 {
-    
-	
     Entity::animate();
 
     if (animation_counter == 1)
@@ -321,7 +316,6 @@ void BigBertha::hurt()
 
         }
     }
-    
     
 }
 

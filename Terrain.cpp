@@ -1,6 +1,5 @@
 #include "Terrain.h"
 #include "Sprites.h"
-#include <QBrush>
 #include <QPainter>
 
 Terrain::Terrain(QRect rect) : Inert()

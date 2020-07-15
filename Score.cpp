@@ -5,6 +5,7 @@
 
 Score::Score() : NumericalPanel()
 {
+	//set default number for panels
 	units =0;
 	dozens =0;
 	hundreds =0;
@@ -13,6 +14,7 @@ Score::Score() : NumericalPanel()
 	hundreds_thousands=0;
 	millions =0;
 
+	//set default pixmap and add to Group
 	for (int i = 0; i < 7; i++)
 	{
 		panel_numbers.push_back(new QGraphicsPixmapItem());
@@ -25,9 +27,10 @@ Score::Score() : NumericalPanel()
 
 void Score::doUpdate(const std::string& update_info)
 {
-	
+	//convert update_info to int
 	int info = std::stoi(update_info);
 
+	//algorithm for get number of the decimal system
 	millions = info / 1000000;
 	info = info % 1000000;
 
@@ -74,8 +77,6 @@ void Score::reset()
 	
 	drawScore();
 
-	
-		
 	HudSubPanel::reset();
 	
 }

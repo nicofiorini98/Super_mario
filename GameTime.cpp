@@ -56,11 +56,6 @@ void GameTime::resetValues()
 	panel_numbers[2]->setPixmap(numbers[units]);
 }
 
-std::tuple<int, int, int> GameTime::getTimeRemaining()
-{
-	return std::tuple<int, int, int>(hundreds, dozens, units);
-}
-
 void GameTime::reset()
 {
 	resetValues();

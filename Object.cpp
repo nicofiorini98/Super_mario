@@ -88,18 +88,11 @@ Direction Object::collisionDirection(Object* item)
     // calculate intersection rectangle (IR)
     QRectF interRect = curr_rect.intersected(item_rect);
 
-    //è il bug fix del professore
-    // reject corner-corner collisions since we are not able
-    // to determine collision direction
 
     //bool touching_direction = true;
     if (interRect.width() <= 4 && interRect.height() <= 4) // il professore aveva messo con <=1, ma non basta
         return UNDETERMINED;
 
-
-    //questo è il mio bug fix
-    //if(interRect.width() == interRect.height())
-    //  return UNDETERMINED;
 
     // IR is vertical
     // --> collision is horizontal

@@ -1,8 +1,9 @@
 #pragma once
 #include "Entity.h"
+
 enum spawnable_t
 {
-	DEBUG,  //todo togliere solo per il debug
+	DEBUG, //only for debug
 	EMPTY,
 	COIN,
 	MUSHROOM,

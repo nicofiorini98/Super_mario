@@ -9,7 +9,8 @@ protected:
 	QPixmap texture_swim[2];		
 	QPixmap texture_death;		
 	QPoint pos_in;
-
+	
+	
 
 public:
 

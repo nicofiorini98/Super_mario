@@ -10,11 +10,11 @@ Cheep::Cheep(QPoint position, Direction direction) : Enemy()
 	// set attribute
 	pos_in = position;
 	dir = direction;
-	
+
 	//flag 
 	slow = true;
 	falling = false;
-	
+
 	// durations
 	death_duration = 250;
 
@@ -33,7 +33,7 @@ Cheep::Cheep(QPoint position, Direction direction) : Enemy()
 void Cheep::advance()
 {
 	//bounce and fall in the depth when dying
-	if(dying)
+	if (dying)
 	{
 		if (death_counter >= 0 && death_counter <= 20)
 			setY(y() - (animation_counter % 2));
@@ -41,6 +41,8 @@ void Cheep::advance()
 			setY(y() + 1);
 		return;
 	}
+
+	prevPos = pos();
 	
 	//moving in the x-axis
 	moving_speed = animation_counter % 2;

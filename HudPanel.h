@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QPoint>
-#include <QGraphicsPixmapItem>
 #include <map>
 #include "HudSubPanel.h"
 

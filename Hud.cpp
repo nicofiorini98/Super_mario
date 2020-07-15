@@ -4,10 +4,10 @@
 #include "Game.h"
 
 // Singleton design pattern
-Hud* Hud::uniqueInstance = 0;
+Hud* Hud::uniqueInstance = nullptr;
 Hud* Hud::instance(QWidget* parent)
 {
-	if (uniqueInstance == 0)
+	if (uniqueInstance == nullptr)
 		uniqueInstance = new Hud(parent);
 	return uniqueInstance;
 }
@@ -40,7 +40,6 @@ Hud::Hud(QWidget* parent) : QGraphicsView(parent)
 
 	// setup game timer
 	connect(Game::instance()->gameTime(), &QTimer::timeout, this, [this] {(updatePanel("GameTime")); });
-	//connect(Game::instance()->gameTime(), &QTimer::timeout, this, [this] {(updatePanel("PowerMeter","decrease")); });
 	
 }
 
@@ -70,5 +69,6 @@ HudSubPanel* Hud::getPanel(const std::string& panel_id)
 {
 	if (hud_panel->get(panel_id))
 		return hud_panel->get(panel_id);
-	else return nullptr;
+	else 
+		return nullptr;
 }

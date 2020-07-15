@@ -32,16 +32,19 @@ protected:
     bool blocked_side;
     bool blocked_down;
 
-    bool splash;
+	//flag for splash in the first iteration with water_surface
     bool first;
+    bool splash; 
 
-    bool spawn_baby; //mi serve per gestire il lancio degli uttri, non dovrebbe servire più, faccio una cosa analoga di Big_Bertha
+	
+    bool spawn_baby;            //is bloober spawn baby?
+
+	//counter for spawn babies
     int spawn_counter;
     int spawn_duration;
-
-	//todo vedere nome, è lo stato in cui si colora e aspetta i figli
 	int wait_counter;
-	
+
+	//counter for launch babies
     int launch_counter;
     int launch_baby;
 
@@ -54,13 +57,9 @@ protected:
     // textures
     QPixmap texture_swim[2];
     QPixmap texture_launch[2];
-    QPixmap texture_death;		// e' sempre la stessa rovesciata
+    QPixmap texture_death;
 
     QPoint pos_in;
-
-    //@override non so se ha senso chiamarla virtual, pero' probabilmente serve anche per i bloober_babies
-   // void Dir_Move() ; // mi serve
-    void state();
 	
     QPoint posBaby(int id);
 	QPainterPath shape() const;
@@ -68,16 +67,14 @@ protected:
 public:
 
     BlooberNanny(QPoint position,Direction direction = LEFT);
-	
-    //@override
-    // @override setMoving() to add horizontal acceleration
-    // pure virtual methods that must be implemented
     
     virtual std::string name() { return "Bloober_Nanny"; }
     virtual void animate();
     virtual void hit(Object* what, Direction fromDir);
     virtual void hurt();
     virtual void advance();
+	
+	//setters and getters
     bool isBlocked_up()   {return   blocked_up;}
     bool isBlocked_side() {return blocked_side;}
 

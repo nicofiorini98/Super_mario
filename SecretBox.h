@@ -15,7 +15,6 @@ class SecretBox : public BouncingBlock
 
 		SecretBox(QPoint position, spawnable_t _spawnable);
 		// inherited methods
-		//virtual void spawn(Direction _dir){}
 		virtual std::string name() {return "SecretBox";}
 		virtual void animate();
 		virtual void hit(Object *what, Direction fromDir);

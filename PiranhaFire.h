@@ -1,5 +1,4 @@
 #pragma once
-#include "Enemy.h"
 #include "Mario.h"
 #include "FireBallPiranha.h"
 #include "Plant.h"
@@ -9,7 +8,6 @@ class PiranhaFire : public Plant
 protected:
 	
 	int angle;  
-
 
 	// textures
 	QPixmap texture_crunch_down[2];		

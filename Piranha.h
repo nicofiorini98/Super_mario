@@ -1,5 +1,4 @@
 #pragma once
-#include "Enemy.h"
 #include "Plant.h"
 
 
@@ -9,7 +8,7 @@ protected:
 	bool rotate;
 	bool red;
 	// textures
-	QPixmap texture_crunch[2];		// brown/red walk animation
+	QPixmap texture_crunch[2];	
 
 	QPoint pos_in;
 
@@ -24,5 +23,5 @@ public:
 	virtual void animate();
 	virtual void hit(Object* what, Direction direction);
 	virtual void hurt();
-
+	
 };

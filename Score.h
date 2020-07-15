@@ -18,7 +18,6 @@ class Score : public NumericalPanel
 
 		virtual void doUpdate(const std::string& update_info);
 		void drawScore();
-		//void addTimeLeft();
 	public:
 
 		Score();

@@ -7,7 +7,7 @@ protected:
 	
 	QPixmap texture[4];
 
-	int angle_dir; //angle from the x-axis
+	int angle_dir; //angle of launch from x-axis 
 
 public:
 

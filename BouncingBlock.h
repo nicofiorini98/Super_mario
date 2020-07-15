@@ -23,8 +23,6 @@ class BouncingBlock : public Inert
 		int hit_counter;
 		int animation_counter;
 
-		//utility method
-		
 
 	public:
 

@@ -164,7 +164,6 @@ class Mario : public Entity
 		bool isBig() { return big; }
 		bool isRaccoon() { return raccoon; }
 		bool isInjured() { return injured; }
-		//bool isDying() { return dying; }
 		bool isOnPipe(std::string level_name);
 		bool isUnderPipe(std::string level_name);
 		bool isEnteringPipe() { return entering_pipe; }
@@ -177,6 +176,8 @@ class Mario : public Entity
 		//function for update attribute for hud
 		void updateScore(int score2add,QPoint pos = QPoint(0,0));
 		void updateLives(int lives2add,QPoint pos = QPoint(0, 0));
+	
+		void updateWalkable();
 		std::string ItemTaken() const { return item_taken; }
 		
 
@@ -186,7 +187,7 @@ class Mario : public Entity
 		void setRebound(bool _rebound) { rebound = _rebound; }
 		void setRunning(bool _running);
 		void setScriptMove(bool _script_move) { script_move = _script_move;}
-		void setFalling(bool _falling);
+		
 		
 		void setAttack(bool _attack) { attack = _attack; } 
 

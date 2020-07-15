@@ -32,7 +32,6 @@ Game::Game(QWidget* parent) : QGraphicsView(parent)
 	scene3 = nullptr;
 	black_scene = nullptr;
 	cur_scene = scene1;
-	//todo check it
 	
 	lives = 4;
 	score = 0;
@@ -158,6 +157,12 @@ void Game::gameover()
 		lives = mario->getLives() - 1;
 		score = mario->getScore();
 
+		//reset lives when is finished
+		if (lives == -1)
+		{
+			lives = 4;
+			score = 0;
+		}
 	}
 	
 }
@@ -213,8 +218,10 @@ void Game::start()
 // pause / resume game
 void Game::tooglePause()
 {
+	
 	if (cur_state == RUNNING)
 	{
+		stopGameTime();
 		engine.stop();
 		stopMusic();
 		cur_state = PAUSE;
@@ -222,6 +229,7 @@ void Game::tooglePause()
 	}
 	else if (cur_state == PAUSE)
 	{
+		game_time->start();
 		engine.start();
 		playMusic();
 		cur_state = RUNNING;
@@ -459,7 +467,6 @@ void Game::advance()
 				}
 				else if (clear_level_counter == 170)
 					fastResetOfGameTime();
-
 				else if (clear_level_counter == 300)
 				{
 					Hud::instance()->reset();
@@ -470,7 +477,6 @@ void Game::advance()
 			}
 		
 	}
-	// here we have to report to 000 the hud timer 
 }
 
 // freeze/unfreeze all entities

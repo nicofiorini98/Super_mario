@@ -19,9 +19,7 @@ class GameTime : public NumericalPanel
 	public:
 
 		GameTime();
-
-		// getters
-		std::tuple<int, int, int> getTimeRemaining();
+		
 
 		virtual void reset();
 

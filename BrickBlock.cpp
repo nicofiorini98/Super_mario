@@ -93,7 +93,6 @@ void BrickBlock::hit(Object* what, Direction fromDir)
 		}
 	}
 	
-	Mario* mario = dynamic_cast<Mario*>(what);
 	if (type == "")
 		BouncingBlock::hit(what, fromDir);
 
@@ -104,7 +103,9 @@ void BrickBlock::hit(Object* what, Direction fromDir)
 		collidable = false;
 		setVisible(false);
 
-		
+		Mario* mario = Game::instance()->getMario();
+		if (mario->pos().x() >= pos().x() - 16 && pos().x() <= pos().x() + boundingRect().width() && !mario->isRaccoonAttack())
+			mario->updateWalkable();
 		
 		//the block is broken in four pieces
 		new BrokenBlock(pos(), LEFT, true);

@@ -10,7 +10,6 @@ ScoreSpawnable::ScoreSpawnable(QPoint position,std::string id) : Entity()
 
 	texture = Sprites::instance()->get(id);
 	
-
 	// make background color (224, 163, 216) transparent
 	texture.setMask(texture.createMaskFromColor(QColor(224, 163, 216)));
 

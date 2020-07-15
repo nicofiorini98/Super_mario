@@ -28,5 +28,7 @@ public:
 	// pure virtual methods that must be implemented
 	virtual std::string name() = 0;
 	virtual void hurt() = 0;
+	QPainterPath shape() const;
+
 
 };

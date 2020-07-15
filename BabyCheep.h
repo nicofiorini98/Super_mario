@@ -25,7 +25,6 @@ public:
 	//getter and setter
     void setScript_Move(bool _script_move, Direction _dir);
     void setBabyFree(bool _baby_free);
-   // bool isDying();
     bool isScript_Move() { return script_move; }
     Direction getDirection() { return dir; }
 

@@ -48,10 +48,13 @@ void KoopaTroopa::advance()
 	//bounce and fall in the depth when dying
 	if (dying)
 	{
-		if (death_counter == 0 && pos().x() >= mario->pos().x())
-			dir = RIGHT;
-		else
-			dir = LEFT;
+		if(death_counter==0)
+		{
+			if (pos().x() >= mario->pos().x())
+				dir = LEFT;
+			else if (pos().x() <= mario->pos().x())
+				dir = RIGHT;
+		}
 
 		setX(x() + (dir == RIGHT ? (animation_counter%2) : -(animation_counter%2)));
 
@@ -148,7 +151,8 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 	
 	else if (mario) 
 	{
-		//change direction if hit by mario
+       	
+        //change direction if hit by mario
 		if (mario->x() >= this->x() + (this->boundingRect().width() / 2))
 			dir = LEFT;
 		else
@@ -175,6 +179,7 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 			shell = true;
 			shell_counter = 0;
 		}
+		 Sounds::instance()->play("bump");	
 	}
 }
 
