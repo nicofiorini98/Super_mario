@@ -23,7 +23,7 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 	animation_div = 8;
 
 	// durations
-	death_duration = 300;
+	death_duration = 400;
 
 	// textures
 	texture_walk[0] = Sprites::instance()->get("Koopa_Troopa-0");
@@ -39,7 +39,7 @@ KoopaTroopa::KoopaTroopa(QPoint position, Direction direction) : Enemy()
 	setPixmap(texture_walk[0]);
 	setPos(position - QPoint(0, pixmap().height()));
 
-	setZValue(2);
+	setZValue(4);
 }
 
 void KoopaTroopa::advance()
@@ -48,10 +48,21 @@ void KoopaTroopa::advance()
 	//bounce and fall in the depth when dying
 	if (dying)
 	{
-		if (death_counter >= 0 && death_counter <= 20)
-			setY(y());
+		if (death_counter == 0 && pos().x() >= mario->pos().x())
+			dir = RIGHT;
 		else
-			setY(y() + 1);
+			dir = LEFT;
+
+		setX(x() + (dir == RIGHT ? (animation_counter%2) : -(animation_counter%2)));
+
+		if (death_counter >= 0 && death_counter <= 20)
+			setY(y() - 2);
+		else if (death_counter > 20 && death_counter <= 30)
+			setY(y() - 3);
+		else if(death_counter > 30 && death_counter<60)
+			setY(y() + 2);
+		else if(death_counter>60)
+			setY(y() + 3);
 		
 		return;
 	}
@@ -93,7 +104,7 @@ void KoopaTroopa::animate()
 
 	if (shell_counter >= 0) {
 		shell_counter++;
-
+		//returns to walk after a while
 		if (shell_counter >= shell_duration) {
 			
 			shell = false;

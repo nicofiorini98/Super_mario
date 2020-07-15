@@ -474,7 +474,7 @@ void Mario::advance()
 			}
 		}
 		//swim falling phase is equal for all type of swim
-		else if (swim_counter >= swim_rise_duration && swim_counter < swim_rise_duration + (swim_fall_duration / 4))					//0.25 speed
+		else if (swim_counter >= swim_rise_duration && swim_counter < swim_rise_duration + (swim_fall_duration / 4))								//0.25 speed
 		{
 			swim_speed = swim_start_counter % 4 == 0;																					
 			setY(y() + swim_speed);
@@ -563,12 +563,13 @@ void Mario::advance()
 		if (moving)
 		{
 			// update moving acceleration / deceleration counters
-			if (moving_stop_counter >= 0) 
+			if (moving_stop_counter >= 0)
 				moving_stop_counter++;
 			else if (moving_start_counter < 25)
 				moving_start_counter++;
 			else if (moving_start_counter >= 25 && running)
 				moving_start_counter++;
+
 		}
 		
 		//update direction change counter
@@ -592,6 +593,7 @@ void Mario::advance()
 			dir_change_counter = -1;
 		}
 
+		//jump accelleration when mario is not in bounce block
 		if(!bounce_block)
 		{
 			if (jump_counter >= jumping_duration - 8)
@@ -613,7 +615,7 @@ void Mario::advance()
 		else
 			falling_speed = 3;
 		
-		//memorize power and then update
+		//memorize prev_power and then update
 		prev_power = power;
 		
 		// horizontal acceleration when moving starts and moving stop is not active yet
@@ -674,14 +676,15 @@ void Mario::advance()
 			{
 				power = 7;
 				moving_speed = 4;                                    //4 speed
+				//active super running mode, ario goes as fast as possible
 				super_running = true; 
 				animation_div = 1;
 			}
 		}
 	}
 	//manage phisyc parameters for moving inWater
-	if (inWater && !script_move) {
-
+	if (inWater && !script_move) 
+	{
 		//power meter is disabled in water
 		prev_power = power;
 		power = 0;
@@ -692,16 +695,16 @@ void Mario::advance()
 		else if (moving_stop_counter < 0 && !walkable_object)
 			moving_start_counter++;
 
-		// update direction change counter
-		if (dir_change_counter >= 0 && walkable_object) //se ho il walkable object in acqua devo cambiare direzione istantaneamente
+		//change direction instantly when walk in the backdrop
+		if (dir_change_counter >= 0 && walkable_object)
 		{
 			Entity::setDirection(inverse(dir));
 			dir_change_counter = -1;
 		}
+		//change direction after 20 frames since dir_change_counter is started
 		else if (dir_change_counter >= 0 && dir_change_counter < 20)
 			dir_change_counter++;
-
-		else if (dir_change_counter >= 20)
+		else if (dir_change_counter >= 20) 
 		{
 			Entity::setDirection(inverse(dir));
 			dir_change_counter = -1;
@@ -713,8 +716,8 @@ void Mario::advance()
 			moving_start_counter = 0;
 			moving_speed = animation_counter % 2;
 		}
-		// horizontal acceleration in water, when mario isn't walking in the backdrop
-
+		
+		// horizontal acceleration in water, when mario is in water and doesn't walk in the backtrop
 		if (moving_start_counter >= 0 && moving_stop_counter < 0 && !walkable_object)
 		{
 			if (moving_start_counter <= 12)												//  0.5 speed
@@ -739,11 +742,10 @@ void Mario::advance()
 			}
 		}
 
-		if (falling_start_counter >= 0)  // incremento il falling_start_counter in entity ho messo che falling_counter+=falling_speed
+		if (falling_start_counter >= 0) 
 			falling_start_counter++;
 
-		//l'accellerazione iniziale fa parte della nuotata
-
+		//manage the falling accelleration in water, when mario is in water and don't swim
 		if (falling_counter <= 6)
 			falling_speed = animation_counter % 2;
 		else
@@ -751,7 +753,6 @@ void Mario::advance()
 
 	}
 	
-
 	//horizontal deceleration when moving ends
 	if (!script_move && moving_start_counter >= 0 && moving_stop_counter >= 0 && !running_out_of_view)
 	{
@@ -772,21 +773,20 @@ void Mario::advance()
 		}
 	}
 
-	//manage movement on the uphill and downhill
+	//script_move is the movement in the uphill and downhill
 	if (script_move)
 	{
 		//change direction instantly
 		if(dir_change_counter>0)
-		{
 			setDirection(inverse(dir));
-		}
+		
 		//stop moving instantly
 		if (moving_stop_counter > 0)
 		{
 			moving_stop_counter = -1;
 			moving = false;
 		}
-		//physic paramether
+		//physic paramether 
 		if (inWater)
 		{
 			moving_speed = animation_counter%2;
@@ -805,7 +805,7 @@ void Mario::advance()
 	Entity::advance();
 }
 
-// Mario jumps
+
 void Mario::jump()
 {
 	if (!swimming)
@@ -832,9 +832,25 @@ void Mario::jump()
 	}
 }
 
+void Mario::startJumping()
+{
+	//don't crouch then start to jump
+	crouch = false;
+	Entity::startJumping();
+}
+
+void Mario::endJumping()
+{
+	//reset jumping_duration, then end to jump
+	jumping_duration = 4 * 16;
+	bounce_block = false;
+	Entity::endJumping();
+}
+
 void Mario::swim()
 {
-	/*swim is based on three type of swimming
+	/*
+	 *swim is based on three type of swimming
 	 1)small swim
 	 2)brake swim
 	 3)swim standard (not small swim and not brake swim)
@@ -853,13 +869,13 @@ void Mario::swim()
 		Sounds::instance()->play("jump");
 		return;
 	}
-	//when already swimming, choice the next 
+	//when already swimming, choice the next swim to do
 	if(swimming)
 	{
 		//behavior in the water surface
 		if(inWater_surface)
 		{
-			//jump out the water
+			//jump out the water when the keyUp is pressed
 			if(Game::instance()->isKeyUpPressed())
 			{
 				endSwimming();
@@ -867,6 +883,7 @@ void Mario::swim()
 				inWater = false;
 				falling = false;
 				jump();
+				//doing a splash when jump out from the water
 				new Splash(pos());
 				return;
 			}
@@ -878,18 +895,19 @@ void Mario::swim()
 					brake_swim = false;
 					small_swim = false;
 				}
-				else
+				//don't swim when mario is reached the upper limit
+				else	
 					return;
 			}
 		}
 
-		//if mario swim when slow down the swimming, mario can start small swim
+		//mario starts small swim when it's already doing brake swim
 		if(brake_swim) 
 		{
 			brake_swim = false;
 			small_swim = true;
 		}
-		//if mario swim when doing small swim, begin swim standard
+		//mario starts swim standard when it's already doing a small swim, begin swim standard
 		else if (small_swim) 
 		{
 			brake_swim = false;
@@ -898,10 +916,13 @@ void Mario::swim()
 		else if (!small_swim && !brake_swim && swim_counter >= swim_rise_duration + swim_fall_duration / 2)
 			small_swim = true;
 	}
+	//mario isn't already swimming
 	else  
 	{
+		//mario slow down it is falling in the backdrop
 		if (!inWater_surface)  
 			brake_swim = true;
+		//start small swim when is in Water surface
 		else
 			small_swim = true;
 	}
@@ -911,34 +932,24 @@ void Mario::swim()
 		Sounds::instance()->play("jump");
 }
 
-void Mario::startJumping()
-{
-	crouch = false;
-	Entity::startJumping();
-}
-
-void Mario::endJumping()
-{
-	
-	jumping_duration = 4 * 16;
-    bounce_block = false;
-    Entity::endJumping();
-}
 
 void Mario::startSwimming()
 {
+	//reset falling parameters when start to swim
 	if (falling)
 	{
 		falling_start_counter = -1;
 		falling = false;
 	}
 
+	//set swim parameters when start to swim
 	swimming = true;
 	swim_counter = 0;
 	swim_start_counter = 0;
 	walkable_object = nullptr;
 
-	//set swim_duration 
+	//sets the swim duration by type
+	//mario takes a shorter swim near the surface 
 	if (!small_swim && !brake_swim)
 	{
 		if (pos().y() - (16 * 16 - 5) > 32)
@@ -954,7 +965,7 @@ void Mario::startSwimming()
 
 void Mario::endSwimming()
 {
-	//reset flag and counter
+	//reset flag and swim counter
 	swimming = false;
 	swim_counter = -1;
 	swim_start_counter = -1;
@@ -981,20 +992,26 @@ void Mario::fly()
 
 void Mario::startFlying()
 {
+	//restart fly_counter is not already fly
 	if (!flying)
 		fly_counter = 0;
-	
+
+	//detached from walkable object and finish to falling
 	walkable_object = nullptr;
+	falling = false;
+
+	//start to fly and set parameters
 	flying = true;
 	fly_counter = 0;
-	falling = false;
 	fly_duration = 64;
-
 }
 
 void Mario::endFlying()
 {
+	//start to falling 
 	falling = true;
+
+	//reset fly parameters and counter
 	flying = false;
 	super_running = false;
 	moving_start_counter = 0;
@@ -1004,10 +1021,13 @@ void Mario::endFlying()
 
 void Mario::startFlyFloating()
 {
+	//finish to falling, and start fly float
+	falling = false;
 	fly_float = true;
+	
+	//set parameters
 	fly_counter = 0;
 	fly_start_counter = 0;
-	falling = false;
 	fly_duration = 12;
 }
 
@@ -1030,10 +1050,11 @@ void Mario::bounce()
 
 void Mario::bounceBlock()
 {
+	//start jump with descending and ascending phase 
 	jumping_duration = 16 + 24;
-	bounce_block = true;
 	falling_counter = 0;
 
+	bounce_block = true;
 	jumping = true;
 
 }
@@ -1041,7 +1062,7 @@ void Mario::bounceBlock()
 // @override setMoving() to add horizontal acceleration
 void Mario::setMoving(bool _moving)
 {
-	//when _moving true, and crouch, don't move
+	//don't crouch when start to move 
 	if (crouch && _moving)
 		crouch = false;
 		
@@ -1052,6 +1073,7 @@ void Mario::setMoving(bool _moving)
 			moving_stop_counter = 0;
 		else
 			moving = false;
+	
 	// transition stop -> move, then activate moving start counter
 	else if (_moving == true && !moving)
 		moving_start_counter = 0;
@@ -1070,12 +1092,11 @@ void Mario::setDirection(Direction _dir)
 	//change direction instantly in script_move
 	if(script_move)
 	{
-		
 		prev_dir = dir;
 		dir = _dir;
 		dir_change_counter = -1;
 	}
-	
+	//starts to change direction when already moving
 	else if (_dir != dir && moving)
 	{
 		// reset acceleration/deceleration counters
@@ -1085,8 +1106,10 @@ void Mario::setDirection(Direction _dir)
 		//start the direction counter
 		dir_change_counter = 0;
 	}
+	//change direction instantly when it's not moving
 	else if (_dir != dir && !moving)
 	{
+		//memorize the prev_dir when mario is raccoon, for asymmetry correction
 		if (raccoon)
 			prev_dir = dir;
 
@@ -1094,12 +1117,15 @@ void Mario::setDirection(Direction _dir)
 	}
 }
 
+
 void Mario::animate()
 {
 	Entity::animate();
+	
 	// save current texture height (for later correction)
 	int prev_h = boundingRect().height();
 
+	
 	if (dying)
 	{
 		setPixmap(texture_dying);
@@ -1107,6 +1133,7 @@ void Mario::animate()
 	}
 	if (script_move_in_pipe)
 	{
+		//set the proper texture for travel in pipe
 		if (big && !fire && !raccoon)
 			setPixmap(texture_entering_pipe[1]);
 		else if (fire)
@@ -1136,8 +1163,9 @@ void Mario::animate()
 	else if(transformation_counter>=0)
 	{
 		transformation_counter++;
-		if(!injured)
-		{ 
+		if(!injured) //powerUP
+		{
+			//set the proper texture for 
 			if (raccoon || fire || inWater)
 				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
 			else
@@ -1145,13 +1173,14 @@ void Mario::animate()
 			
 			if (transformation_counter >= 12 * 5)
 			{
-				if (raccoon && dir == RIGHT) //correction asymmetry of raccoon transformation
+				//correction asymmetry for raccoon transformation
+				if (raccoon && dir == RIGHT) 
 					setX(x() - 8);
 				transformation_counter = -1;
 				Game::instance()->setFreezed(false);
 			}
 		}
-		else
+		else //powerDown
 		{
 			if (big || inWater)
 				setPixmap(texture_transformation[(transformation_counter / 5) % 6]);
@@ -1174,6 +1203,7 @@ void Mario::animate()
 		else if (flying && !fly_float)
 			setPixmap(texture_raccoon_flying[(animation_counter / 6) % 3]);
 
+		//set the proper texture in crouch
 		else if (big && crouch)
 		{
 			if (!raccoon && !fire)
@@ -1184,7 +1214,7 @@ void Mario::animate()
 				setPixmap(texture_raccoon_crouch);
 		}
 
-		//all texture of jumping
+		//set the proper texture in jumping
 		else if (jumping && !super_running)
 		{
 			if (!fire && !raccoon)
@@ -1196,6 +1226,7 @@ void Mario::animate()
 			else
 				setPixmap(texture_jumping[1]);
 		}
+		//set the proper texture in jumping while is in super running
 		else if (jumping && super_running)
 		{
 			if (!fire && !raccoon)
@@ -1203,7 +1234,7 @@ void Mario::animate()
 			else if (fire)
 				setPixmap(texture_fire_super_jumping);
 		}
-
+		//set the proper texture in falling
 		else if (falling && !super_running)
 		{
 			if (!fire && !raccoon)
@@ -1213,6 +1244,7 @@ void Mario::animate()
 			else if (raccoon)
 				setPixmap(texture_raccoon_falling[0]);
 		}
+		//set the proper texture in falling and super_running
 		else if (falling && super_running)
 		{
 			if (!fire && !raccoon)
@@ -1222,6 +1254,7 @@ void Mario::animate()
 			else if (raccoon && !flying)
 				setPixmap(texture_raccoon_flying[0]);
 		}
+		//set the proper texture in moving
 		else if (moving && !super_running)
 		{
 			if (!raccoon && !fire)
@@ -1246,6 +1279,7 @@ void Mario::animate()
 					setPixmap(texture_raccoon_walking[(animation_counter / animation_div) % 4]);
 			}
 		}
+		//set the proper texture in moving and super running
 		else if (moving && super_running)
 		{
 			if (!raccoon && !fire)
@@ -1270,6 +1304,7 @@ void Mario::animate()
 					setPixmap(texture_raccoon_super_running[(animation_counter / animation_div) % 3]);
 			}
 		}
+		//set the proper texture when stands
 		else
 		{
 			if (!fire && !raccoon)
@@ -1280,11 +1315,11 @@ void Mario::animate()
 				setPixmap(texture_raccoon_stand);
 		}
 	}
-	else if (inWater)
+	else if (inWater) //animate inWater
 	{
 		if (!walkable_object)
 		{
-			//swimming and fall inWater animation of mario small
+			//set the proper texture for swim and fall in water
 			if (!big)
 			{
 				if (swimming)
@@ -1292,8 +1327,6 @@ void Mario::animate()
 				else if (falling)
 					setPixmap(texture_small_swimming[(animation_counter / animation_div) % 2]);
 			}
-
-			//swimming and fall inWater animation of mario Big
 			else if (big && !fire && !raccoon)
 			{
 				if (swimming)
@@ -1316,7 +1349,8 @@ void Mario::animate()
 					setPixmap(texture_raccoon_swimming[(animation_counter / animation_div) % 4]);
 			}
 		}
-		else
+		//animate for walking inWater
+		else 
 		{
 			if (moving)
 			{
@@ -1344,10 +1378,11 @@ void Mario::animate()
 		if (dir_change_counter > 0)
 			setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 	}
-	
+
+	//animate for attack
 	if (attack)
 	{
-		//attack with fire is shoot a fireBall
+		//set the proper texture for attack with fireball
 		if (fire)
 		{
 			attack_counter++;
@@ -1365,6 +1400,7 @@ void Mario::animate()
 				attack_counter = 0;
 			}
 		}
+		//set the proper texture for attack with raccoon
 		else if (raccoon && outOfWater)
 		{
 			attack_counter++;
@@ -1372,27 +1408,31 @@ void Mario::animate()
 
 			if (attack_counter == 12)
 			{
-
+				//set flag for collision detection
 				raccoon_attack = true;
+				
 				//update prev_dir for asymmetry correction
 				prev_dir = dir; 
 				dir = inverse(dir); 
 			}
 			else if (attack_counter == 18)
 			{
-				Sounds::instance()->play("tail");
+				//reset flag for collision detection
 				raccoon_attack = false;
+				
 				//update prev_dir for asymmetry correction
 				prev_dir = dir;     
 				dir = inverse(dir);
-			}
 
+				//play sound
+				Sounds::instance()->play("tail");
+			}
+			//stop to attack
 			if (attack_counter > 30)
 			{
 				attack = false;
 				attack_counter = 0;
 			}
-
 		}
 	}
 
@@ -1406,42 +1446,42 @@ void Mario::animate()
 		setPixmap(pixmap().transformed(QTransform().scale(-1, 1)));
 }
 
-// Mario has been hit
 void Mario::hit(Object* what, Direction fromDir)
 {
 	Object::hit(what, fromDir);
 
-	if (fromDir == DOWN && swimming && dynamic_cast<Inert*>(what))  // se sto nuotando e tocco verso il basso devo riprendere il walkable object
+	//get walkable object inWater
+	if (fromDir == DOWN && swimming && dynamic_cast<Inert*>(what))  
 		walkable_object = dynamic_cast<Inert*>(what);
 
-	
+	//end swimming when hitted from down or up
 	if (swimming && (fromDir == DOWN || fromDir == UP))
 		endSwimming();
 
+	//end fly float when hitted from down
 	if (fly_float && (fromDir == DOWN))
 		endFlyFloating();
 
+	//end flying when hitted from down
 	if (flying && (fromDir == DOWN))
 		endFlying();
 
-	if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "downhill")
+	//change mode of movement when hitted with downhill or uphill
+	if (dynamic_cast<Iceberg*>(what) && (dynamic_cast<Iceberg*>(what)->type() == "downhill" || dynamic_cast<Iceberg*>(what)->type()=="uphill"))
 	{
 		falling = false;
-		falling_start_counter = -1;
 		script_move = true;
-		downhill = true;
-	}
-	else if (dynamic_cast<Iceberg*>(what) && dynamic_cast<Iceberg*>(what)->type() == "uphill")
-	{
-		falling = false;
+		if (dynamic_cast<Iceberg*>(what)->type() == "downhill")
+			downhill = true;
+		else
+			downhill = false;
 		falling_start_counter = -1;
-		script_move = true;
-		downhill = false;
+		
 	}
 	else
 		script_move = false;
 
-
+	//get item taken and go out of view when hit with a card 
 	if (dynamic_cast<GoalRoulette*>(what))
 	{
 		item_taken = dynamic_cast<GoalRoulette*>(what)->getContent();
@@ -1453,9 +1493,6 @@ void Mario::hit(Object* what, Direction fromDir)
 		moving = true;
 	}
 	
-	/*if (dynamic_cast<BrickBlock*>(what) && fromDir == UNDETERMINED)
-		solveCollisions();*/
-
 	// disable deceleration if mario hits impenetrable object
 	if (dynamic_cast<Inert*>(what) && (fromDir == LEFT || fromDir == RIGHT))
 	{
@@ -1464,8 +1501,9 @@ void Mario::hit(Object* what, Direction fromDir)
 			falling = true;
 	}
 
-	Enemy* enemy = dynamic_cast<Enemy*>(what);
 
+	//hurt enemy when hit with tail attack
+	Enemy* enemy = dynamic_cast<Enemy*>(what);
 	if (raccoon && attack && enemy)
 		enemy->hurt();
 	
@@ -1479,15 +1517,13 @@ void Mario::hit(Object* what, Direction fromDir)
 			else if (!koopa->isShell())
 				powerDown();
 		}
-		
 		else powerDown();
 	}
 }
 
-// running = double moving speed
+
 void Mario::setRunning(bool _running)
 {
-	
 	// do nothing if running state does not change
 	if (running == _running)
 		return;
@@ -1503,9 +1539,9 @@ void Mario::setRunning(bool _running)
 
 void Mario::enterPipe(Direction fromDir)
 {
+	//asymmetry correction for raccoon
 	if (raccoon && dir == RIGHT)
 		setX(x() + 8);
-	
 	
 	if (fromDir == DOWN)
 	{
@@ -1529,8 +1565,10 @@ void Mario::exitPipe()
 		prevPos = pos();
 	}
 
+	//reset direction and ZValue
 	dir = RIGHT;
 	setZValue(6);
+	
 	Sounds::instance()->play("pipe");
 }
 
@@ -1539,10 +1577,9 @@ void Mario::startPipeTravel()
 {
 	entering_pipe = false;
 	script_move_in_pipe = true;
-	
-	setZValue(1);
 
 	collidable = false;
+	setZValue(1);
 
 	Game::instance()->setFreezed(true);
 }
@@ -1565,12 +1602,13 @@ void Mario::die()
 
 }
 
-// crouch
+
 void Mario::setCrouch(bool active)
 {
+	//stop moving when crouch
 	if (active && moving)
 		setMoving(false);
-	
+
 	if (!jumping && !falling)
 		crouch = active;
 
@@ -1580,6 +1618,7 @@ void Mario::setCrouch(bool active)
 
 void Mario::powerUp(spawnable_t _power) 
 {
+	//play the proper sound
 	if(_power == MUSHROOM)
 		Sounds::instance()->play("eat");
 	else if(_power== FLOWER)
@@ -1589,7 +1628,7 @@ void Mario::powerUp(spawnable_t _power)
 
 	transformation_counter = 0;
 
-	//only for debug
+	//transformation without spawnable, only for debug
 	if(!_power) 
 	{
 		if (!big)
@@ -1635,12 +1674,14 @@ void Mario::powerUp(spawnable_t _power)
 		else
 			big = true;
 	}
+	//freezed all entity 
 	Game::instance()->setFreezed(true);
 }
 
 
 void Mario::powerDown()
 {
+	
 	injured = true;
 	attack = false;
 	raccoon_attack = false;
@@ -1661,7 +1702,7 @@ void Mario::powerDown()
 
 bool Mario::isOnPipe(std::string level_name)
 {
-	//if mario don't touch pipe, is not on pipe
+	//if mario don't touch pipe, isn't on pipe
 	if (!dynamic_cast<Pipe*>(walkable_object))
 		return false;
 	
@@ -1689,7 +1730,7 @@ bool Mario::isUnderPipe(std::string level_name)
 		pos_x += 8;
 	
 	if  ((level_name == "World 6-9-3" && pos_x >= 13*16 +4  && (pos_x + 16) <= 15*16 -4)
-	   ||(level_name == "World 6-9-2" && pos_x >= 108*16  && (pos_x + 16) <= 110*16 ))  // rivedere questa riga
+	   ||(level_name == "World 6-9-2" && pos_x >= 108*16  && (pos_x + 16) <= 110*16 ))
 		return true;
 	else 
 		return false;
@@ -1711,6 +1752,7 @@ void Mario::updateScore(int score2add,QPoint pos)
 
 void Mario::updateLives(int lives2add, QPoint pos)
 {
+	//update lives
 	lives += lives2add;
 
 	//create score spawnable
@@ -1719,6 +1761,7 @@ void Mario::updateLives(int lives2add, QPoint pos)
 	Hud::instance()->updatePanel("LifeCounter", std::to_string(lives));
 }
 
+//@override
 QPainterPath Mario::shape() const
 {
 	QPainterPath path;
@@ -1732,6 +1775,7 @@ QPainterPath Mario::shape() const
 		path.addRect(3, boundingRect().top() + 3, boundingRect().width() - 6, boundingRect().bottom()-3);
 	else if ((big && !raccoon) || transformation_counter>0)
 		path.addRect(3, boundingRect().top() + 3, 10, boundingRect().bottom()-3);
+	//raccoon has different shape for the asymmetry and attack
 	else if (raccoon)
 	{
 		if (attack && attack_counter == 12)

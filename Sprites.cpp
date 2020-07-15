@@ -57,7 +57,6 @@ static QRect transparent(151, 380, 19, 30);
 static QRect points(82, 64, 11, 8);
 static QRect roulette_item(258, 350, 16, 16);
 static QRect spinning_item(258, 374, 16, 16);
-static QRect firework(31, 60, 128, 128);
 static QRect end_level_text(53, 365, 146, 26);
 static QRect card(260, 394, 16, 16);
 static QRect life_up(493, 347, 29, 16);
@@ -88,7 +87,8 @@ Sprites::Sprites()
 	title_screen  = loadTexture(":/graphics/sprites/title_screen.png");
 	miscs         = loadTexture(":/graphics/sprites/miscs.png", QColor(166, 185, 255));
 	goal_roulette = loadTexture(":/graphics/sprites/goal_roulette.png", QColor(0, 183, 239));
-	fireworks     = loadTexture(":/graphics/sprites/fireworks.png", QColor(3, 26, 110));
+
+
 }
 
 QPixmap Sprites::get(const std::string & id)
@@ -252,7 +252,7 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(QRect(373, 265, 19, 27));
 	if (id == "mario-fire-swim-3")  
 		return mario.copy(QRect(347, 265, 19, 27));
-	//todo ricontrollare queste texture
+	
 	if (id == "mario-fire-swim-4") 
 		return mario.copy(QRect(347, 265, 19, 27));
 	if (id == "mario-fire-swim-5")  
@@ -283,9 +283,8 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "mario-raccoon-crouch")
 		return  mario.copy(QRect(79, 360, 24, 18));
 
-	//todo ricontrollare
-	/*if (id == "mario-raccoon-brake") 
-		return mario.copy(QRect(439, 348, 24, 30));*/
+	
+	
 	if (id == "mario-raccoon-brake") 
 		return mario.copy(QRect(439, 312, 24, 30));
 
@@ -325,7 +324,7 @@ QPixmap Sprites::get(const std::string & id)
 		return mario.copy(QRect(149, 384, 24, 28));
 	if (id == "mario-raccoon-swim-3")
 		return mario.copy(QRect(123, 384, 24, 28));
-	//sequenza mario swimming
+	//sequence mario swimming
 	if (id == "mario-raccoon-swim-4")
 		return mario.copy(QRect(149, 384, 24, 28));
 	if (id == "mario-raccoon-swim-5")
@@ -580,7 +579,7 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "Bloober-Baby-2")
 		return enemies.copy(QRect(500, 163, 8, 10)); //babie attack, yellow texture
 
-	 //tartaruga
+	 //koopatroopa
 	if (id == "Koopa_Troopa-0")
 		return enemies.copy(Koopa_Troopa);
 	if (id == "Koopa_Troopa-1")
@@ -698,7 +697,7 @@ QPixmap Sprites::get(const std::string & id)
 		return stage_tiles.copy(moveBy(jump_block, 1, 0));
 	if (id == "jump-block-2")
 		return stage_tiles.copy(moveBy(jump_block, 2, 0));
-	//frammenti di blocco
+	//brokenblock
 	if (id == "broken-block")
 		return stage_tiles.copy(broken_block);
 	
@@ -773,41 +772,9 @@ QPixmap Sprites::get(const std::string & id)
 	if (id == "spinning-item-6")
 		return goal_roulette.copy(moveBy(spinning_item, 9, 0));
 
-	//if (id == "100")
-	//	return hud.copy(points);
-	//if (id == "200")
-	//	return hud.copy(moveRight(point, ));
-	//if (id == "400")
-	//	return hud.copy(moveRight(point, ));
-	//if (id == "800")
-	//	return hud.copy(moveRight(point, ));
-	//if (id == "1000")
-	//	return hud.copy(moveRight(point, ));
-	//if (id == "2000")
-	//	return hud.copy(moveRight(point, ));
-	//if (id == "4000")
-	//	return hud.copy(moveRight(point, ));
-	//if (id == "8000")
-	//	return hud.copy(moveRight(point, ));
+	
 
-	if (id == "mushroom-firework-1")
-		return fireworks.copy(firework);
-	if (id == "mushroom-firework-2")
-		return fireworks.copy(moveBy(firework, 1, 0, 128, 0, 19, 0));
-	if (id == "mushroom-firework-3")
-		return fireworks.copy(moveBy(firework, 2, 0, 128, 0, 19, 0));
-	if (id == "flower-firework-1")
-		return fireworks.copy(moveBy(firework, 0, 1, 0, 128, 0, 25));
-	if (id == "flower-firework-2")
-		return fireworks.copy(moveBy(firework, 1, 1, 128, 128, 19, 25));
-	if (id == "flower-firework-3")
-		return fireworks.copy(moveBy(firework, 2, 1, 128, 128, 19, 25));
-	if (id == "star-firework-1")
-		return fireworks.copy(moveBy(firework, 0, 2, 0, 128, 0, 25));
-	if (id == "star-firework-2")
-		return fireworks.copy(moveBy(firework, 1, 2, 128, 128, 19, 25));
-	if (id == "star-firework-3")
-		return fireworks.copy(moveBy(firework, 2, 2, 128, 128, 19, 25));
+	
 
 	if (id == "flower-card")
 		return goal_roulette.copy(card);

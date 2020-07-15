@@ -1,7 +1,6 @@
 #include "SpinningItem.h"
 #include "Sprites.h"
 #include "EndLevelText.h"
-#include "Firework.h"
 
 SpinningItem::SpinningItem(QPoint position, const std::string& _id) : Collectable (position)
 {

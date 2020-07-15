@@ -13,7 +13,6 @@
 #include "BrickBlock.h"
 #include "HiddenBlock.h"
 #include "GoalRoulette.h"
-#include "Firework.h"
 #include <iostream>
 #include "EndLevelText.h"
 #include "LifeUp.h"
@@ -83,7 +82,6 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		//brickblock fine livello con foglia
 		new BrickBlock(QPoint(50 * 16, terrain_level -(6*16)),"",LEAF);
 		
-		//new Firework(QPoint(0,1*16), "FLOWER");
 		//new GoalRoulette(QPoint(4*16,23*16));
 		new GoalRoulette(QPoint(88*16, 337));
 
@@ -309,7 +307,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 	   new Cheep(QPoint(68 * 16, 20 * 16));
 	   new BlooberNanny(QPoint(78 * 16, 20 * 16));
-	   new BigBertha(QPoint(109.5 * 16, 19 * 16)); 
+	   new BigBertha(QPoint(109.5 * 16, 19 * 16));
+
 		
 	}
 	else if(level_name == "World 6-9-3")
