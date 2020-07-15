@@ -72,10 +72,8 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 		new BrickBlock(QPoint(35 * 16, terrain_level-13*16),"ice");
 		new BrickBlock(QPoint(39 * 16, terrain_level-13*16),"ice");
 		new KoopaTroopa(QPoint(38 * 16, terrain_level-13*16));
-		new Piranha(QPoint(42 * 16, terrain_level-13*16),UP,true,true);
 		//brickblock fine livello con foglia
 		new BrickBlock(QPoint(50 * 16, terrain_level -(6*16)),"",LEAF);
-		new Cheep(QPoint(34 * 16, terrain_level-13*16));
 		new GoalRoulette(QPoint(88*16, 337));
 	
 		// Mario
