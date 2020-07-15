@@ -45,7 +45,7 @@ Mario* LevelManager::load(std::string level_name,QGraphicsScene* scene)
 
 	   //collider for start level or end level
 	   (new FixedBlock(QPoint(0, terrain_level - 192), "collider-side"))->setRotation(90);
-	   (new FixedBlock(QPoint(98*16, terrain_level - 192), "collider-side"))->setRotation(90);
+	   (new FixedBlock(QPoint(97*16, terrain_level - 192), "collider-side"))->setRotation(90);
 		// terrain
 		new Terrain(QRect(0, terrain_level, 97*16, 1*16));
 
