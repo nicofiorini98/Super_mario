@@ -181,6 +181,8 @@ void KoopaTroopa::hit(Object* what, Direction fromDir)
 		}
 		 Sounds::instance()->play("bump");	
 	}
+	if(dynamic_cast<Inert*>(what) && shell_moving)
+		Sounds::instance()->play("bump");
 }
 
 void KoopaTroopa::hurt()
